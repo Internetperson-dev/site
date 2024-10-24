@@ -13,11 +13,200 @@
 </head>
 <body>
   <canvas id="gameCanvas" width="400" height="240"></canvas>
-  
-  <!-- Include external JS files -->
-  <script src="platform.js"></script>
-  <script src="player.js"></script>
-  <script src="input.js"></script>
-  <script src="game.js"></script>
+
+  <!-- Platform Script -->
+  <script>
+    function Platform(x, y, width, height, color) {
+      this.x = x;
+      this.y = y;
+      this.width = width;
+      this.height = height;
+      this.color = color;
+
+      // Draw the platform on the canvas
+      this.draw = function(ctx) {
+        ctx.fillStyle = this.color;
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+      };
+    }
+  </script>
+
+  <!-- Player Script -->
+  <script>
+    function Player(x, y, width, height, color) {
+      this.x = x;
+      this.y = y;
+      this.width = width;
+      this.height = height;
+      this.color = color;
+      this.speedX = 0;
+      this.speedY = 0;
+      this.gravity = 0.5;
+      this.jumpPower = -10;
+      this.grounded = false;
+
+      // Update the player's movement and position
+      this.update = function(platform) {
+        handleInput(this); // Handle keyboard, touch, and mouse inputs
+
+        // Apply gravity
+        this.speedY += this.gravity;
+
+        // Update position
+        this.x += this.speedX;
+        this.y += this.speedY;
+
+        // Keep player within canvas bounds
+        if (this.x < 0) this.x = 0;
+        if (this.x + this.width > canvas.width) this.x = canvas.width - this.width;
+
+        // Platform collision detection
+        if (this.y + this.height > platform.y && this.x + this.width > platform.x && this.x < platform.x + platform.width) {
+          this.y = platform.y - this.height;
+          this.speedY = 0;
+          this.grounded = true;
+        } else {
+          this.grounded = false;
+        }
+
+        // Reset if the player falls off the screen
+        if (this.y > canvas.height) {
+          this.x = 50;
+          this.y = 180;
+          this.speedY = 0;
+        }
+      };
+
+      // Draw the player on the canvas
+      this.draw = function(ctx) {
+        ctx.fillStyle = this.color;
+        ctx.fillRect(this.x, this.y, this.width, this.height);
+      };
+    }
+  </script>
+
+  <!-- Input Handling Script -->
+  <script>
+    // Handle user input (keyboard, touch, and mouse)
+    var keys = { left: false, right: false, up: false };
+    var touchStartY = 0;
+    var touchStartX = 0;
+    var touchActive = false;
+    var mouseActive = false;
+    var mouseStartX = 0;
+    var mouseStartY = 0;
+
+    // Keyboard event listeners
+    window.addEventListener('keydown', function(e) {
+      if (e.keyCode === 37) keys.left = true;   // Left arrow
+      if (e.keyCode === 39) keys.right = true;  // Right arrow
+      if (e.keyCode === 38) keys.up = true;     // Up arrow (jump)
+    });
+
+    window.addEventListener('keyup', function(e) {
+      if (e.keyCode === 37) keys.left = false;
+      if (e.keyCode === 39) keys.right = false;
+      if (e.keyCode === 38) keys.up = false;
+    });
+
+    // Touch event listeners
+    canvas.addEventListener('touchstart', function(e) {
+      var touch = e.touches[0];
+      touchStartY = touch.clientY;
+      touchStartX = touch.clientX;
+      touchActive = true;
+    });
+
+    canvas.addEventListener('touchend', function(e) {
+      touchActive = false;
+      if (touchStartY - e.changedTouches[0].clientY > 30 && player.grounded) {
+        player.speedY = player.jumpPower; // Jump on flick
+        player.grounded = false;
+      }
+    });
+
+    // Mouse event listeners
+    canvas.addEventListener('mousedown', function(e) {
+      mouseStartX = e.clientX;
+      mouseStartY = e.clientY;
+      mouseActive = true;
+    });
+
+    canvas.addEventListener('mouseup', function(e) {
+      mouseActive = false;
+      if (mouseStartY - e.clientY > 30 && player.grounded) {
+        player.speedY = player.jumpPower; // Jump on flick
+        player.grounded = false;
+      }
+    });
+
+    // Handle input
+    function handleInput(player) {
+      // Keyboard input
+      if (keys.left) {
+        player.speedX = -2;
+      } else if (keys.right) {
+        player.speedX = 2;
+      } else {
+        player.speedX = 0;
+      }
+
+      // Touch input
+      if (touchActive) {
+        if (touchStartX < canvas.width / 2) {
+          player.speedX = -2;
+        } else if (touchStartX > canvas.width / 2) {
+          player.speedX = 2;
+        }
+      }
+
+      // Mouse input
+      if (mouseActive) {
+        if (mouseStartX < canvas.width / 2) {
+          player.speedX = -2;
+        } else if (mouseStartX > canvas.width / 2) {
+          player.speedX = 2;
+        }
+      }
+    }
+  </script>
+
+  <!-- Main Game Logic Script -->
+  <script>
+    // Get the canvas and its context
+    var canvas = document.getElementById('gameCanvas');
+    var ctx = canvas.getContext('2d');
+
+    // Platform object
+    var platform = new Platform(0, 200, 400, 20, 'green');
+
+    // Player object
+    var player = new Player(50, 180, 20, 20, 'red');
+
+    // Game loop
+    function gameLoop() {
+      update();
+      draw();
+      setTimeout(gameLoop, 1000 / 30); // 30 FPS
+    }
+
+    // Update game state
+    function update() {
+      player.update(platform);
+    }
+
+    // Draw game state
+    function draw() {
+      // Clear canvas
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Draw player and platform
+      player.draw(ctx);
+      platform.draw(ctx);
+    }
+
+    // Start game loop
+    gameLoop();
+  </script>
 </body>
 </html>
