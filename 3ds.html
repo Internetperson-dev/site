@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3DS Platformer Game</title>
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background: #87CEFA; /* Sky blue background */
+        }
+        canvas {
+            background: #ffffff; /* White canvas */
+            display: block;
+        }
+    </style>
     <script>
         // Game Variables
         let canvas, ctx;
@@ -36,7 +47,6 @@
             ctx = canvas.getContext('2d');
             document.body.appendChild(canvas);
             resizeCanvas();
-            window.addEventListener('resize', resizeCanvas);
             setupControls();
             gameLoop();
         }
@@ -45,7 +55,6 @@
         function resizeCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight * 0.75; // Adjust height
-            player.y = Math.min(player.y, canvas.height - player.height); // Ensure player stays within bounds
         }
 
         // Setup Controls
