@@ -85,6 +85,7 @@
     }
   </script>
 
+<!-- Input Handling Script -->
 <script>
   // Handle user input (keyboard, touch, and mouse)
   var keys = { left: false, right: false, up: false };
@@ -95,17 +96,17 @@
   var mouseStartX = 0;
   var mouseStartY = 0;
 
-  // Keyboard event listeners for W, A, D (and keeping arrow keys support)
+  // Keyboard event listeners for W, A, D, Space (and keeping arrow keys support)
   window.addEventListener('keydown', function(e) {
     if (e.keyCode === 37 || e.keyCode === 65) keys.left = true;   // Left arrow or 'A'
     if (e.keyCode === 39 || e.keyCode === 68) keys.right = true;  // Right arrow or 'D'
-    if (e.keyCode === 38 || e.keyCode === 87) keys.up = true;     // Up arrow or 'W' (Jump)
+    if (e.keyCode === 38 || e.keyCode === 87 || e.keyCode === 32) keys.up = true;  // Up arrow, 'W', or 'Space'
   });
 
   window.addEventListener('keyup', function(e) {
     if (e.keyCode === 37 || e.keyCode === 65) keys.left = false;  // Left arrow or 'A'
     if (e.keyCode === 39 || e.keyCode === 68) keys.right = false; // Right arrow or 'D'
-    if (e.keyCode === 38 || e.keyCode === 87) keys.up = false;    // Up arrow or 'W'
+    if (e.keyCode === 38 || e.keyCode === 87 || e.keyCode === 32) keys.up = false; // Up arrow, 'W', or 'Space'
   });
 
   // Touch event listeners
@@ -141,13 +142,19 @@
 
   // Handle input
   function handleInput(player) {
-    // Keyboard input (W, A, D or Arrow keys)
+    // Keyboard input (W, A, D, Space, or Arrow keys)
     if (keys.left) {
       player.speedX = -2;
     } else if (keys.right) {
       player.speedX = 2;
     } else {
       player.speedX = 0;
+    }
+
+    // Jumping with W, Space, or Up Arrow if player is grounded
+    if (keys.up && player.grounded) {
+      player.speedY = player.jumpPower; // Jump
+      player.grounded = false;
     }
 
     // Touch input
@@ -169,6 +176,8 @@
     }
   }
 </script>
+
+  
   
   <!-- Main Game Logic Script -->
   <script>
