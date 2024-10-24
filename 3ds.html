@@ -8,6 +8,7 @@
         body { margin: 0; overflow: hidden; background-color: #87CEEB; }
         canvas { display: block; margin: auto; background-color: #ffffff; }
     </style>
+    <script src="https://wolfyxon.github.io/3ds-web-stuff/scripts/global.js"></script>
 </head>
 <body>
     <canvas id="gameCanvas" width="800" height="240"></canvas>
@@ -17,7 +18,7 @@
 
         let player = {
             x: 50,
-            y: 400,
+            y: 200,
             width: 50,
             height: 50,
             gravity: 0.5,
@@ -32,6 +33,24 @@
             jump: false
         };
 
+        // Initialize input detection
+        function setupInput() {
+            // Assuming global.js has a method to bind buttons
+            // Replace 'left', 'right', and 'jump' with appropriate 3DS button mappings
+            bindButton('left', () => keys.left = true);
+            bindButton('right', () => keys.right = true);
+            bindButton('jump', () => {
+                if (!player.isJumping) {
+                    player.velocityY = player.jumpStrength;
+                    player.isJumping = true;
+                }
+            });
+
+            unbindButton('left', () => keys.left = false);
+            unbindButton('right', () => keys.right = false);
+            unbindButton('jump', () => keys.jump = false);
+        }
+
         function update() {
             // Handle movement
             if (keys.left) {
@@ -39,12 +58,6 @@
             }
             if (keys.right) {
                 player.x += 5;
-            }
-
-            // Jumping
-            if (keys.jump && !player.isJumping) {
-                player.velocityY = player.jumpStrength;
-                player.isJumping = true;
             }
 
             // Gravity
@@ -66,20 +79,7 @@
             requestAnimationFrame(update);
         }
 
-        function keyDownHandler(event) {
-            if (event.key === 'ArrowLeft') keys.left = true;
-            if (event.key === 'ArrowRight') keys.right = true;
-            if (event.key === 'ArrowUp') keys.jump = true;
-        }
-
-        function keyUpHandler(event) {
-            if (event.key === 'ArrowLeft') keys.left = false;
-            if (event.key === 'ArrowRight') keys.right = false;
-            if (event.key === 'ArrowUp') keys.jump = false;
-        }
-
-        document.addEventListener('keydown', keyDownHandler);
-        document.addEventListener('keyup', keyUpHandler);
+        setupInput(); // Set up the 3DS input
         update();
     </script>
 </body>
