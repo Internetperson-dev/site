@@ -5,18 +5,19 @@
     <title>3DS Web stuff - home</title>
     <!-- DO NOT DELETE -->
     <meta name="google-site-verification" content="CEp8re5xPxShHGl3Z04NXVKOKE-OgXujmu6jYVBIXqE" />
-    
+
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+    <link rel="stylesheet" href="styles/global.css">
+    <link rel="stylesheet" href="styles/home.css">
 
-    <!-- Use CSS and JS from the 3DS Web Stuff repository -->
-    <link rel="stylesheet" href="https://wolfyxon.github.io/3ds-web-stuff/assets/style.css">
-    
     <meta content="3DS Web Stuff" property="og:title" />
     <meta content="A collection of games and other stuff designed specifically for the Nintendo 3DS browser" property="og:description" />
     <meta name="description" content="A collection of games and other stuff designed specifically for the Nintendo 3DS browser">
 
-    <script src="https://wolfyxon.github.io/3ds-web-stuff/assets/javascript.js" type="text/javascript"></script>
+    <script src="scripts/global.js" type="text/javascript"></script>
+    <script src="scripts/lib/anim.js" type="text/javascript"></script>
+    <script src="scripts/home.js" type="text/javascript"></script>
 
 </head>
 <body>
@@ -248,6 +249,196 @@
                         <a href="games/breakout/">Breakout</a> is finally playable on Old 3DS thanks to magiczocker10!
                     </p>
                   </article>
+                  <article>
+                    <h3>22.06.2024</h3>
+                    <p>
+                        The contact form has been disabled due to it being used by bots.
+                    </p>
+                    <p>
+                        I expected that it's going to be used by bots at one point, since it used a public Discord webhook which is not a very safe solution,
+                        but I thought it would be cool to send messages directly from your 3DS.
+                    </p>
+                    <p>
+                        It might return at some point, but I need to maybe use a custom server in the middle which would redirect the webhook to Discord, but I
+                        need to find a free solution for that.
+                    </p>
+                  </article>
+                  <article>
+                      <h3>05.06.2024</h3>
+                      <p>
+                          The site has gotten some changes lately.
+                      </p>
+                      <p>
+                          <a href="games/ttt">Tic-Tac-Toe</a> has a new nicer look, and now you can flag cells in <a href="games/minesweeper">Minesweeper</a>.
+                      </p>
+                      <p>
+                          Welcome a new contributor! <a href="other/qr">QR code generator</a> can now generate not just QR codes, thanks to basic-experimental.
+                      </p>
+                  </article>
+                  <article>
+                      <h3>11.05.2024</h3>
+                      <p>
+                          Say hello to DSi!
+                      </p>
+                      <p>
+                          Some basic games can now be played on the DSi, thanks to magiczocker10. Games playable on the DSi are marked with the <span class="tag tag-dsi"></span> tag.
+                      </p>
+                  </article>
+                  <article>
+                      <h3>20.04.2024</h3>
+                      <p>
+                          The site is currently going through a lot of technical changes and optimization thanks to magiczocker10.
+                      </p>
+                      <p>
+                          Soon more games will be possible thanks to a new rendering library that uses a tree structure and uses DOM elements instead of drawing on a canvas.
+                      </p>
+                      <p>
+                          This library should also provide much better performance with bigger games.
+                      </p>
+                      <p class="note">Nerdy stuff lol</p>
+                  </article>
+                  <article>
+                      <h3>11.04.2024</h3>
+                      <p><a href="games/connect4">Connect 4</a> and <a href="games/hangman">Hangman</a> are here thanks to magiczocker10!</p>
+                  </article>
+                  <article>
+                      <h3>08.04.2024</h3>
+                      <p>Today is the last day of 3DS and Wii U online play...</p>
+                      <p>We hope you all had a great time.</p>
+                  </article>
+                  <article>
+                      <h3>07.04.2024</h3>
+                      <p>Today <a href="games/sudoku">Sudoku</a> was added with some other changes by magiczocker10.</p>
+                  </article>
+                  <article>
+                      <h3>01.04.2024</h3>
+                      <p>Happy Easter and April Fools!</p>
+                      <p><a href="games/breakout">Breakout</a> is finally public.</p>
+                      <p>Also a <a href="other/hack">totally real hacking interface</a> was added.</p>
+                  </article>
+                  <article>
+                      <h3>14.03.2024</h3>
+                      <p><a href="games/minesweeper">MineSweeper</a> has been added.</p>
+                      <p>Thanks to magiczocker10 for making it and optimizing other parts of the site!</p>
+                  </article>
+                  <article>
+                      <h3>18.02.2024</h3>
+                      <p>Restyled some site elements to make it more lively.</p>
+                      <p>More games are coming very soon!</p>
+                  </article>
+                  <article>
+                      <h3>10.02.2024</h3>
+                      <p>Some performance issues were fixed on Old 3DS systems and minor bugfixes were made.</p>
+                      <p>Added a scrolling background to JetFighter.</p>
+                  </article>
+                  <article>
+                      <h3>06.02.2024</h3>
+                      <p>Tuesday patch! Games will now run at the same speed on all devices no matter the performance. Pigeon and Pong are now slightly more difficult.</p>
+                      <p>Other minor bugfixes were made.</p>
+                      <p>I also received some nice game ideas, and bug reports. In near future I'll develop a minimal game engine that will allow me to develop more advanced games. I noted these ideas down.</p>
+                  </article>
+                  <article>
+                      <h3>03.02.2024</h3>
+                      <p>I'm currently working on optimizing games and improving support for Old 3DS/2DS</p>
+                      <p>Thanks Heolity for testing!</p>
+                  </article>
+
+                  <article>
+                      <h3>27.01.2024</h3>
+                        <p>Say hi to pets. They'll be chillin' in the left corner of the top screen :D</p>
+                        <img src="img/pets/chicken/chicken1.png" style="width: 16%">
+                  </article>
+                  <article>
+                      <h3>21.01.2024</h3>
+                      <p><a href="other/calculator">Calculator</a> and <a href="other/rand">Random Number Generator</a> were added.</p>
+                      <p>As you can see the color scheme was changed to make the site look prettier.</p>
+                      <p>I'm currently working on a weather forecast app. Cheers!</p>
+                  </article>
+                  <article>
+                      <h3>15.01.2024</h3>
+                      <p><a href="games/pong">Pong</a> is there!</p>
+                  </article>
+                  <article>
+                      <h3>01.01.2024</h3>
+                      <p>Happy new year!</p>
+                      <p>I decided to publish an early version of <a href="games/jetfighter">JetFighter</a>. Enjoy! </p>
+                  </article>
+                  <article>
+                      <h3>21.12.2023</h3>
+                      <p>Something cool is on the way!</p>
+                      <img src="games/jetfighter/img/jet.png">
+                  </article>
+                  <article>
+                      <h3>17.12.2023</h3>
+                      <p>
+                          In today's patch, tap controls were added to Jumpy and Pigeon. You can now just tap the screen to jump. It also allows mobile users to
+                          test the games on their phones.
+                      </p>
+                      <p>
+                          In Pigeon, fixed pipes spawning despite the pigeon being dead or the game not started. I accidentally broke it when testing sprite
+                          scaling.
+                      </p>
+                      <p>
+                          Some minor fixes and additional features were added to the website itself.
+                      </p>
+                  </article>
+                  <article>
+                      <h3>13.12.2023</h3>
+                      <a href="games/ttt">Tic-Tac-Toe</a> released along with some minor fixes in the Pigeon game.
+                  </article>
+                  <article>
+                      <h3>12.12.2023</h3>
+                      <img src="games/pigeon/img/wingUp.png">
+                      <p>New game based on Flappy Bird is out!</p>
+                      <a href="games/pigeon">Pigeon</a>!
+                      <p>In near future I might add random events to it like things you have to quickly dodge to make it more interesting, but I think it's already good for now.</p>
+                      <p>It relies on the newly written Game.js library, so I was able to properly test, adapt and fix a lot of bugs while seeing it in action.</p>
+                  </article>
+                  <article>
+                      <h3>05.12.2023</h3>
+                      <p>First game is there! <a href="games/jumpy">Jumpy!</a> </p>
+                      <div style="width: 17px; overflow: hidden">
+                          <img src="games/jumpy/img/jumpy.png" style="width: 72px; height: 26px" alt="jumpy">
+                      </div>
+                      <p>For now the website is going through a lot of technical changes, and I am working on libraries that will allow games to be easily made.</p>
+                      <p>More games and stuff soon!</p>
+                  </article>
+                  <article>
+                      <h3>03.12.2023</h3>
+                      <p>First functional version of the site is complete</p>
+                  </article>
+              </div>
+              <div id="tab-about">
+                  <p>
+                      This website is a small collection of browser games made in JavaScript.
+                  </p>
+                  <p>
+                      Please note that this website uses outdated web standards in order to support the Nintendo 3DS browser, also due to how old the browser is some things may not be possible.
+                  </p>
+                  <p>
+                      If you'd like to suggest a game or create your own with JavaScript, feel free to suggest or open pull requests on the GitHub page.
+                  </p>
+                  <p>
+                      This project is not affiliated with Nintendo, and it's only community driven.
+                  </p>
+                  <h3>Links & contact</h3>
+                  <!--<a href="contact.html" class="only-3ds"><button>Contact form ></button></a>-->
+                  <p class="note">Should be opened on another device</p>
+                  <p class="note only-3ds">Click to reveal the URL</p>
+
+                  <div class="social-link">
+                      <img src="img/logos/github.png">
+                      <a href="https://github.com/Wolfyxon/3ds-web-stuff" class="non-3ds-link">Source code</a>
+                  </div>
+                  <div class="social-link">
+                      <img src="img/logos/discord.png">
+                      <a href="https://discord.com/invite/RztUGCK" class="non-3ds-link">Discord server</a>
+                  </div>
+                  <div class="social-link">
+                      <img src="img/logos/gmail.png">
+                      <a href="mailto:wolfyxon@gmail.com" class="non-3ds-link">wolfyxon@gmail.com</a>
+                  </div>
+
               </div>
           </div>
       </div>
