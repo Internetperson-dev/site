@@ -3,20 +3,29 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Platformer Game</title>
+    <title>Responsive Platformer Game</title>
     <style>
+        body {
+            margin: 0;
+            overflow: hidden; /* Prevents scrollbars from appearing */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh; /* Centers the canvas vertically */
+        }
+
         canvas {
-            background: #cce7ff;
-            display: block;
-            margin: auto;
+            background: #cce7ff; /* Light blue background */
+            display: block; /* Remove margin */
         }
     </style>
 </head>
 <body>
-    <canvas id="gameCanvas" width="800" height="400"></canvas>
+    <canvas id="gameCanvas"></canvas>
     <script>
         var canvas = document.getElementById('gameCanvas');
         var ctx = canvas.getContext('2d');
+        resizeCanvas();
 
         // Player object
         var player = {
@@ -31,6 +40,14 @@
             grounded: false,
         };
 
+        // Platform properties
+        var platform = {
+            x: 0,
+            y: 350,
+            width: canvas.width,
+            height: 20,
+        };
+
         function update() {
             // Apply gravity
             player.speedY += player.gravity;
@@ -39,19 +56,22 @@
             player.x += player.speedX;
             player.y += player.speedY;
 
-            // Simple ground collision
-            if (player.y + player.height >= canvas.height) {
-                player.y = canvas.height - player.height;
-                player.grounded = true;
-                player.speedY = 0;
+            // Collision detection with platform
+            if (player.y + player.height >= platform.y) {
+                player.y = platform.y - player.height; // Snap player to the top of the platform
+                player.grounded = true; // Set grounded to true
+                player.speedY = 0; // Reset vertical speed
             } else {
-                player.grounded = false;
+                player.grounded = false; // Player is not grounded
             }
 
             // Clear the canvas
             ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // Draw the platform
+            ctx.fillStyle = '#4CAF50'; // Green platform color
+            ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
             // Draw the player
-            ctx.fillStyle = '#ff5733';
+            ctx.fillStyle = '#ff5733'; // Player color
             ctx.fillRect(player.x, player.y, player.width, player.height);
         }
 
@@ -101,6 +121,22 @@
             if (e.keyCode === 39 || e.keyCode === 68) keys.right = false; // Right arrow or 'D'
             if (e.keyCode === 38 || e.keyCode === 87 || e.keyCode === 32) keys.up = false; // Up arrow, 'W', or 'Space'
         });
+
+        function resizeCanvas() {
+            // Set canvas size to match the window dimensions while maintaining the aspect ratio
+            var aspectRatio = 800 / 400; // Original canvas dimensions
+            if (window.innerWidth / window.innerHeight < aspectRatio) {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerWidth / aspectRatio;
+            } else {
+                canvas.height = window.innerHeight;
+                canvas.width = window.innerHeight * aspectRatio;
+            }
+            platform.width = canvas.width; // Update platform width
+        }
+
+        // Call resizeCanvas on window resize
+        window.addEventListener('resize', resizeCanvas);
 
         function gameLoop() {
             handleInput();
