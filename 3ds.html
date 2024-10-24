@@ -9,17 +9,57 @@
             margin: 0;
             overflow: hidden;
             background: #87CEFA; /* Sky blue background */
+            position: relative; /* Allow positioning of children */
         }
         canvas {
             background: #ffffff; /* White canvas */
             display: block;
         }
+        /* Custom positions for 3DS screens */
+        #topscreenleft {
+            position: absolute;
+            left: 0px;
+            top: 30px;
+            width: 320px; /* Width of the top left screen */
+            height: 240px; /* Height of the top left screen */
+            overflow: hidden;
+        }
+        #topscreenright {
+            position: absolute;
+            left: 200px;
+            top: 30px;
+            width: 320px; /* Width of the top right screen */
+            height: 240px; /* Height of the top right screen */
+            overflow: hidden;
+        }
+        #bottomscreen {
+            position: absolute;
+            left: 40px;
+            top: 240px;
+            width: 320px; /* Width of the bottom screen */
+            height: 240px; /* Height of the bottom screen */
+            overflow: hidden;
+        }
+        #helpscreen {
+            position: absolute;
+            left: 40px;
+            top: 30px;
+            width: 320px;
+            height: 450px;
+            overflow: hidden;
+            visibility: hidden;
+        }
+        #clear { position: absolute; left: 0px; top: 190px; z-index: 999; }
+        #check { position: absolute; left: 250px; top: 190px; z-index: 999; }
+        #restart { position: absolute; left: 110px; top: 0px; z-index: 999; }
+        #corner { position: absolute; left: 300px; top: 0px; z-index: 999; }
     </style>
     <script>
         var canvas, ctx;
         var player;
         var platforms = [];
         var gravity = 0.5;
+        var is3DS = /Nintendo 3DS/.test(navigator.userAgent);
 
         // Player Object
         function initPlayer() {
@@ -58,8 +98,16 @@
 
         // Resize Canvas
         function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight * 0.75; // Adjust height
+            if (is3DS) {
+                canvas.width = 320; // Width of the bottom screen
+                canvas.height = 240; // Height of the bottom screen
+                canvas.style.position = "absolute";
+                canvas.style.left = "40px"; // Adjust position
+                canvas.style.top = "240px"; // Position for the bottom screen
+            } else {
+                canvas.width = window.innerWidth;
+                canvas.height = window.innerHeight * 0.75; // Adjust height for other browsers
+            }
         }
 
         // Setup Controls
