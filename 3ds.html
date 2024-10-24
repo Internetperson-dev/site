@@ -1,232 +1,115 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <title>3DS Platformer with Touch and Mouse Controls</title>
-  <style>
-    canvas {
-      display: block;
-      margin: 0 auto;
-      background-color: #87CEEB;
-      touch-action: none; /* Disable default scrolling on touch */
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Platformer Game</title>
+    <style>
+        canvas {
+            background: #cce7ff;
+            display: block;
+            margin: auto;
+        }
+    </style>
 </head>
 <body>
-  <canvas id="gameCanvas" width="400" height="240"></canvas>
+    <canvas id="gameCanvas" width="800" height="400"></canvas>
+    <script>
+        var canvas = document.getElementById('gameCanvas');
+        var ctx = canvas.getContext('2d');
 
-  <!-- Platform Script -->
-  <script>
-    function Platform(x, y, width, height, color) {
-      this.x = x;
-      this.y = y;
-      this.width = width;
-      this.height = height;
-      this.color = color;
+        // Player object
+        var player = {
+            x: 50,
+            y: 300,
+            width: 30,
+            height: 30,
+            speedX: 0,
+            speedY: 0,
+            jumpPower: -10,
+            gravity: 0.5,
+            grounded: false,
+        };
 
-      // Draw the platform on the canvas
-      this.draw = function(ctx) {
-        ctx.fillStyle = this.color;
-        ctx.fillRect(this.x, this.y, this.width, this.height);
-      };
-    }
-  </script>
+        function update() {
+            // Apply gravity
+            player.speedY += player.gravity;
 
-  <!-- Player Script -->
-  <script>
-    function Player(x, y, width, height, color) {
-      this.x = x;
-      this.y = y;
-      this.width = width;
-      this.height = height;
-      this.color = color;
-      this.speedX = 0;
-      this.speedY = 0;
-      this.gravity = 0.5;
-      this.jumpPower = -10;
-      this.grounded = false;
+            // Move the player
+            player.x += player.speedX;
+            player.y += player.speedY;
 
-      // Update the player's movement and position
-      this.update = function(platform) {
-        handleInput(this); // Handle keyboard, touch, and mouse inputs
+            // Simple ground collision
+            if (player.y + player.height >= canvas.height) {
+                player.y = canvas.height - player.height;
+                player.grounded = true;
+                player.speedY = 0;
+            } else {
+                player.grounded = false;
+            }
 
-        // Apply gravity
-        this.speedY += this.gravity;
-
-        // Update position
-        this.x += this.speedX;
-        this.y += this.speedY;
-
-        // Keep player within canvas bounds
-        if (this.x < 0) this.x = 0;
-        if (this.x + this.width > canvas.width) this.x = canvas.width - this.width;
-
-        // Platform collision detection
-        if (this.y + this.height > platform.y && this.x + this.width > platform.x && this.x < platform.x + platform.width) {
-          this.y = platform.y - this.height;
-          this.speedY = 0;
-          this.grounded = true;
-        } else {
-          this.grounded = false;
+            // Clear the canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // Draw the player
+            ctx.fillStyle = '#ff5733';
+            ctx.fillRect(player.x, player.y, player.width, player.height);
         }
 
-        // Reset if the player falls off the screen
-        if (this.y > canvas.height) {
-          this.x = 50;
-          this.y = 180;
-          this.speedY = 0;
+        function handleInput() {
+            // Handle keyboard input (for debugging)
+            if (keys.left) {
+                player.speedX = -2;
+            } else if (keys.right) {
+                player.speedX = 2;
+            } else {
+                player.speedX = 0;
+            }
+
+            // Jumping with W, Space, or Up Arrow if player is grounded
+            if (keys.up && player.grounded) {
+                player.speedY = player.jumpPower; // Jump
+                player.grounded = false;
+            }
+
+            // Gamepad input handling
+            var gamepads = navigator.getGamepads();
+            if (gamepads[0]) { // Check if a gamepad is connected
+                var gp = gamepads[0];
+                if (gp.buttons[0].pressed) { // Button A (Cross on PlayStation / A on Xbox)
+                    if (player.grounded) {
+                        player.speedY = player.jumpPower;
+                        player.grounded = false;
+                    }
+                }
+
+                // Axis movement
+                player.speedX = gp.axes[0] * 2; // Left stick X-axis for movement
+            }
         }
-      };
 
-      // Draw the player on the canvas
-      this.draw = function(ctx) {
-        ctx.fillStyle = this.color;
-        ctx.fillRect(this.x, this.y, this.width, this.height);
-      };
-    }
-  </script>
+        // Keyboard input handling
+        var keys = { left: false, right: false, up: false };
 
-<!-- Input Handling Script -->
-<script>
-  // Handle user input (keyboard, touch, and mouse)
-  var keys = { left: false, right: false, up: false };
-  var touchStartY = 0;
-  var touchStartX = 0;
-  var touchActive = false;
-  var mouseActive = false;
-  var mouseStartX = 0;
-  var mouseStartY = 0;
+        window.addEventListener('keydown', function(e) {
+            if (e.keyCode === 37 || e.keyCode === 65) keys.left = true;   // Left arrow or 'A'
+            if (e.keyCode === 39 || e.keyCode === 68) keys.right = true;  // Right arrow or 'D'
+            if (e.keyCode === 38 || e.keyCode === 87 || e.keyCode === 32) keys.up = true;  // Up arrow, 'W', or 'Space'
+        });
 
-  // Keyboard event listeners for W, A, D, Space (and keeping arrow keys support)
-  window.addEventListener('keydown', function(e) {
-    if (e.keyCode === 37 || e.keyCode === 65) keys.left = true;   // Left arrow or 'A'
-    if (e.keyCode === 39 || e.keyCode === 68) keys.right = true;  // Right arrow or 'D'
-    if (e.keyCode === 38 || e.keyCode === 87 || e.keyCode === 32) keys.up = true;  // Up arrow, 'W', or 'Space'
-  });
+        window.addEventListener('keyup', function(e) {
+            if (e.keyCode === 37 || e.keyCode === 65) keys.left = false;  // Left arrow or 'A'
+            if (e.keyCode === 39 || e.keyCode === 68) keys.right = false; // Right arrow or 'D'
+            if (e.keyCode === 38 || e.keyCode === 87 || e.keyCode === 32) keys.up = false; // Up arrow, 'W', or 'Space'
+        });
 
-  window.addEventListener('keyup', function(e) {
-    if (e.keyCode === 37 || e.keyCode === 65) keys.left = false;  // Left arrow or 'A'
-    if (e.keyCode === 39 || e.keyCode === 68) keys.right = false; // Right arrow or 'D'
-    if (e.keyCode === 38 || e.keyCode === 87 || e.keyCode === 32) keys.up = false; // Up arrow, 'W', or 'Space'
-  });
+        function gameLoop() {
+            handleInput();
+            update();
+            requestAnimationFrame(gameLoop);
+        }
 
-  // Touch event listeners
-  canvas.addEventListener('touchstart', function(e) {
-    var touch = e.touches[0];
-    touchStartY = touch.clientY;
-    touchStartX = touch.clientX;
-    touchActive = true;
-  });
-
-  canvas.addEventListener('touchend', function(e) {
-    touchActive = false;
-    if (touchStartY - e.changedTouches[0].clientY > 30 && player.grounded) {
-      player.speedY = player.jumpPower; // Jump on flick
-      player.grounded = false;
-    }
-  });
-
-  // Mouse event listeners separated into its own section
-  function setupMouseControls() {
-    canvas.addEventListener('mousedown', function(e) {
-      mouseStartX = e.clientX;
-      mouseStartY = e.clientY;
-      mouseActive = true;
-      console.log('Mouse down at X:', mouseStartX, 'Y:', mouseStartY);
-
-      // Determine movement direction based on mouse click position
-      if (mouseStartX < canvas.width / 2) {
-        player.speedX = -2; // Move left
-        console.log('Player moving left');
-      } else if (mouseStartX > canvas.width / 2) {
-        player.speedX = 2; // Move right
-        console.log('Player moving right');
-      }
-    });
-
-    canvas.addEventListener('mouseup', function(e) {
-      mouseActive = false;
-      console.log('Mouse up at X:', e.clientX, 'Y:', e.clientY);
-
-      // Stop movement when mouse is released
-      player.speedX = 0;
-
-      // Handle jumping if mouse drag is detected
-      if (mouseStartY - e.clientY > 30 && player.grounded) {
-        player.speedY = player.jumpPower; // Jump on upward drag
-        player.grounded = false;
-        console.log('Player jumped');
-      }
-    });
-  }
-
-  // Call to set up mouse controls
-  setupMouseControls();
-
-  // Handle input (keyboard, touch, and mouse)
-  function handleInput(player) {
-    // Keyboard input (W, A, D, Space, or Arrow keys)
-    if (keys.left) {
-      player.speedX = -2;
-    } else if (keys.right) {
-      player.speedX = 2;
-    } else if (!mouseActive) { // Stop if mouse isn't actively moving
-      player.speedX = 0;
-    }
-
-    // Jumping with W, Space, or Up Arrow if player is grounded
-    if (keys.up && player.grounded) {
-      player.speedY = player.jumpPower; // Jump
-      player.grounded = false;
-      console.log('Player jumped via keyboard');
-    }
-
-    // Touch input
-    if (touchActive) {
-      if (touchStartX < canvas.width / 2) {
-        player.speedX = -2;
-      } else if (touchStartX > canvas.width / 2) {
-        player.speedX = 2;
-      }
-    }
-  }
-</script>
-  
-  <!-- Main Game Logic Script -->
-  <script>
-    // Get the canvas and its context
-    var canvas = document.getElementById('gameCanvas');
-    var ctx = canvas.getContext('2d');
-
-    // Platform object
-    var platform = new Platform(0, 200, 400, 20, 'green');
-
-    // Player object
-    var player = new Player(50, 180, 20, 20, 'red');
-
-    // Game loop
-    function gameLoop() {
-      update();
-      draw();
-      setTimeout(gameLoop, 1000 / 60); // 60 FPS
-    }
-
-    // Update game state
-    function update() {
-      player.update(platform);
-    }
-
-    // Draw game state
-    function draw() {
-      // Clear canvas
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Draw player and platform
-      player.draw(ctx);
-      platform.draw(ctx);
-    }
-
-    // Start game loop
-    gameLoop();
-  </script>
+        // Start the game loop
+        gameLoop();
+    </script>
 </body>
 </html>
