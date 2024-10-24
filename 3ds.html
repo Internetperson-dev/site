@@ -1,131 +1,256 @@
-<!DOCTYPE html>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+        "http://www.w3.org/TR/html4/loose.dtd">
 <html lang="en">
 <head>
+    <title>3DS Web stuff - home</title>
+    <!-- DO NOT DELETE -->
+    <meta name="google-site-verification" content="CEp8re5xPxShHGl3Z04NXVKOKE-OgXujmu6jYVBIXqE" />
+    
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Platformer Game with 3DS Controls</title>
-    <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-        }
-        canvas {
-            display: block;
-        }
-        /* Adjust the canvas size for the 3DS screen */
-        #gameCanvas {
-            width: 400px;
-            height: 240px;
-        }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
+
+    <!-- Use CSS and JS from the 3DS Web Stuff repository -->
+    <link rel="stylesheet" href="https://wolfyxon.github.io/3ds-web-stuff/assets/style.css">
+    
+    <meta content="3DS Web Stuff" property="og:title" />
+    <meta content="A collection of games and other stuff designed specifically for the Nintendo 3DS browser" property="og:description" />
+    <meta name="description" content="A collection of games and other stuff designed specifically for the Nintendo 3DS browser">
+
+    <script src="https://wolfyxon.github.io/3ds-web-stuff/assets/javascript.js" type="text/javascript"></script>
+
 </head>
 <body>
+  <div id="screens">
+      <div id="top-screen">
+          <div id="title-zone">
+              <h1>3DS Web stuff</h1>
+              <p>by Wolfyxon</p>
+          </div>
+          <p>
+              A little collection of games and other stuff designed for the Nintendo 3DS online browser.
+          </p>
+          <h4>Gamepad controls</h4>
+          <table id="controls">
+              <tr>
+                  <td>&#xE07B;</td><td>Previous tab</td> <td>&#xE07C;</td><td>Next tab</td>
+              </tr>
+              <tr>
+                  <td>&#xE079;</td><td>Scroll up</td> <td>&#xE07A;</td><td>Scroll down</td>
+              </tr>
 
-<canvas id="gameCanvas"></canvas>
+          </table>
+          <span id="pet" class="animated"></span>
+      </div>
+      <div id="bottom-screen">
+          <div id="tab-btns">
+              <span data-id="0">Games</span>
+              <span data-id="1">Other</span>
+              <span data-id="2">News</span>
+              <span data-id="3">About</span>
+          </div>
+          <div id="tabs">
+              <div id="tab-games">
+                  <div class="app-list">
+                      <a href="games/pigeon">
+                          <img class="app-icon" src="games/pigeon/icon.png" alt="Pigeon icon">
+                          <div class="app-text">
+                              <p class="app-name">Pigeon</p>
+                              <p class="app-description">Fly between pipes</p>
+                          </div>
+                      </a>
+                      <a href="games/jumpy">
+                          <img class="app-icon" src="games/jumpy/icon.png" alt="Jumpy icon">
+                          <div class="app-text">
+                              <p class="app-name">Jumpy</p>
+                              <p class="app-description">Jump and avoid spikes</p>
+                          </div>
+                      </a>
+                      <a href="games/snake">
+                          <img class="app-icon" src="games/snake/icon.png" alt="Snake icon">
+                          <div class="app-text">
+                              <p class="app-name">Snake</p>
+                              <p class="app-description">Eat apples to grow</p>
+                              <!-- <span class="tag tag-dsi"></span> -->
+                          </div>
+                      </a>
+                      <a href="games/minesweeper">
+                          <img class="app-icon" src="games/minesweeper/img/bomb.png" alt="Minesweeper icon">
+                          <div class="app-text">
+                              <p class="app-name">MineSweeper</p>
+                              <p class="app-description">Uncover tiles and watch for the mines</p>
+                              <span class="tag tag-dsi"></span>
+                          </div>
+                      </a>
+                      <a href="games/breakout">
+                          <img class="app-icon" src="games/breakout/icon.png" alt="Breakout icon">
+                          <div class="app-text">
+                              <p class="app-name">Breakout</p>
+                              <p class="app-description">Destroy blocks and keep the ball up</p>
+                              <span class="tag tag-early-access"></span>
+                          </div>
+                      </a>
+                      <a href="games/jetfighter">
+                          <img class="app-icon" src="games/jetfighter/img/jet.png" alt="JetFighter icon">
+                          <div class="app-text">
+                              <p class="app-name">JetFighter</p>
+                              <p class="app-description">Take down the evil helicopters!</p>
+                              <span class="tag tag-early-access"></span>
+                          </div>
+                      </a>
+                      <a href="games/pong">
+                          <img class="app-icon" src="games/pong/icon.png" alt="Pong icon">
+                          <div class="app-text">
+                              <p class="app-name">Pong!</p>
+                              <p class="app-description">Play ping-pong with an AI.</p>
+                          </div>
+                      </a>
+                      <a href="games/ttt">
+                          <img class="app-icon" src="games/ttt/icon.png" alt="Tic-Tac-Toe icon">
+                          <div class="app-text">
+                              <p class="app-name">Tic-Tac-Toe</p>
+                              <p class="app-description">Place X and O to make a pattern.</p>
+                              <span class="tag tag-dsi"></span>
+                          </div>
+                      </a>
+                      <a href="games/sudoku">
+                          <img class="app-icon" src="games/sudoku/icon.png" alt="Sudoku icon">
+                          <div class="app-text">
+                              <p class="app-name">Sudoku</p>
+                              <p class="app-description">Don't repeat numbers!</p>
+                              <span class="tag tag-dsi"></span>
+                          </div>
+                      </a>
+                      <a href="games/connect4">
+                          <img class="app-icon" src="games/connect4/icon.png" alt="Connect 4 icon">
+                          <div class="app-text">
+                              <p class="app-name">Connect 4</p>
+                              <p class="app-description">Connect 4 points</p>
+                              <span class="tag tag-dsi"></span>
+                          </div>
+                      </a>
+                      <a href="games/hangman">
+                          <img class="app-icon" src="games/hangman/icon.png" alt="Hangman icon">
+                          <div class="app-text">
+                              <p class="app-name">Hangman</p>
+                              <p class="app-description">Guess the word</p>
+                              <span class="tag tag-dsi"></span>
+                          </div>
+                      </a>
+                      <a href="games/picross">
+                        <img class="app-icon" src="" alt="Picross icon">
+                        <div class="app-text">
+                            <p class="app-name">Picross</p>
+                            <p class="app-description">Fill the cells</p>
+                            <span class="tag tag-early-access"></span>
+                        </div>
+                    </a>
+                      <a href="games/simon">
+                          <img class="app-icon" src="" alt="Simon icon">
+                          <div class="app-text">
+                              <p class="app-name">Simon</p>
+                              <p class="app-description">Remember the lights</p>
+                              <span class="tag tag-dsi"></span>
+                          </div>
+                      </a>
+                  </div>
+              </div>
+              <div id="tab-other">
+                  <div class="app-list">
 
-<script>
-    const canvas = document.getElementById('gameCanvas');
-    const ctx = canvas.getContext('2d');
+                      <a href="other/calculator">
+                          <img class="app-icon" src="other/calculator/icon.png" alt="Calculator icon">
+                          <div class="app-text">
+                              <p class="app-name">Calculator</p>
+                              <p class="app-description">Just a calculator</p>
+                              <span class="tag tag-dsi"></span>
+                          </div>
+                      </a>
 
-    // Set canvas size to fit 3DS screen
-    if (is3DS()) {
-        canvas.width = 400;
-        canvas.height = 240;
-    } else {
-        canvas.width = 800; // Desktop default size
-        canvas.height = 400;
-    }
+                      <a href="other/brush">
+                          <img class="app-icon" src="other/brush/icon.png" alt="Brush icon">
+                          <div class="app-text">
+                              <p class="app-name">Brush</p>
+                              <p class="app-description">A drawing app</p>
+                              <span class="tag tag-early-access"></span>
+                          </div>
+                      </a>
 
-    // Platformer game variables
-    let player = {
-        x: 50,
-        y: 50,
-        width: 20,
-        height: 20,
-        speed: 5,
-        velocityY: 0,
-        gravity: 0.5,
-        onGround: false
-    };
+                      <a href="other/hack">
+                          <img class="app-icon" src="other/hack/icon.png" alt="Hack icon">
+                          <div class="app-text">
+                              <p class="app-name">Hack</p>
+                              <p class="app-description">Totally real hacking interface</p>
+                          </div>
+                      </a>
 
-    let keys = {};
+                      <a href="other/timer">
+                        <img class="app-icon" src="img/test.png" alt="Timer icon">
+                        <div class="app-text">
+                            <p class="app-name">Timer</p>
+                            <p class="app-description">Measure time</p>
+                        </div>
+                    </a>
 
-    // Detect if it's a 3DS browser
-    function is3DS() {
-        return window.navigator.userAgent.includes("Nintendo 3DS");
-    }
+                      <a href="other/coder/">
+                          <img class="app-icon" src="other/coder/icon.png" alt="Coder">
+                          <div class="app-text">
+                              <p class="app-name">Coder</p>
+                              <p class="app-description">Turn text into encoded images</p>
+                              <span class="tag tag-dsi"></span>
+                          </div>
+                      </a>
 
-    // Handle keydown events for controls (D-pad and buttons)
-    window.addEventListener('keydown', function (e) {
-        const key = keycodes[e.keyCode];
-        if (key) {
-            keys[key] = true;
-        }
-    });
+                      <a href="other/unitConverter">
+                        <img class="app-icon" src="img/test.png" alt="Unit converter icon">
+                        <div class="app-text">
+                            <p class="app-name">Unit converter</p>
+                            <p class="app-description">Convert between units</p>
+                        </div>
+                    </a>
 
-    // Handle keyup events
-    window.addEventListener('keyup', function (e) {
-        const key = keycodes[e.keyCode];
-        if (key) {
-            keys[key] = false;
-        }
-    });
+                    <a href="other/rand">
+                        <img class="app-icon" src="img/test.png" alt="Rand icon">
+                        <div class="app-text">
+                            <p class="app-name">Random number generator</p>
+                            <p class="app-description">Generate random numbers in a range</p>
+                            <span class="tag tag-dsi"></span>
+                        </div>
+                    </a>
 
-    // Keycodes for 3DS D-pad and A button
-    const keycodes = {
-        13: "A",     // Enter key
-        65: "A",     // A key
-        37: "Left",  // Left arrow
-        38: "Up",    // Up arrow
-        39: "Right", // Right arrow
-        40: "Down"   // Down arrow
-    };
-
-    // Game update function (runs every frame)
-    function update() {
-        // Player movement logic
-        if (keys["Left"]) {
-            player.x -= player.speed;
-        }
-        if (keys["Right"]) {
-            player.x += player.speed;
-        }
-        if (keys["Up"] && player.onGround) {
-            player.velocityY = -10; // Jump
-            player.onGround = false;
-        }
-
-        // Apply gravity
-        player.velocityY += player.gravity;
-        player.y += player.velocityY;
-
-        // Collision detection (simple ground check)
-        if (player.y + player.height > canvas.height) {
-            player.y = canvas.height - player.height;
-            player.velocityY = 0;
-            player.onGround = true;
-        }
-
-        // Clear canvas
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        // Draw player
-        ctx.fillStyle = 'blue';
-        ctx.fillRect(player.x, player.y, player.width, player.height);
-
-        requestAnimationFrame(update);
-    }
-
-    // Start the game loop
-    update();
-
-    // Prevent arrow keys from scrolling the page
-    window.addEventListener("keydown", function(e) {
-        if ([37, 38, 39, 40].includes(e.keyCode)) {
-            e.preventDefault();
-        }
-    });
-</script>
-
+                      <a href="other/debug">
+                          <img class="app-icon" src="img/test.png" alt="Debug icon">
+                          <div class="app-text">
+                              <p class="app-name">Debug</p>
+                              <p class="app-description">Some testing</p>
+                          </div>
+                      </a>
+                      <a href="other/font">
+                          <img class="app-icon" src="img/test.png" alt="Font test icon">
+                          <div class="app-text">
+                              <p class="app-name">Font test</p>
+                              <p class="app-description">3DS font test</p>
+                              <span class="tag tag-dsi"></span>
+                          </div>
+                      </a>
+                      <a href="other/elmGameTest">
+                          <img class="app-icon" src="img/test.png" alt="Element game test icon">
+                          <div class="app-text">
+                              <p class="app-name">elementGame.js</p>
+                              <p class="app-description">elementGame.js library test</p>
+                          </div>
+                      </a>
+                  </div>
+              </div>
+              <div id="tab-news">
+                <article>
+                    <h3>19.08.2024</h3>
+                    <p>
+                        <a href="games/breakout/">Breakout</a> is finally playable on Old 3DS thanks to magiczocker10!
+                    </p>
+                  </article>
+              </div>
+          </div>
+      </div>
+  </div>
 </body>
 </html>
