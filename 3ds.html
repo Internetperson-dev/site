@@ -125,32 +125,42 @@
     }
   });
 
-  // Mouse event listeners
-  canvas.addEventListener('mousedown', function(e) {
-    mouseStartX = e.clientX;
-    mouseStartY = e.clientY;
-    mouseActive = true;
+  // Mouse event listeners separated into its own section
+  function setupMouseControls() {
+    canvas.addEventListener('mousedown', function(e) {
+      mouseStartX = e.clientX;
+      mouseStartY = e.clientY;
+      mouseActive = true;
+      console.log('Mouse down at X:', mouseStartX, 'Y:', mouseStartY);
 
-    // Determine movement direction based on mouse click position
-    if (mouseStartX < canvas.width / 2) {
-      player.speedX = -2; // Move left
-    } else if (mouseStartX > canvas.width / 2) {
-      player.speedX = 2; // Move right
-    }
-  });
+      // Determine movement direction based on mouse click position
+      if (mouseStartX < canvas.width / 2) {
+        player.speedX = -2; // Move left
+        console.log('Player moving left');
+      } else if (mouseStartX > canvas.width / 2) {
+        player.speedX = 2; // Move right
+        console.log('Player moving right');
+      }
+    });
 
-  canvas.addEventListener('mouseup', function(e) {
-    mouseActive = false;
-    
-    // Stop movement when mouse is released
-    player.speedX = 0;
+    canvas.addEventListener('mouseup', function(e) {
+      mouseActive = false;
+      console.log('Mouse up at X:', e.clientX, 'Y:', e.clientY);
 
-    // Handle jumping if mouse drag is detected
-    if (mouseStartY - e.clientY > 30 && player.grounded) {
-      player.speedY = player.jumpPower; // Jump on upward drag
-      player.grounded = false;
-    }
-  });
+      // Stop movement when mouse is released
+      player.speedX = 0;
+
+      // Handle jumping if mouse drag is detected
+      if (mouseStartY - e.clientY > 30 && player.grounded) {
+        player.speedY = player.jumpPower; // Jump on upward drag
+        player.grounded = false;
+        console.log('Player jumped');
+      }
+    });
+  }
+
+  // Call to set up mouse controls
+  setupMouseControls();
 
   // Handle input (keyboard, touch, and mouse)
   function handleInput(player) {
@@ -167,6 +177,7 @@
     if (keys.up && player.grounded) {
       player.speedY = player.jumpPower; // Jump
       player.grounded = false;
+      console.log('Player jumped via keyboard');
     }
 
     // Touch input
@@ -179,9 +190,6 @@
     }
   }
 </script>
-
-
-  
   
   <!-- Main Game Logic Script -->
   <script>
