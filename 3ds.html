@@ -3,188 +3,142 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Platformer Game - Super Mario Bros. 1-1</title>
-    <style>
-        body {
-            margin: 0;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            background: #87CEEB; /* Sky blue background */
-        }
-        canvas {
-            background: #ffffff;
-            display: block;
-        }
-    </style>
-</head>
-<body>
-    <canvas id="gameCanvas"></canvas>
+    <title>3DS Platformer Game</title>
     <script>
-        // Set up canvas
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-        const originalWidth = 800;  // Original canvas width
-        const originalHeight = 600; // Original canvas height
-        const scale = Math.min(window.innerWidth / originalWidth, window.innerHeight / originalHeight);
-        resizeCanvas(scale);
+        // Game Variables
+        let canvas, ctx;
+        let player;
+        let platforms = [];
+        const gravity = 0.5;
 
-        // Player object
-        const player = {
+        // Player Object
+        player = {
             x: 50,
-            y: 200,
-            width: 32 * scale,
-            height: 32 * scale,
+            y: 150,
+            width: 32,
+            height: 32,
             speedX: 0,
             speedY: 0,
-            jumpPower: -20, // Jump power
-            gravity: 0.8 * scale, // Gravity
+            jumpPower: -10,
             grounded: false,
-            sprite: new Image(),
-            spriteSrc: 'player.gif', // Path to your animated sprite
-            speed: 200 * scale // Player speed in pixels per second
+            color: 'red'
         };
 
-        // Load the sprite
-        player.sprite.src = player.spriteSrc;
+        // Platform Properties
+        platforms.push({ x: 0, y: 200, width: 800, height: 20 }); // Ground
+        platforms.push({ x: 100, y: 150, width: 100, height: 20 }); // Floating platform
+        platforms.push({ x: 300, y: 100, width: 100, height: 20 }); // Another floating platform
+        platforms.push({ x: 500, y: 50, width: 100, height: 20 });  // High platform
 
-        // Platform properties (1-1 from Super Mario Bros)
-        const platforms = [
-            { x: 0, y: 370 * scale, width: originalWidth * scale, height: 20 * scale }, // Ground
-            { x: 100 * scale, y: 320 * scale, width: 150 * scale, height: 20 * scale }, // Platform 1
-            { x: 300 * scale, y: 250 * scale, width: 150 * scale, height: 20 * scale }, // Platform 2
-            { x: 500 * scale, y: 320 * scale, width: 150 * scale, height: 20 * scale }, // Platform 3
-            { x: 700 * scale, y: 370 * scale, width: 100 * scale, height: 20 * scale }, // Right edge
-            { x: 150 * scale, y: 200 * scale, width: 100 * scale, height: 20 * scale }, // Floating Platform 1
-            { x: 400 * scale, y: 150 * scale, width: 100 * scale, height: 20 * scale }, // Floating Platform 2
-        ];
-
-        // Reset position if player falls off
-        function resetPlayer() {
-            player.x = 50;
-            player.y = 200;
-            player.speedX = 0;
-            player.speedY = 0;
+        // Initialize Canvas
+        function init() {
+            canvas = document.createElement('canvas');
+            ctx = canvas.getContext('2d');
+            document.body.appendChild(canvas);
+            resizeCanvas();
+            window.addEventListener('resize', resizeCanvas);
+            setupControls();
+            gameLoop();
         }
 
-        // Handle input
-        const keys = { left: false, right: false, up: false };
+        // Resize Canvas
+        function resizeCanvas() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight * 0.75; // Adjust height
+            player.y = Math.min(player.y, canvas.height - player.height); // Ensure player stays within bounds
+        }
 
-        window.addEventListener('keydown', (e) => {
-            if (e.key === 'ArrowLeft' || e.key === 'a') keys.left = true;
-            if (e.key === 'ArrowRight' || e.key === 'd') keys.right = true;
-            if (e.key === 'ArrowUp' || e.key === 'w' || e.key === ' ') keys.up = true;
-        });
+        // Setup Controls
+        function setupControls() {
+            // Handle keyboard inputs
+            document.addEventListener('keydown', (e) => {
+                switch (e.code) {
+                    case 'ArrowLeft':
+                    case 'KeyA':
+                        player.speedX = -5;
+                        break;
+                    case 'ArrowRight':
+                    case 'KeyD':
+                        player.speedX = 5;
+                        break;
+                    case 'ArrowUp':
+                    case 'Space':
+                    case 'KeyW':
+                        jump();
+                        break;
+                }
+            });
 
-        window.addEventListener('keyup', (e) => {
-            if (e.key === 'ArrowLeft' || e.key === 'a') keys.left = false;
-            if (e.key === 'ArrowRight' || e.key === 'd') keys.right = false;
-            if (e.key === 'ArrowUp' || e.key === 'w' || e.key === ' ') keys.up = false;
-        });
+            document.addEventListener('keyup', (e) => {
+                if (e.code === 'ArrowLeft' || e.code === 'KeyA' || e.code === 'ArrowRight' || e.code === 'KeyD') {
+                    player.speedX = 0; // Stop horizontal movement
+                }
+            });
+        }
 
-        function handleInput(deltaTime) {
-            // Handle player movement
-            if (keys.left) {
-                player.speedX = -player.speed * deltaTime; // Move left
-            } else if (keys.right) {
-                player.speedX = player.speed * deltaTime; // Move right
-            } else {
-                player.speedX = 0; // Stop horizontal movement
-            }
-
-            // Jumping
-            if (keys.up && player.grounded) {
+        // Jump Function
+        function jump() {
+            if (player.grounded) {
                 player.speedY = player.jumpPower; // Jump
                 player.grounded = false;
             }
         }
 
-        function update(deltaTime) {
-            // Apply gravity
-            player.speedY += player.gravity;
-
-            // Move the player
+        // Update Game Logic
+        function update() {
+            player.speedY += gravity; // Apply gravity
             player.x += player.speedX;
             player.y += player.speedY;
 
             // Collision detection with platforms
-            player.grounded = false;
+            player.grounded = false; // Reset grounded status
             platforms.forEach(platform => {
                 if (player.y + player.height >= platform.y && 
                     player.x + player.width >= platform.x && 
                     player.x <= platform.x + platform.width) {
                     player.y = platform.y - player.height; // Snap player to the top of the platform
-                    player.grounded = true;
+                    player.grounded = true; // Set grounded to true
                     player.speedY = 0; // Reset vertical speed
                 }
             });
 
-            // Invisible walls (left and right)
-            if (player.x < 0) {
-                player.x = 0; // Prevent moving left out of bounds
-            } else if (player.x + player.width > canvas.width) {
-                player.x = canvas.width - player.width; // Prevent moving right out of bounds
-            }
-
-            // Restart if player falls into a gap
+            // Reset player if falling off the screen
             if (player.y > canvas.height) {
-                resetPlayer(); // Reset the player's position if they fall off the screen
+                resetPlayer();
             }
+        }
 
-            // Clear the canvas
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        // Reset Player Position
+        function resetPlayer() {
+            player.x = 50;
+            player.y = 150;
+            player.speedY = 0;
+        }
+
+        // Render Game Elements
+        function render() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+            ctx.fillStyle = player.color;
+            ctx.fillRect(player.x, player.y, player.width, player.height); // Draw player
 
             // Draw platforms
-            ctx.fillStyle = '#4CAF50'; // Green platform color
+            ctx.fillStyle = 'green';
             platforms.forEach(platform => {
                 ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
             });
-
-            // Draw player with mirroring when moving left
-            ctx.save(); // Save the current context
-            ctx.translate(player.x + player.width / 2, player.y + player.height / 2); // Move origin to player center
-
-            // Scale the player based on movement direction
-            if (player.speedX < 0) {
-                ctx.scale(-1, 1); // Mirror for left movement
-            }
-
-            // Draw the player sprite
-            ctx.drawImage(player.sprite, -player.width / 2, -player.height / 2, player.width, player.height);
-            ctx.restore(); // Restore the context to the original state
         }
 
-        // Resize canvas function
-        function resizeCanvas(scale) {
-            canvas.width = originalWidth * scale;
-            canvas.height = originalHeight * scale;
+        // Game Loop
+        function gameLoop() {
+            update();
+            render();
+            requestAnimationFrame(gameLoop); // Loop at ~60 FPS
         }
 
-        let lastTime = 0;
-        function gameLoop(timestamp) {
-            const deltaTime = (timestamp - lastTime) / 1000; // Time since last frame in seconds
-            lastTime = timestamp;
-
-            handleInput(deltaTime);
-            update(deltaTime);
-            requestAnimationFrame(gameLoop); // Run the loop at 60 FPS
-        }
-
-        // Start the game loop
-        gameLoop();
-        window.addEventListener('resize', () => {
-            const newScale = Math.min(window.innerWidth / originalWidth, window.innerHeight / originalHeight);
-            resizeCanvas(newScale);
-            player.width = 32 * newScale;
-            player.height = 32 * newScale;
-            platforms.forEach(platform => {
-                platform.width = originalWidth * newScale;
-                platform.height = 20 * newScale;
-                platform.y = Math.floor(platform.y * newScale); // Adjust platform height position
-            });
-        });
+        // Start Game
+        window.onload = init;
     </script>
+</head>
+<body>
 </body>
 </html>
