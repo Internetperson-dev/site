@@ -7,17 +7,16 @@
     <style>
         body {
             margin: 0;
-            overflow: hidden; /* Prevents scrollbars from appearing */
+            overflow: hidden;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh; /* Centers the canvas vertically */
-            background: #cce7ff; /* Light blue background */
+            height: 100vh;
+            background: #cce7ff;
         }
-
         canvas {
-            background: #ffffff; /* Canvas color */
-            display: block; /* Remove margin */
+            background: #ffffff;
+            display: block;
         }
     </style>
 </head>
@@ -25,170 +24,46 @@
     <canvas id="gameCanvas"></canvas>
     <script>
         // Set up canvas
-        var canvas = document.getElementById('gameCanvas');
-        var ctx = canvas.getContext('2d');
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
         resizeCanvas();
 
-// Player object
-var player = {
-    x: 50,
-    y: 200,
-    width: 32,
-    height: 32,
-    speedX: 0,
-    speedY: 0,
-    jumpPower: -12,
-    gravity: 0.5,
-    grounded: false,
-    sprite: new Image(),
-    spriteWidth: 32, // Width of one sprite frame
-    spriteHeight: 32, // Height of one sprite frame
-    currentFrame: 0,
-    totalFrames: 4, // Set this according to your sprite sheet frames
-    frameDelay: 5, // Delay between frames
-    frameCount: 0 // Frame counter
-};
+        // Player object
+        const player = {
+            x: 50,
+            y: 200,
+            width: 32,
+            height: 32,
+            speedX: 0,
+            speedY: 0,
+            jumpPower: -12,
+            gravity: 0.5,
+            grounded: false,
+            sprite: new Image(),
+            spriteSrc: 'player.gif', // Path to your animated sprite
+        };
 
-// Load the sprite sheet
-player.sprite.src = 'path_to_your_sprite_sheet.png'; // Update with the path to your sprite sheet
-
-// Update animation logic
-function update() {
-    // Move player and apply gravity...
-
-    // Update animation
-    if (player.speedX !== 0) {
-        player.frameCount++;
-        if (player.frameCount >= player.frameDelay) {
-            player.frameCount = 0;
-            player.currentFrame = (player.currentFrame + 1) % player.totalFrames; // Loop through frames
-        }
-    } else {
-        player.currentFrame = 0; // Reset to idle frame if not moving
-    }
-
-    // Draw player animation
-    ctx.drawImage(
-        player.sprite,
-        player.currentFrame * player.spriteWidth,
-        0,
-        player.spriteWidth,
-        player.spriteHeight,
-        player.x,
-        player.y,
-        player.width,
-        player.height
-    );
-}
-
-
-// Load the sprite sheet
-player.sprite.src = 'https://opengameart.org/sites/default/files/2d_character_spritesheet.png';
-
-// Update game logic
-function update() {
-    // Apply gravity
-    player.speedY += player.gravity;
-
-    // Move the player
-    player.x += player.speedX;
-    player.y += player.speedY;
-
-    // Collision detection with platforms
-    player.grounded = false; // Reset grounded status
-    platforms.forEach(platform => {
-        if (player.y + player.height >= platform.y && player.x + player.width >= platform.x && player.x <= platform.x + platform.width) {
-            player.y = platform.y - player.height; // Snap player to the top of the platform
-            player.grounded = true; // Set grounded to true
-            player.speedY = 0; // Reset vertical speed
-        }
-    });
-
-    // Update animation
-    if (player.speedX !== 0) {
-        player.frameCount++;
-        if (player.frameCount >= player.frameDelay) {
-            player.frameCount = 0;
-            player.currentFrame = (player.currentFrame + 1) % player.totalFrames; // Loop through frames
-        }
-    } else {
-        player.currentFrame = 0; // Reset to idle frame
-    }
-
-    // Clear the canvas
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // Draw platforms
-    ctx.fillStyle = '#4CAF50'; // Green platform color
-    platforms.forEach(platform => {
-        ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
-    });
-
-    // Draw player animation
-    ctx.drawImage(
-        player.sprite,
-        player.currentFrame * player.spriteWidth, // X position of the frame in the sprite sheet
-        0, // Y position of the frame in the sprite sheet
-        player.spriteWidth,
-        player.spriteHeight,
-        player.x,
-        player.y,
-        player.width,
-        player.height
-    );
-}
-
+        // Load the sprite
+        player.sprite.src = player.spriteSrc;
 
         // Platform properties
-        var platforms = [
-            { x: 0, y: 350, width: 800, height: 20 } // Ground platform
+        const platforms = [
+            { x: 0, y: 350, width: canvas.width, height: 20 } // Ground platform
         ];
 
-        // Update game logic
-        function update() {
-            // Apply gravity
-            player.speedY += player.gravity;
-
-            // Move the player
-            player.x += player.speedX;
-            player.y += player.speedY;
-
-            // Collision detection with platforms
-            player.grounded = false; // Reset grounded status
-            platforms.forEach(platform => {
-                if (player.y + player.height >= platform.y && player.x + player.width >= platform.x && player.x <= platform.x + platform.width) {
-                    player.y = platform.y - player.height; // Snap player to the top of the platform
-                    player.grounded = true; // Set grounded to true
-                    player.speedY = 0; // Reset vertical speed
-                }
-            });
-
-            // Clear the canvas
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Draw platforms
-            ctx.fillStyle = '#4CAF50'; // Green platform color
-            platforms.forEach(platform => {
-                ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
-            });
-
-            // Draw player
-            ctx.drawImage(player.sprite, player.x, player.y, player.width, player.height);
-        }
-
         // Handle input
-        var keys = { left: false, right: false, up: false };
+        const keys = { left: false, right: false, up: false };
 
-        window.addEventListener('keydown', function(e) {
-            if (e.keyCode === 37 || e.keyCode === 65) keys.left = true;   // Left arrow or 'A'
-            if (e.keyCode === 39 || e.keyCode === 68) keys.right = true;  // Right arrow or 'D'
-            if (e.keyCode === 38 || e.keyCode === 87 || e.keyCode === 32) keys.up = true;  // Up arrow, 'W', or 'Space'
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft' || e.key === 'a') keys.left = true;
+            if (e.key === 'ArrowRight' || e.key === 'd') keys.right = true;
+            if (e.key === 'ArrowUp' || e.key === 'w' || e.key === ' ') keys.up = true;
         });
 
-        window.addEventListener('keyup', function(e) {
-            if (e.keyCode === 37 || e.keyCode === 65) keys.left = false;  // Left arrow or 'A'
-            if (e.keyCode === 39 || e.keyCode === 68) keys.right = false; // Right arrow or 'D'
-            if (e.keyCode === 38 || e.keyCode === 87 || e.keyCode === 32) keys.up = false; // Up arrow, 'W', or 'Space'
+        window.addEventListener('keyup', (e) => {
+            if (e.key === 'ArrowLeft' || e.key === 'a') keys.left = false;
+            if (e.key === 'ArrowRight' || e.key === 'd') keys.right = false;
+            if (e.key === 'ArrowUp' || e.key === 'w' || e.key === ' ') keys.up = false;
         });
 
         function handleInput() {
@@ -206,6 +81,43 @@ function update() {
                 player.speedY = player.jumpPower; // Jump
                 player.grounded = false;
             }
+        }
+
+        function update() {
+            // Apply gravity
+            player.speedY += player.gravity;
+
+            // Move the player
+            player.x += player.speedX;
+            player.y += player.speedY;
+
+            // Collision detection with platforms
+            player.grounded = false;
+            platforms.forEach(platform => {
+                if (player.y + player.height >= platform.y && 
+                    player.x + player.width >= platform.x && 
+                    player.x <= platform.x + platform.width) {
+                    player.y = platform.y - player.height; // Snap player to the top of the platform
+                    player.grounded = true;
+                    player.speedY = 0; // Reset vertical speed
+                }
+            });
+
+            // Clear the canvas
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            // Draw platforms
+            ctx.fillStyle = '#4CAF50'; // Green platform color
+            platforms.forEach(platform => {
+                ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
+            });
+
+            // Draw player with rotation when moving left
+            ctx.save(); // Save the current context
+            ctx.translate(player.x + player.width / 2, player.y + player.height / 2); // Move origin to player center
+            if (player.speedX < 0) ctx.rotate(Math.PI); // Rotate 180 degrees when moving left
+            ctx.drawImage(player.sprite, -player.width / 2, -player.height / 2, player.width, player.height);
+            ctx.restore(); // Restore the context to the original state
         }
 
         // Resize canvas function
