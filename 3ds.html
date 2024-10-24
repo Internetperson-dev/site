@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>3DS Platformer with Touch Controls</title>
+  <title>3DS Platformer with Touch and Mouse Controls</title>
   <style>
     canvas {
       display: block;
@@ -13,142 +13,51 @@
 </head>
 <body>
   <canvas id="gameCanvas" width="400" height="240"></canvas>
-  <script>
-    // Get the canvas and its context
-    var canvas = document.getElementById('gameCanvas');
-    var ctx = canvas.getContext('2d');
-
-    // Player object
-    var player = {
-      x: 50,
-      y: 180,
-      width: 20,
-      height: 20,
-      color: 'red',
-      speedX: 0,
-      speedY: 0,
-      gravity: 0.5,
-      jumpPower: -10,
-      grounded: false
-    };
-
-    // Simple platform object
-    var platform = {
-      x: 0,
-      y: 200,
-      width: 400,
-      height: 20,
-      color: 'green'
-    };
-
-    // Keyboard input
-    var keys = {
-      left: false,
-      right: false,
-      up: false
-    };
-
-    // Touch input
-    var touchStartY = 0;
-    var touchStartX = 0;
-    var touchActive = false;
-
-    // Game loop
-    function gameLoop() {
-      update();
-      draw();
-      setTimeout(gameLoop, 1000 / 30); // 30 FPS limit for 3DS browser
-    }
-
-    // Update game state
-    function update() {
-      // Horizontal movement (keyboard or touch)
-      if (keys.left || (touchActive && touchStartX < canvas.width / 2)) {
-        player.speedX = -2;
-      } else if (keys.right || (touchActive && touchStartX > canvas.width / 2)) {
-        player.speedX = 2;
-      } else {
-        player.speedX = 0;
-      }
-
-      // Apply gravity
-      player.speedY += player.gravity;
-
-      // Update player position
-      player.x += player.speedX;
-      player.y += player.speedY;
-
-      // Keep player within canvas bounds
-      if (player.x < 0) player.x = 0;
-      if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
-
-      // Platform collision detection
-      if (player.y + player.height > platform.y && player.x + player.width > platform.x && player.x < platform.x + platform.width) {
-        player.y = platform.y - player.height;
-        player.speedY = 0;
-        player.grounded = true;
-      } else {
-        player.grounded = false;
-      }
-
-      // Keep player within canvas vertically
-      if (player.y > canvas.height) {
-        // Reset the player if they fall off the screen
-        player.x = 50;
-        player.y = 180;
-        player.speedY = 0;
-      }
-    }
-
-    // Draw game state
-    function draw() {
-      // Clear canvas
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-      // Draw player
-      ctx.fillStyle = player.color;
-      ctx.fillRect(player.x, player.y, player.width, player.height);
-
-      // Draw platform
-      ctx.fillStyle = platform.color;
-      ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
-    }
-
-    // Keydown event listener
-    window.addEventListener('keydown', function(e) {
-      if (e.keyCode === 37) keys.left = true;   // Left arrow
-      if (e.keyCode === 39) keys.right = true;  // Right arrow
-      if (e.keyCode === 38) keys.up = true;     // Up arrow (jump)
-    });
-
-    // Keyup event listener
-    window.addEventListener('keyup', function(e) {
-      if (e.keyCode === 37) keys.left = false;
-      if (e.keyCode === 39) keys.right = false;
-      if (e.keyCode === 38) keys.up = false;
-    });
-
-    // Touch start event listener
-    canvas.addEventListener('touchstart', function(e) {
-      var touch = e.touches[0];
-      touchStartY = touch.clientY;
-      touchStartX = touch.clientX;
-      touchActive = true;
-    });
-
-    // Touch end event listener
-    canvas.addEventListener('touchend', function(e) {
-      touchActive = false;
-
-      // Check if it was a "flick up" gesture for jumping
-      if (touchStartY - e.changedTouches[0].clientY > 30 && player.grounded) {
-        player.speedY = player.jumpPower;
-        player.grounded = false;
-      }
-    });
-
-    // Start game loop
-    gameLoop();
-  </script>
+  
+  <!-- Include external JS files -->
+  <script src="platform.js"></script>
+  <script src="player.js"></script>
+  <script src="input.js"></script>
+  <script src="game.js"></script>
 </body>
+</html>
+
+2. game.js (Main Game Logic and Loop)
+
+javascript
+
+// Get the canvas and its context
+var canvas = document.getElementById('gameCanvas');
+var ctx = canvas.getContext('2d');
+
+// Platform object
+var platform = new Platform(0, 200, 400, 20, 'green');
+
+// Player object
+var player = new Player(50, 180, 20, 20, 'red');
+
+// Game loop
+function gameLoop() {
+  update();
+  draw();
+  setTimeout(gameLoop, 1000 / 30); // 30 FPS
+}
+
+// Update game state
+function update() {
+  player.update(platform);
+}
+
+// Draw game state
+function draw() {
+  // Clear canvas
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+  // Draw player and platform
+  player.draw(ctx);
+  platform.draw(ctx);
+}
+
+// Start game loop
+gameLoop();
 </html>
