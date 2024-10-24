@@ -112,10 +112,16 @@
                 ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
             });
 
-            // Draw player with rotation when moving left
+            // Draw player with rotation when moving left or right
             ctx.save(); // Save the current context
             ctx.translate(player.x + player.width / 2, player.y + player.height / 2); // Move origin to player center
-            if (player.speedX < 0) ctx.rotate(Math.PI); // Rotate 180 degrees when moving left
+
+            // Rotate the player based on movement direction
+            if (player.speedX < 0) {
+                ctx.rotate(Math.PI); // Rotate 180 degrees for left movement
+            }
+
+            // Draw the player sprite
             ctx.drawImage(player.sprite, -player.width / 2, -player.height / 2, player.width, player.height);
             ctx.restore(); // Restore the context to the original state
         }
