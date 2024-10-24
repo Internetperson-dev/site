@@ -112,13 +112,13 @@
                 ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
             });
 
-            // Draw player with rotation when moving left or right
+            // Draw player with mirroring when moving left
             ctx.save(); // Save the current context
             ctx.translate(player.x + player.width / 2, player.y + player.height / 2); // Move origin to player center
 
-            // Rotate the player based on movement direction
+            // Scale the player based on movement direction
             if (player.speedX < 0) {
-                ctx.rotate(Math.PI); // Rotate 180 degrees for left movement
+                ctx.scale(-1, 1); // Mirror for left movement
             }
 
             // Draw the player sprite
