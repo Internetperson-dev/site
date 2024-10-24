@@ -1,12 +1,13 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>3DS Platformer</title>
+  <title>3DS Platformer with Touch Controls</title>
   <style>
     canvas {
       display: block;
       margin: 0 auto;
       background-color: #87CEEB;
+      touch-action: none; /* Disable default scrolling on touch */
     }
   </style>
 </head>
@@ -47,6 +48,11 @@
       up: false
     };
 
+    // Touch input
+    var touchStartY = 0;
+    var touchStartX = 0;
+    var touchActive = false;
+
     // Game loop
     function gameLoop() {
       update();
@@ -56,19 +62,13 @@
 
     // Update game state
     function update() {
-      // Horizontal movement
-      if (keys.left) {
+      // Horizontal movement (keyboard or touch)
+      if (keys.left || (touchActive && touchStartX < canvas.width / 2)) {
         player.speedX = -2;
-      } else if (keys.right) {
+      } else if (keys.right || (touchActive && touchStartX > canvas.width / 2)) {
         player.speedX = 2;
       } else {
         player.speedX = 0;
-      }
-
-      // Jumping
-      if (keys.up && player.grounded) {
-        player.speedY = player.jumpPower;
-        player.grounded = false;
       }
 
       // Apply gravity
@@ -126,6 +126,25 @@
       if (e.keyCode === 37) keys.left = false;
       if (e.keyCode === 39) keys.right = false;
       if (e.keyCode === 38) keys.up = false;
+    });
+
+    // Touch start event listener
+    canvas.addEventListener('touchstart', function(e) {
+      var touch = e.touches[0];
+      touchStartY = touch.clientY;
+      touchStartX = touch.clientX;
+      touchActive = true;
+    });
+
+    // Touch end event listener
+    canvas.addEventListener('touchend', function(e) {
+      touchActive = false;
+
+      // Check if it was a "flick up" gesture for jumping
+      if (touchStartY - e.changedTouches[0].clientY > 30 && player.grounded) {
+        player.speedY = player.jumpPower;
+        player.grounded = false;
+      }
     });
 
     // Start game loop
