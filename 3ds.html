@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Platformer Game</title>
+    <title>Platformer Game - Super Mario Bros. 1-1</title>
     <style>
         body {
             margin: 0;
@@ -12,7 +12,7 @@
             justify-content: center;
             align-items: center;
             height: 100vh;
-            background: #cce7ff;
+            background: #87CEEB; /* Sky blue background */
         }
         canvas {
             background: #ffffff;
@@ -26,31 +26,48 @@
         // Set up canvas
         const canvas = document.getElementById('gameCanvas');
         const ctx = canvas.getContext('2d');
-        resizeCanvas();
+        const originalWidth = 800;  // Original canvas width
+        const originalHeight = 600; // Original canvas height
+        const scale = Math.min(window.innerWidth / originalWidth, window.innerHeight / originalHeight);
+        resizeCanvas(scale);
 
         // Player object
         const player = {
             x: 50,
             y: 200,
-            width: 32,
-            height: 32,
+            width: 32 * scale,
+            height: 32 * scale,
             speedX: 0,
             speedY: 0,
-            jumpPower: -12,
-            gravity: 0.5,
+            jumpPower: -20, // Jump power
+            gravity: 0.8 * scale, // Gravity
             grounded: false,
             sprite: new Image(),
             spriteSrc: 'player.gif', // Path to your animated sprite
-            speed: 200 // Player speed in pixels per second
+            speed: 200 * scale // Player speed in pixels per second
         };
 
         // Load the sprite
         player.sprite.src = player.spriteSrc;
 
-        // Platform properties
+        // Platform properties (1-1 from Super Mario Bros)
         const platforms = [
-            { x: 0, y: 350, width: canvas.width, height: 20 } // Ground platform
+            { x: 0, y: 370 * scale, width: originalWidth * scale, height: 20 * scale }, // Ground
+            { x: 100 * scale, y: 320 * scale, width: 150 * scale, height: 20 * scale }, // Platform 1
+            { x: 300 * scale, y: 250 * scale, width: 150 * scale, height: 20 * scale }, // Platform 2
+            { x: 500 * scale, y: 320 * scale, width: 150 * scale, height: 20 * scale }, // Platform 3
+            { x: 700 * scale, y: 370 * scale, width: 100 * scale, height: 20 * scale }, // Right edge
+            { x: 150 * scale, y: 200 * scale, width: 100 * scale, height: 20 * scale }, // Floating Platform 1
+            { x: 400 * scale, y: 150 * scale, width: 100 * scale, height: 20 * scale }, // Floating Platform 2
         ];
+
+        // Reset position if player falls off
+        function resetPlayer() {
+            player.x = 50;
+            player.y = 200;
+            player.speedX = 0;
+            player.speedY = 0;
+        }
 
         // Handle input
         const keys = { left: false, right: false, up: false };
@@ -111,6 +128,11 @@
                 player.x = canvas.width - player.width; // Prevent moving right out of bounds
             }
 
+            // Restart if player falls into a gap
+            if (player.y > canvas.height) {
+                resetPlayer(); // Reset the player's position if they fall off the screen
+            }
+
             // Clear the canvas
             ctx.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -135,9 +157,9 @@
         }
 
         // Resize canvas function
-        function resizeCanvas() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
+        function resizeCanvas(scale) {
+            canvas.width = originalWidth * scale;
+            canvas.height = originalHeight * scale;
         }
 
         let lastTime = 0;
@@ -152,8 +174,17 @@
 
         // Start the game loop
         gameLoop();
-        window.addEventListener('resize', resizeCanvas);
+        window.addEventListener('resize', () => {
+            const newScale = Math.min(window.innerWidth / originalWidth, window.innerHeight / originalHeight);
+            resizeCanvas(newScale);
+            player.width = 32 * newScale;
+            player.height = 32 * newScale;
+            platforms.forEach(platform => {
+                platform.width = originalWidth * newScale;
+                platform.height = 20 * newScale;
+                platform.y = Math.floor(platform.y * newScale); // Adjust platform height position
+            });
+        });
     </script>
 </body>
-</html>
 </html>
