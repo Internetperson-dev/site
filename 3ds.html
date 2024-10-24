@@ -44,10 +44,43 @@ var player = {
     spriteWidth: 32, // Width of one sprite frame
     spriteHeight: 32, // Height of one sprite frame
     currentFrame: 0,
-    totalFrames: 4, // Change this based on the number of frames in the sprite sheet
+    totalFrames: 4, // Set this according to your sprite sheet frames
     frameDelay: 5, // Delay between frames
     frameCount: 0 // Frame counter
 };
+
+// Load the sprite sheet
+player.sprite.src = 'path_to_your_sprite_sheet.png'; // Update with the path to your sprite sheet
+
+// Update animation logic
+function update() {
+    // Move player and apply gravity...
+
+    // Update animation
+    if (player.speedX !== 0) {
+        player.frameCount++;
+        if (player.frameCount >= player.frameDelay) {
+            player.frameCount = 0;
+            player.currentFrame = (player.currentFrame + 1) % player.totalFrames; // Loop through frames
+        }
+    } else {
+        player.currentFrame = 0; // Reset to idle frame if not moving
+    }
+
+    // Draw player animation
+    ctx.drawImage(
+        player.sprite,
+        player.currentFrame * player.spriteWidth,
+        0,
+        player.spriteWidth,
+        player.spriteHeight,
+        player.x,
+        player.y,
+        player.width,
+        player.height
+    );
+}
+
 
 // Load the sprite sheet
 player.sprite.src = 'https://opengameart.org/sites/default/files/2d_character_spritesheet.png';
