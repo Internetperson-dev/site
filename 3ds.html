@@ -5,270 +5,82 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>3DS Platformer</title>
     <style>
-        canvas {
-            display: block;
-            margin: 0 auto;
-            background: #87CEEB;
-            image-rendering: pixelated; /* To give a retro pixelated look */
-        }
+        body { margin: 0; overflow: hidden; background-color: #87CEEB; }
+        canvas { display: block; margin: auto; background-color: #ffffff; }
     </style>
 </head>
 <body>
-    <canvas class="dual-screen" id="gameCanvas"></canvas>
-    
+    <canvas id="gameCanvas" width="800" height="480"></canvas>
     <script>
-    ///////// The base code you provided /////////
-    const keycodes = {
-        13: "A",
-        65: "A",
-        37: "Left",
-        38: "Up",
-        39: "Right",
-        40: "Down"
-    };
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
 
-    function registerFallback(object, property, fallback) {
-        if(object[property]) return;
-        object[property] = fallback;
-    }
+        let player = {
+            x: 50,
+            y: 400,
+            width: 50,
+            height: 50,
+            gravity: 0.5,
+            velocityY: 0,
+            jumpStrength: -10,
+            isJumping: false
+        };
 
-    function doNothing() {}
+        let keys = {
+            left: false,
+            right: false,
+            jump: false
+        };
 
-    registerFallback(Array.prototype, "includes", function (value) {
-        return includes(this, value);
-    });
-
-    registerFallback(Object.prototype, "keys", function () {
-        return oKeys(this);
-    });
-
-    registerFallback(String.prototype, "startsWith", function (str) {
-        return this.substring(0, str.length) == str;
-    });
-
-    registerFallback(window, "console", {});
-    registerFallback(console, "log", doNothing);
-    registerFallback(console, "error", doNothing);
-    registerFallback(console, "warn", doNothing);
-    registerFallback(console, "assert", doNothing);
-
-    function randf(min, max) {
-        return Math.random() * (max - min) + min;
-    }
-
-    function randi(min, max) {
-        min = Math.ceil(min);
-        max = Math.floor(max);
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-
-    function pickRandom(array){
-        return array[randi(0, array.length - 1 )];
-    }
-
-    function lerp(start, end, speed){
-        if(speed >= 1) return end;
-        return (1-speed)*start+speed*end;
-    }
-
-    function fmod(a, b){
-        return Number((a - (Math.floor(a / b) * b)).toPrecision(8));
-    }
-
-    function clamp(value, min, max){
-        if(value > max) value = max;
-        if(value < min) value = min;
-        return value;
-    }
-
-    function pow(base, exponent) {
-        if (exponent === 0) return 1;
-        var result = 1;
-        for (var i = 0; i < Math.abs(exponent); i++){
-            result *= base;
-        }
-        if (exponent < 0) {
-            return 1 / result;
-        } else {
-            return result;
-        }
-    }
-
-    function is3DS(){
-        return includes(window.navigator.userAgent,"Nintendo 3DS");
-    }
-
-    function isDSi(){
-        return includes(window.navigator.userAgent, "Nintendo DSi");
-    }
-
-    function isDS(){
-        return !isDSi() && includes(window.navigator.userAgent || '', "Nintendo DS");
-    }
-
-    function isDSFamily(){
-        return isDS() || isDSi() || is3DS();
-    }
-
-    function includes(container,search){
-        if (typeof(container) === 'string' || container instanceof Array){
-            return container.indexOf(search) !== -1;
-        }
-        return container[search] !== undefined;
-    }
-
-    function oKeys(obj) {
-        var out = [];
-        for (var k in obj) {
-            if(obj.hasOwnProperty(k)) { 
-                out.push(k);
+        function update() {
+            // Handle movement
+            if (keys.left) {
+                player.x -= 5;
             }
-        }
-        return out;
-    }
-
-    function getWithout(array,exclude){
-        return array.filter(function (item) {
-            return item !== exclude;
-        });
-    }
-
-    var pressStates = {};
-    var pressCallbacks = {
-        "Left": [],
-        "Up": [],
-        "Right": [],
-        "Down": [],
-        "A": []
-    };
-
-    function onBtnJustPressed(name, callback){
-        const keys = oKeys(pressCallbacks);
-        for(var i = 0; i < keys.length; i++) {
-            const key = keys[i];
-            if(key.toLowerCase() === name.toLowerCase()) {
-                pressCallbacks[key].push(callback);
+            if (keys.right) {
+                player.x += 5;
             }
-        }
-    }
 
-    function whichButton(keycode){
-        return keycodes[keycode];
-    }
-
-    function isButton(keycode, buttonName){
-        const name = whichButton(keycode);
-        if(!name) return false;
-        return name.toLowerCase() === buttonName.toLowerCase();
-    }
-
-    function getPressedBtns(){
-        const keys = oKeys(pressStates);
-        var res = [];
-        for(var i = 0; i < keys.length; i++) {
-            const key = keys[i];
-            if (pressStates[key]) res.push(key);
-        }
-        return res;
-    }
-
-    function isBtnPressed(name){
-        const keys = oKeys(pressStates);
-        name = name.toLowerCase();
-        for(var i = 0; i < keys.length; i++) {
-            const key = keys[i];
-            if (pressStates[key] && name === key.toLowerCase()) return true;
-        }
-        return false;
-    }
-
-    function registerNon3DSlink(a){
-        a.addEventListener("click", function (e){
-            alert("The 3DS doesn't support that page. Please open \n\n"+a.href+"\n\non a external device (with a modern browser)");
-            e.preventDefault();
-            return false;
-        }, false);
-    }
-
-    function registerScreenUnlocker(element) {
-        element.addEventListener("focusin",function(){
-            forcePosition = false;
-        }, false);
-        element.addEventListener("focusout",function(){
-            forcePosition = true;
-        }, false);
-    }
-
-    function isScrollable(element){
-        const css = window.getComputedStyle(element);
-        return (
-            css.overflow === "scroll" ||
-            css.overflowX === "scroll" ||
-            css.overflowY === "scroll"
-        );
-    }
-
-    function findScrollableAncestor(element) {
-        if(isScrollable(element)) return element;
-        var parent = element.parentElement;
-        while (parent) {
-            if (isScrollable(parent)) return parent;
-            parent = parent.parentElement;
-        }
-    }
-
-    var availableLibs = [];
-
-    function hasLib(lib) {
-        return includes(availableLibs, lib);
-    }
-
-    function depend(lib) {
-        if(!hasLib(lib)) {
-            throw "Dependency error! '" + lib + "' is not loaded.";
-        }
-    }
-
-    function libName(lib) {
-        if(hasLib(lib)) {
-            throw "This library is already registered. Is this function duplicated? Did you mean depend()?";
-        }
-        availableLibs.push(lib);
-    }
-
-    var forcePosition = true;
-
-    function centerScreen() {
-        if(!forcePosition) return;
-        const x = 40;
-        const y = 227;
-        if(window.scrollX === x && window.scrollY === y) return;
-        window.scrollTo(x,y);
-    }
-
-    if(is3DS()) setInterval(centerScreen);
-
-    function globalHandleKeyDown(e){
-        preventKey(e);
-        const name = keycodes[e.keyCode];
-        if(name) {
-            if(!pressStates[name]) {
-                const callbacks = pressCallbacks[name];
-                for(var i = 0; i < callbacks.length; i++) {
-                    callbacks[i]();
-                }
+            // Jumping
+            if (keys.jump && !player.isJumping) {
+                player.velocityY = player.jumpStrength;
+                player.isJumping = true;
             }
-            pressStates[name] = true;
+
+            // Gravity
+            player.velocityY += player.gravity;
+            player.y += player.velocityY;
+
+            // Prevent falling through the ground
+            if (player.y + player.height >= canvas.height) {
+                player.y = canvas.height - player.height;
+                player.velocityY = 0;
+                player.isJumping = false;
+            }
+
+            // Draw everything
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = 'red';
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+
+            requestAnimationFrame(update);
         }
-    }
 
-    function globalHandleKeyUp(e){
-        preventKey(e);
-        const name = keycodes[e.keyCode];
-        if(name) {
-            pressStates[name] = false;
+        function keyDownHandler(event) {
+            if (event.key === 'ArrowLeft') keys.left = true;
+            if (event.key === 'ArrowRight') keys.right = true;
+            if (event.key === 'ArrowUp') keys.jump = true;
         }
-    }
 
-    function rel
+        function keyUpHandler(event) {
+            if (event.key === 'ArrowLeft') keys.left = false;
+            if (event.key === 'ArrowRight') keys.right = false;
+            if (event.key === 'ArrowUp') keys.jump = false;
+        }
 
+        document.addEventListener('keydown', keyDownHandler);
+        document.addEventListener('keyup', keyUpHandler);
+        update();
+    </script>
+</body>
+</html>
