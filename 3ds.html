@@ -3,190 +3,129 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>3DS Platformer Game</title>
+    <title>Platformer Game with 3DS Controls</title>
     <style>
         body {
             margin: 0;
             overflow: hidden;
-            background: #87CEFA; /* Sky blue background */
-            position: relative; /* Allow positioning of children */
         }
-        /* Top screen for gameplay */
-        #topscreen {
-            position: absolute;
-            left: 0px;
-            top: 0px;
-            width: 320px; /* Width of the top screen */
-            height: 240px; /* Height of the top screen */
-            overflow: hidden;
-            background: #ffffff; /* White background for gameplay */
+        canvas {
+            display: block;
         }
-        /* Bottom screen for information (e.g., music player) */
-        #bottomscreen {
-            position: absolute;
-            left: 0px;
-            top: 240px;
-            width: 320px; /* Width of the bottom screen */
-            height: 240px; /* Height of the bottom screen */
-            background: #f0f0f0; /* Light gray background */
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-        }
-        /* Music player styling */
-        #musicPlayer {
-            margin-top: 20px;
+        /* Adjust the canvas size for the 3DS screen */
+        #gameCanvas {
+            width: 400px;
+            height: 240px;
         }
     </style>
-    <script>
-        var canvas, ctx;
-        var player;
-        var platforms = [];
-        var gravity = 0.5;
-        var is3DS = /Nintendo 3DS/.test(navigator.userAgent);
-
-        // Player Object
-        function initPlayer() {
-            player = {
-                x: 50,
-                y: 150,
-                width: 32,
-                height: 32,
-                speedX: 0,
-                speedY: 0,
-                jumpPower: -10,
-                grounded: false,
-                color: 'red'
-            };
-        }
-
-        // Platform Properties
-        function initPlatforms() {
-            platforms.push({ x: 0, y: 200, width: 800, height: 20 }); // Ground
-            platforms.push({ x: 100, y: 150, width: 100, height: 20 }); // Floating platform
-            platforms.push({ x: 300, y: 100, width: 100, height: 20 }); // Another floating platform
-            platforms.push({ x: 500, y: 50, width: 100, height: 20 });  // High platform
-        }
-
-        // Initialize Canvas
-        function init() {
-            canvas = document.createElement('canvas');
-            ctx = canvas.getContext('2d');
-            document.getElementById('topscreen').appendChild(canvas);
-            resizeCanvas();
-            initPlayer();
-            initPlatforms();
-            setupControls();
-            gameLoop();
-        }
-
-        // Resize Canvas
-        function resizeCanvas() {
-            canvas.width = 320; // Width of the top screen
-            canvas.height = 240; // Height of the top screen
-        }
-
-        // Setup Controls
-        function setupControls() {
-            // Handle keyboard inputs
-            document.addEventListener('keydown', function(e) {
-                if (e.code === 'ArrowLeft' || e.code === 'KeyA') {
-                    player.speedX = -5;
-                }
-                if (e.code === 'ArrowRight' || e.code === 'KeyD') {
-                    player.speedX = 5;
-                }
-                if (e.code === 'ArrowUp' || e.code === 'Space' || e.code === 'KeyW') {
-                    jump();
-                }
-            });
-
-            document.addEventListener('keyup', function(e) {
-                if (e.code === 'ArrowLeft' || e.code === 'KeyA' || 
-                    e.code === 'ArrowRight' || e.code === 'KeyD') {
-                    player.speedX = 0; // Stop horizontal movement
-                }
-            });
-        }
-
-        // Jump Function
-        function jump() {
-            if (player.grounded) {
-                player.speedY = player.jumpPower; // Jump
-                player.grounded = false;
-            }
-        }
-
-        // Update Game Logic
-        function update() {
-            player.speedY += gravity; // Apply gravity
-            player.x += player.speedX;
-            player.y += player.speedY;
-
-            // Collision detection with platforms
-            player.grounded = false; // Reset grounded status
-            for (var i = 0; i < platforms.length; i++) {
-                var platform = platforms[i];
-                if (player.y + player.height >= platform.y && 
-                    player.x + player.width >= platform.x && 
-                    player.x <= platform.x + platform.width) {
-                    player.y = platform.y - player.height; // Snap player to the top of the platform
-                    player.grounded = true; // Set grounded to true
-                    player.speedY = 0; // Reset vertical speed
-                }
-            }
-
-            // Reset player if falling off the screen
-            if (player.y > canvas.height) {
-                resetPlayer();
-            }
-        }
-
-        // Reset Player Position
-        function resetPlayer() {
-            player.x = 50;
-            player.y = 150;
-            player.speedY = 0;
-        }
-
-        // Render Game Elements
-        function render() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
-            ctx.fillStyle = player.color;
-            ctx.fillRect(player.x, player.y, player.width, player.height); // Draw player
-
-            // Draw platforms
-            ctx.fillStyle = 'green';
-            for (var i = 0; i < platforms.length; i++) {
-                var platform = platforms[i];
-                ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
-            }
-        }
-
-        // Game Loop
-        function gameLoop() {
-            update();
-            render();
-            requestAnimationFrame(gameLoop); // Loop at ~60 FPS
-        }
-
-        // Start Game
-        window.onload = init;
-    </script>
 </head>
 <body>
-    <!-- Top screen for gameplay -->
-    <div id="topscreen"></div>
-    <!-- Bottom screen for information -->
-    <div id="bottomscreen">
-        <h2>Music Player</h2>
-        <div id="musicPlayer">
-            <audio controls>
-                <source src="your-music-file.mp3" type="audio/mpeg">
-                Your browser does not support the audio element.
-            </audio>
-        </div>
-    </div>
+
+<canvas id="gameCanvas"></canvas>
+
+<script>
+    const canvas = document.getElementById('gameCanvas');
+    const ctx = canvas.getContext('2d');
+
+    // Set canvas size to fit 3DS screen
+    if (is3DS()) {
+        canvas.width = 400;
+        canvas.height = 240;
+    } else {
+        canvas.width = 800; // Desktop default size
+        canvas.height = 400;
+    }
+
+    // Platformer game variables
+    let player = {
+        x: 50,
+        y: 50,
+        width: 20,
+        height: 20,
+        speed: 5,
+        velocityY: 0,
+        gravity: 0.5,
+        onGround: false
+    };
+
+    let keys = {};
+
+    // Detect if it's a 3DS browser
+    function is3DS() {
+        return window.navigator.userAgent.includes("Nintendo 3DS");
+    }
+
+    // Handle keydown events for controls (D-pad and buttons)
+    window.addEventListener('keydown', function (e) {
+        const key = keycodes[e.keyCode];
+        if (key) {
+            keys[key] = true;
+        }
+    });
+
+    // Handle keyup events
+    window.addEventListener('keyup', function (e) {
+        const key = keycodes[e.keyCode];
+        if (key) {
+            keys[key] = false;
+        }
+    });
+
+    // Keycodes for 3DS D-pad and A button
+    const keycodes = {
+        13: "A",     // Enter key
+        65: "A",     // A key
+        37: "Left",  // Left arrow
+        38: "Up",    // Up arrow
+        39: "Right", // Right arrow
+        40: "Down"   // Down arrow
+    };
+
+    // Game update function (runs every frame)
+    function update() {
+        // Player movement logic
+        if (keys["Left"]) {
+            player.x -= player.speed;
+        }
+        if (keys["Right"]) {
+            player.x += player.speed;
+        }
+        if (keys["Up"] && player.onGround) {
+            player.velocityY = -10; // Jump
+            player.onGround = false;
+        }
+
+        // Apply gravity
+        player.velocityY += player.gravity;
+        player.y += player.velocityY;
+
+        // Collision detection (simple ground check)
+        if (player.y + player.height > canvas.height) {
+            player.y = canvas.height - player.height;
+            player.velocityY = 0;
+            player.onGround = true;
+        }
+
+        // Clear canvas
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+        // Draw player
+        ctx.fillStyle = 'blue';
+        ctx.fillRect(player.x, player.y, player.width, player.height);
+
+        requestAnimationFrame(update);
+    }
+
+    // Start the game loop
+    update();
+
+    // Prevent arrow keys from scrolling the page
+    window.addEventListener("keydown", function(e) {
+        if ([37, 38, 39, 40].includes(e.keyCode)) {
+            e.preventDefault();
+        }
+    });
+</script>
+
 </body>
 </html>
