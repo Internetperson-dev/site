@@ -1,0 +1,78 @@
+/* Base styles */
+html {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.6;
+    font-size: 16px;
+    scroll-behavior: smooth;
+}
+
+/* Light and dark mode */
+@media (prefers-color-scheme: light) {
+    body {
+        background-color: #ffffff;
+        color: #222222;
+    }
+    a {
+        color: #1a73e8;
+    }
+    button, input {
+        background-color: #f0f0f0;
+        color: #222222;
+        border: 1px solid #cccccc;
+    }
+}
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: #121212;
+        color: #e0e0e0;
+    }
+    a {
+        color: #8ab4f8;
+    }
+    button, input {
+        background-color: #333333;
+        color: #e0e0e0;
+        border: 1px solid #555555;
+    }
+}
+
+/* Links and buttons */
+a {
+    text-decoration: none;
+    transition: color 0.3s ease;
+}
+
+a:hover {
+    text-decoration: underline;
+}
+
+button, input {
+    padding: 0.6rem 1.2rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover, input:hover {
+    background-color: #eaeaea;
+}
+
+/* Responsive typography */
+h1, h2, h3, h4, h5, h6 {
+    margin: 0 0 1rem 0;
+    font-weight: 600;
+}
+
+p {
+    margin: 0 0 1rem 0;
+}
+
+/* Ensure images and media are responsive */
+img, video {
+    max-width: 100%;
+    height: auto;
+}
