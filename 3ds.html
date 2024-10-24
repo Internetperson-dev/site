@@ -16,30 +16,33 @@
         }
     </style>
     <script>
-        // Game Variables
-        let canvas, ctx;
-        let player;
-        let platforms = [];
-        const gravity = 0.5;
+        var canvas, ctx;
+        var player;
+        var platforms = [];
+        var gravity = 0.5;
 
         // Player Object
-        player = {
-            x: 50,
-            y: 150,
-            width: 32,
-            height: 32,
-            speedX: 0,
-            speedY: 0,
-            jumpPower: -10,
-            grounded: false,
-            color: 'red'
-        };
+        function initPlayer() {
+            player = {
+                x: 50,
+                y: 150,
+                width: 32,
+                height: 32,
+                speedX: 0,
+                speedY: 0,
+                jumpPower: -10,
+                grounded: false,
+                color: 'red'
+            };
+        }
 
         // Platform Properties
-        platforms.push({ x: 0, y: 200, width: 800, height: 20 }); // Ground
-        platforms.push({ x: 100, y: 150, width: 100, height: 20 }); // Floating platform
-        platforms.push({ x: 300, y: 100, width: 100, height: 20 }); // Another floating platform
-        platforms.push({ x: 500, y: 50, width: 100, height: 20 });  // High platform
+        function initPlatforms() {
+            platforms.push({ x: 0, y: 200, width: 800, height: 20 }); // Ground
+            platforms.push({ x: 100, y: 150, width: 100, height: 20 }); // Floating platform
+            platforms.push({ x: 300, y: 100, width: 100, height: 20 }); // Another floating platform
+            platforms.push({ x: 500, y: 50, width: 100, height: 20 });  // High platform
+        }
 
         // Initialize Canvas
         function init() {
@@ -47,6 +50,8 @@
             ctx = canvas.getContext('2d');
             document.body.appendChild(canvas);
             resizeCanvas();
+            initPlayer();
+            initPlatforms();
             setupControls();
             gameLoop();
         }
@@ -60,26 +65,21 @@
         // Setup Controls
         function setupControls() {
             // Handle keyboard inputs
-            document.addEventListener('keydown', (e) => {
-                switch (e.code) {
-                    case 'ArrowLeft':
-                    case 'KeyA':
-                        player.speedX = -5;
-                        break;
-                    case 'ArrowRight':
-                    case 'KeyD':
-                        player.speedX = 5;
-                        break;
-                    case 'ArrowUp':
-                    case 'Space':
-                    case 'KeyW':
-                        jump();
-                        break;
+            document.addEventListener('keydown', function(e) {
+                if (e.code === 'ArrowLeft' || e.code === 'KeyA') {
+                    player.speedX = -5;
+                }
+                if (e.code === 'ArrowRight' || e.code === 'KeyD') {
+                    player.speedX = 5;
+                }
+                if (e.code === 'ArrowUp' || e.code === 'Space' || e.code === 'KeyW') {
+                    jump();
                 }
             });
 
-            document.addEventListener('keyup', (e) => {
-                if (e.code === 'ArrowLeft' || e.code === 'KeyA' || e.code === 'ArrowRight' || e.code === 'KeyD') {
+            document.addEventListener('keyup', function(e) {
+                if (e.code === 'ArrowLeft' || e.code === 'KeyA' || 
+                    e.code === 'ArrowRight' || e.code === 'KeyD') {
                     player.speedX = 0; // Stop horizontal movement
                 }
             });
@@ -101,7 +101,8 @@
 
             // Collision detection with platforms
             player.grounded = false; // Reset grounded status
-            platforms.forEach(platform => {
+            for (var i = 0; i < platforms.length; i++) {
+                var platform = platforms[i];
                 if (player.y + player.height >= platform.y && 
                     player.x + player.width >= platform.x && 
                     player.x <= platform.x + platform.width) {
@@ -109,7 +110,7 @@
                     player.grounded = true; // Set grounded to true
                     player.speedY = 0; // Reset vertical speed
                 }
-            });
+            }
 
             // Reset player if falling off the screen
             if (player.y > canvas.height) {
@@ -132,9 +133,10 @@
 
             // Draw platforms
             ctx.fillStyle = 'green';
-            platforms.forEach(platform => {
+            for (var i = 0; i < platforms.length; i++) {
+                var platform = platforms[i];
                 ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
-            });
+            }
         }
 
         // Game Loop
