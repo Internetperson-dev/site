@@ -130,24 +130,36 @@
     mouseStartX = e.clientX;
     mouseStartY = e.clientY;
     mouseActive = true;
+
+    // Determine movement direction based on mouse click position
+    if (mouseStartX < canvas.width / 2) {
+      player.speedX = -2; // Move left
+    } else if (mouseStartX > canvas.width / 2) {
+      player.speedX = 2; // Move right
+    }
   });
 
   canvas.addEventListener('mouseup', function(e) {
     mouseActive = false;
+    
+    // Stop movement when mouse is released
+    player.speedX = 0;
+
+    // Handle jumping if mouse drag is detected
     if (mouseStartY - e.clientY > 30 && player.grounded) {
-      player.speedY = player.jumpPower; // Jump on flick
+      player.speedY = player.jumpPower; // Jump on upward drag
       player.grounded = false;
     }
   });
 
-  // Handle input
+  // Handle input (keyboard, touch, and mouse)
   function handleInput(player) {
     // Keyboard input (W, A, D, Space, or Arrow keys)
     if (keys.left) {
       player.speedX = -2;
     } else if (keys.right) {
       player.speedX = 2;
-    } else {
+    } else if (!mouseActive) { // Stop if mouse isn't actively moving
       player.speedX = 0;
     }
 
@@ -165,17 +177,9 @@
         player.speedX = 2;
       }
     }
-
-    // Mouse input
-    if (mouseActive) {
-      if (mouseStartX < canvas.width / 2) {
-        player.speedX = -2;
-      } else if (mouseStartX > canvas.width / 2) {
-        player.speedX = 2;
-      }
-    }
   }
 </script>
+
 
   
   
