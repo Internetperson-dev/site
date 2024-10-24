@@ -41,6 +41,7 @@
             grounded: false,
             sprite: new Image(),
             spriteSrc: 'player.gif', // Path to your animated sprite
+            speed: 200 // Player speed in pixels per second
         };
 
         // Load the sprite
@@ -66,12 +67,12 @@
             if (e.key === 'ArrowUp' || e.key === 'w' || e.key === ' ') keys.up = false;
         });
 
-        function handleInput() {
+        function handleInput(deltaTime) {
             // Handle player movement
             if (keys.left) {
-                player.speedX = -5; // Move left
+                player.speedX = -player.speed * deltaTime; // Move left
             } else if (keys.right) {
-                player.speedX = 5; // Move right
+                player.speedX = player.speed * deltaTime; // Move right
             } else {
                 player.speedX = 0; // Stop horizontal movement
             }
@@ -83,7 +84,7 @@
             }
         }
 
-        function update() {
+        function update(deltaTime) {
             // Apply gravity
             player.speedY += player.gravity;
 
@@ -102,6 +103,13 @@
                     player.speedY = 0; // Reset vertical speed
                 }
             });
+
+            // Invisible walls (left and right)
+            if (player.x < 0) {
+                player.x = 0; // Prevent moving left out of bounds
+            } else if (player.x + player.width > canvas.width) {
+                player.x = canvas.width - player.width; // Prevent moving right out of bounds
+            }
 
             // Clear the canvas
             ctx.clearRect(0, 0, canvas.width, canvas.height);
@@ -132,9 +140,13 @@
             canvas.height = window.innerHeight;
         }
 
-        function gameLoop() {
-            handleInput();
-            update();
+        let lastTime = 0;
+        function gameLoop(timestamp) {
+            const deltaTime = (timestamp - lastTime) / 1000; // Time since last frame in seconds
+            lastTime = timestamp;
+
+            handleInput(deltaTime);
+            update(deltaTime);
             requestAnimationFrame(gameLoop); // Run the loop at 60 FPS
         }
 
@@ -143,4 +155,5 @@
         window.addEventListener('resize', resizeCanvas);
     </script>
 </body>
+</html>
 </html>
