@@ -2,25 +2,27 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=321, initial-scale=1.0, user-scalable=no"> <!-- Set width to 320 and prevent zooming -->
+    <meta name="viewport" content="width=321, initial-scale=1.0, user-scalable=no"> <!-- Set width to 321 and prevent zooming -->
     <title>Platformer Game</title>
     <style>
         body {
             margin: 0;
-            overflow: hidden;
+            overflow: hidden; /* Prevent scrolling */
             background-color: #87CEEB; /* Sky blue background */
+            position: relative; /* Enable positioning of the canvas */
+            height: 457px; /* Height of the top screen */
+            width: 321px; /* Width of the top screen */
         }
 
         .dual-screen {
             position: absolute;
             margin-left: 39.4667px; /* Adjust margin for 3DS top screen */
-            height: 457px; /* Height of the top screen */
-            width: 321px; /* Width of the canvas */
+            height: 240px; /* Keep the canvas height for the game */
+            width: 320px; /* Keep the canvas width */
         }
 
         #gameCanvas {
             display: block;
-            margin: 0 auto; /* Center the canvas horizontally */
             background-color: #8B4513; /* Brown ground color */
         }
 
@@ -97,10 +99,15 @@
         // Handle key events
         var keys = {};
         window.addEventListener('keydown', function(e) {
-            if (keyMap[e.keyCode]) keys[keyMap[e.keyCode]] = true;
+            if (keyMap[e.keyCode]) {
+                keys[keyMap[e.keyCode]] = true;
+                e.preventDefault(); // Prevent default scrolling behavior
+            }
         });
         window.addEventListener('keyup', function(e) {
-            if (keyMap[e.keyCode]) keys[keyMap[e.keyCode]] = false;
+            if (keyMap[e.keyCode]) {
+                keys[keyMap[e.keyCode]] = false;
+            }
         });
 
         // Update player and check collisions
