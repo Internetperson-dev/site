@@ -95,6 +95,7 @@
 
         // Update player and check collisions
         function update() {
+            // Update the player's vertical position
             player.dy += player.gravity;
             player.y += player.dy;
 
@@ -107,9 +108,9 @@
                     player.y + player.height < platform.y + platform.height &&
                     player.y + player.height + player.dy >= platform.y
                 ) {
-                    player.dy = 0;
-                    player.y = platform.y - player.height;
-                    player.grounded = true;
+                    player.dy = 0; // Reset vertical velocity on collision
+                    player.y = platform.y - player.height; // Position player on top of the platform
+                    player.grounded = true; // Player is grounded
                 }
             });
 
@@ -128,6 +129,7 @@
             if (player.x < 0) player.x = 0;
             if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
 
+            // Clear the canvas and redraw everything
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             drawPlatforms();
             drawPlayer();
