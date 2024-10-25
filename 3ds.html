@@ -30,10 +30,10 @@
             y: 200,
             width: 30,
             height: 30,
-            speed: 2,
+            speed: 4,          // Increased speed for faster movement
             dy: 0,
-            gravity: 0.5,
-            jumpPower: -10,
+            gravity: 0.8,      // Increased gravity for quicker fall
+            jumpPower: -12,    // Adjusted jump power for snappier jump
             grounded: false
         };
 
@@ -112,7 +112,7 @@
             update();
         }
 
-        setInterval(gameLoop, 1000 / 30); // Set a 30 FPS interval
+        setInterval(gameLoop, 1000 / 60); // Set to 60 FPS for smoother gameplay
     </script>
 </body>
 </html>
