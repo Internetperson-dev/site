@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=320, initial-scale=1.0, user-scalable=no"> <!-- Set width to 320 and prevent zooming -->
     <title>Platformer Game</title>
     <style>
         body {
@@ -13,20 +13,20 @@
 
         #gameCanvas {
             display: block;
-            margin: 0 auto;
+            margin: 0 auto; /* Center the canvas horizontally */
             background-color: #8B4513; /* Brown ground color */
         }
 
         .player {
             position: absolute;
-            background-color: #FF0000;
+            background-color: #FF0000; /* Red player color */
             width: 30px;
             height: 30px;
         }
 
         .platform {
             position: absolute;
-            background-color: #228B22;
+            background-color: #228B22; /* Green platform color */
             height: 20px;
         }
     </style>
@@ -72,13 +72,13 @@
 
         // Draw player
         function drawPlayer() {
-            ctx.fillStyle = '#FF0000';
+            ctx.fillStyle = '#FF0000'; // Red color for the player
             ctx.fillRect(player.x, player.y, player.width, player.height);
         }
 
         // Draw platforms
         function drawPlatforms() {
-            ctx.fillStyle = '#228B22';
+            ctx.fillStyle = '#228B22'; // Green color for platforms
             for (var i = 0; i < platforms.length; i++) {
                 var platform = platforms[i];
                 ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
