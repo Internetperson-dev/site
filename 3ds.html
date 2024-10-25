@@ -9,40 +9,36 @@
             margin: 0;
             overflow: hidden;
             background-color: #87CEEB; /* Sky blue background */
-            height: 480px; /* Total height (top and bottom screens) */
+            height: 480px; /* Total height for 3DS top and bottom screens */
             display: flex;
-            flex-direction: column; /* Arrange children vertically */
-            align-items: center; /* Center elements horizontally */
+            flex-direction: column;
+            align-items: center;
         }
 
         #topScreen {
-            height: 200px; /* Height of the top screen */
+            height: 200px; /* Game screen */
             width: 100%;
         }
 
         #gameCanvas {
             background-color: #8B4513; /* Brown ground color */
-            border: 1px solid black; /* Optional: Add a border to make it more visible */
+            border: 1px solid black;
         }
 
         #bottomScreen {
-            height: 280px; /* Bottom screen space for timer and audio */
+            height: 280px; /* Bottom screen space for timer */
             width: 100%;
-            background-color: #FFFFFF; /* White background for the bottom screen */
+            background-color: #FFFFFF;
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: space-around; /* Distribute the timer and music player evenly */
+            justify-content: center;
         }
 
         #timer {
             font-size: 24px;
             font-family: Arial, sans-serif;
             color: #000000;
-        }
-
-        audio {
-            width: 90%; /* Make the audio player responsive */
         }
     </style>
 </head>
@@ -52,13 +48,9 @@
         <canvas id="gameCanvas" width="400" height="200"></canvas>
     </div>
 
-    <!-- Bottom Screen (Timer and Music Player) -->
+    <!-- Bottom Screen (Timer) -->
     <div id="bottomScreen">
         <div id="timer">Time: 0 seconds</div>
-        <audio controls>
-            <source src="path_to_music.mp3" type="audio/mpeg">
-            Your browser does not support the audio element.
-        </audio>
     </div>
 
     <script>
@@ -114,19 +106,21 @@
         var currentLevel = 0;
         var platforms = levels[currentLevel];
 
-        // Modularize drawing functions
+        // Draw player
         function drawPlayer() {
             ctx.fillStyle = '#FF0000'; 
             ctx.fillRect(player.x, player.y, player.width, player.height);
         }
 
+        // Draw platforms
         function drawPlatforms() {
             ctx.fillStyle = '#228B22'; 
-            platforms.forEach(platform => {
+            platforms.forEach(function(platform) {
                 ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
             });
         }
 
+        // Draw end object
         function drawEndObject() {
             ctx.fillStyle = '#FFD700';
             ctx.fillRect(endObject.x, endObject.y, endObject.width, endObject.height);
@@ -141,12 +135,13 @@
             if (keyMap[e.keyCode]) keys[keyMap[e.keyCode]] = false;
         });
 
+        // Update player and check collisions
         function updatePlayer() {
             player.dy += player.gravity;
             player.y += player.dy;
 
             player.grounded = false;
-            platforms.forEach(platform => {
+            platforms.forEach(function(platform) {
                 if (
                     player.x < platform.x + platform.width &&
                     player.x + player.width > platform.x &&
