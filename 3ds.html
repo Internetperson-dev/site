@@ -80,6 +80,11 @@
             { x: 200, y: 120, width: 100, height: 20 }
         ];
 
+        // Time management for fixed time step
+        var lastTime = 0;
+        var fixedDeltaTime = 1000 / 60; // 60 updates per second
+        var accumulatedTime = 0;
+
         // Draw player
         function drawPlayer() {
             ctx.fillStyle = '#FF0000'; // Red color for the player
@@ -105,7 +110,7 @@
         });
 
         // Update player and check collisions
-        function update() {
+        function update(deltaTime) {
             player.dy += player.gravity;
             player.y += player.dy;
 
@@ -139,15 +144,33 @@
             // Keep player within canvas bounds
             if (player.x < 0) player.x = 0;
             if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
+        }
+
+        // Main loop
+        function gameLoop(timestamp) {
+            // Calculate the time since the last update
+            var deltaTime = timestamp - lastTime;
+            lastTime = timestamp;
+
+            accumulatedTime += deltaTime;
+
+            // Update physics based on fixed time step
+            while (accumulatedTime >= fixedDeltaTime) {
+                update(fixedDeltaTime);
+                accumulatedTime -= fixedDeltaTime;
+            }
 
             // Clear the canvas and redraw everything
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             drawPlatforms();
             drawPlayer();
+
+            // Request the next frame
+            requestAnimationFrame(gameLoop);
         }
 
-        // Start game loop at 60 FPS
-        setInterval(update, 1000 / 60);
+        // Start the game loop
+        requestAnimationFrame(gameLoop);
     </script>
 </body>
 </html>
