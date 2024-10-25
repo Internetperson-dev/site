@@ -11,6 +11,13 @@
             background-color: #87CEEB; /* Sky blue background */
         }
 
+        .dual-screen {
+            position: absolute;
+            margin-left: 39.4667px; /* Adjust margin for 3DS top screen */
+            height: 457px; /* Height of the top screen */
+            width: 321px; /* Width of the canvas */
+        }
+
         #gameCanvas {
             display: block;
             margin: 0 auto; /* Center the canvas horizontally */
@@ -32,7 +39,9 @@
     </style>
 </head>
 <body>
-    <canvas id="gameCanvas" width="320" height="240"></canvas>
+    <div class="dual-screen">
+        <canvas id="gameCanvas" width="320" height="240"></canvas>
+    </div>
     <script>
         var canvas = document.getElementById('gameCanvas');
         var ctx = canvas.getContext('2d');
