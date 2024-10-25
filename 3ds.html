@@ -2,18 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=321, height=80 initial-scale=1.0, user-scalable=no"> <!-- Set width to 320 and prevent zooming -->
+    <meta name="viewport" content="width=320, height=240, initial-scale=1.0, user-scalable=no"> <!-- Adjusted for 3DS -->
     <title>Platformer Game</title>
     <style>
         body {
             margin: 0;
             overflow: hidden;
             background-color: #87CEEB; /* Sky blue background */
+            display: flex;
+            justify-content: center;
+            align-items: flex-end; /* Align the canvas to the bottom */
+            height: 100vh; /* Take full height of the viewport */
         }
 
         #gameCanvas {
             display: block;
-            margin: 0 auto; /* Center the canvas horizontally */
             background-color: #8B4513; /* Brown ground color */
         }
 
@@ -29,14 +32,6 @@
             background-color: #228B22; /* Green platform color */
             height: 20px;
         }
-
-html,body {
-    overflow: hidden
-}
-
-#divID {
-    overflow: auto; // if you want just vertical scroll overflow-y: auto;
-}
         
     </style>
 </head>
