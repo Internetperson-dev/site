@@ -2,27 +2,27 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=400, height=200, initial-scale=1.0, user-scalable=no"> <!-- Adjusted for 3DS top screen -->
+    <meta name="viewport" content="width=400, height=200, initial-scale=1.0, user-scalable=no">
     <title>Platformer Game</title>
     <style>
         body {
             margin: 0;
             overflow: hidden;
             background-color: #87CEEB; /* Sky blue background */
-            height: 200px; /* Set to the height of the top screen */
+            height: 200px;
             display: flex;
-            flex-direction: column; /* Arrange children vertically */
-            align-items: center; /* Center elements horizontally */
+            flex-direction: column;
+            align-items: center;
         }
 
         #topSpace {
-            height: 0; /* Height of the blank space, adjust if needed */
+            height: 0;
             width: 100%;
         }
 
         #gameCanvas {
             background-color: #8B4513; /* Brown ground color */
-            border: 1px solid black; /* Optional: Add a border to make it more visible */
+            border: 1px solid black;
         }
 
         .player {
@@ -37,12 +37,11 @@
             background-color: #228B22; /* Green platform color */
             height: 20px;
         }
-        
     </style>
 </head>
 <body>
-    <div id="topSpace"></div> <!-- Blank div for spacing -->
-    <canvas id="gameCanvas" width="400" height="200"></canvas> <!-- Adjusted width and height -->
+    <div id="topSpace"></div>
+    <canvas id="gameCanvas" width="400" height="200"></canvas>
     <script>
         var canvas = document.getElementById('gameCanvas');
         var ctx = canvas.getContext('2d');
@@ -63,7 +62,7 @@
         // Player properties
         var player = {
             x: 50,
-            y: 150, // Adjusted for the new canvas height
+            y: 150,
             width: 30,
             height: 30,
             speed: 4,
@@ -142,15 +141,10 @@
                 player.dy = 0;
             }
 
-            // Check if the player has reached the end of the level
-            if (player.x > canvas.width) {
-                currentLevel++; // Move to the next level
-                if (currentLevel < levels.length) {
-                    resetLevel();
-                } else {
-                    alert("You've completed the game!"); // Game over message
-                    resetGame();
-                }
+            // Check if the player has reached the end of Level 1
+            if (currentLevel === 0 && player.x > canvas.width) {
+                currentLevel++; // Move to Level 2
+                resetLevel(); // Reset for the new level
             }
 
             // Handle player movement
@@ -174,12 +168,6 @@
             player.y = 150; // Reset player's height
             player.dy = 0; // Reset vertical speed
             platforms = levels[currentLevel]; // Load the new level's platforms
-        }
-
-        // Reset game to first level
-        function resetGame() {
-            currentLevel = 0; // Reset to level 0
-            resetLevel(); // Reset level
         }
 
         // Start game loop at 60 FPS
