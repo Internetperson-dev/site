@@ -15,55 +15,23 @@
             align-items: center; /* Center elements horizontally */
         }
 
-        #topSpace {
-            height: 0; /* Height of the blank space, adjust if needed */
-            width: 100%;
-        }
-
         #gameCanvas {
             background-color: #8B4513; /* Brown ground color */
             border: 1px solid black; /* Optional: Add a border to make it more visible */
-        }
-
-        .player {
-            position: absolute;
-            background-color: #FF0000; /* Red player color */
-            width: 30px;
-            height: 30px;
-        }
-
-        .platform {
-            position: absolute;
-            background-color: #228B22; /* Green platform color */
-            height: 20px;
         }
         
     </style>
 </head>
 <body>
-    <div id="topSpace"></div> <!-- Blank div for spacing -->
     <canvas id="gameCanvas" width="400" height="200"></canvas> <!-- Adjusted width and height -->
     <script>
         var canvas = document.getElementById('gameCanvas');
         var ctx = canvas.getContext('2d');
 
-        // Define key mappings for 3DS buttons, WASD, and arrow keys
-        var keyMap = {
-            13: "A",      // 3DS "A" Button
-            65: "A",      // "A" key on keyboard
-            87: "Up",     // "W" key on keyboard
-            68: "Right",  // "D" key on keyboard
-            83: "Down",   // "S" key on keyboard
-            37: "Left",   // Left Arrow
-            38: "Up",     // Up Arrow
-            39: "Right",  // Right Arrow
-            40: "Down"    // Down Arrow
-        };
-
         // Player properties
         var player = {
             x: 50,
-            y: 150, // Adjusted for the new canvas height
+            y: 150, // Initial y position for player
             width: 30,
             height: 30,
             speed: 4,
@@ -75,42 +43,23 @@
 
         // Platform properties
         var platforms = [
-            { x: 0, y: 180, width: 400, height: 20 }, // Adjusted width
+            { x: 0, y: 180, width: 400, height: 20 }, // Ground platform
             { x: 100, y: 160, width: 100, height: 20 },
             { x: 200, y: 120, width: 100, height: 20 }
         ];
 
-        // Time management for fixed time step
-        var lastTime = 0;
-        var fixedDeltaTime = 1000 / 60; // 60 updates per second
-        var accumulatedTime = 0;
-
-        // Draw player
-        function drawPlayer() {
-            ctx.fillStyle = '#FF0000'; // Red color for the player
-            ctx.fillRect(player.x, player.y, player.width, player.height);
-        }
-
-        // Draw platforms
-        function drawPlatforms() {
-            ctx.fillStyle = '#228B22'; // Green color for platforms
-            for (var i = 0; i < platforms.length; i++) {
-                var platform = platforms[i];
-                ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
-            }
-        }
-
         // Handle key events
         var keys = {};
         window.addEventListener('keydown', function(e) {
-            if (keyMap[e.keyCode]) keys[keyMap[e.keyCode]] = true;
+            keys[e.key] = true; // Use key names instead of key codes for simplicity
         });
         window.addEventListener('keyup', function(e) {
-            if (keyMap[e.keyCode]) keys[keyMap[e.keyCode]] = false;
+            keys[e.key] = false;
         });
 
         // Update player and check collisions
-        function update(deltaTime) {
+        function update() {
+            // Apply gravity
             player.dy += player.gravity;
             player.y += player.dy;
 
@@ -125,7 +74,7 @@
                     player.y + player.height + player.dy >= platform.y
                 ) {
                     player.dy = 0;
-                    player.y = platform.y - player.height;
+                    player.y = platform.y - player.height; // Position player on top of platform
                     player.grounded = true;
                 }
             }
@@ -137,36 +86,34 @@
             }
 
             // Handle player movement
-            if (keys["Left"]) player.x -= player.speed;
-            if (keys["Right"]) player.x += player.speed;
-            if (keys["Up"] && player.grounded) player.dy = player.jumpPower;
+            if (keys["ArrowLeft"] || keys["a"]) player.x -= player.speed; // Move left
+            if (keys["ArrowRight"] || keys["d"]) player.x += player.speed; // Move right
+            if (keys["ArrowUp"] || keys["w"] && player.grounded) {
+                player.dy = player.jumpPower; // Jump
+            }
 
             // Keep player within canvas bounds
             if (player.x < 0) player.x = 0;
             if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
         }
 
-        // Main loop
-        function gameLoop(timestamp) {
-            // Calculate the time since the last update
-            var deltaTime = timestamp - lastTime;
-            lastTime = timestamp;
-
-            accumulatedTime += deltaTime;
-
-            // Update physics based on fixed time step
-            while (accumulatedTime >= fixedDeltaTime) {
-                update(fixedDeltaTime);
-                accumulatedTime -= fixedDeltaTime;
+        // Draw everything
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height); // Clear the canvas
+            ctx.fillStyle = '#228B22'; // Green color for platforms
+            for (var i = 0; i < platforms.length; i++) {
+                var platform = platforms[i];
+                ctx.fillRect(platform.x, platform.y, platform.width, platform.height); // Draw platforms
             }
+            ctx.fillStyle = '#FF0000'; // Red color for the player
+            ctx.fillRect(player.x, player.y, player.width, player.height); // Draw player
+        }
 
-            // Clear the canvas and redraw everything
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-            drawPlatforms();
-            drawPlayer();
-
-            // Request the next frame
-            requestAnimationFrame(gameLoop);
+        // Main loop
+        function gameLoop() {
+            update(); // Update game logic
+            draw(); // Render the game
+            requestAnimationFrame(gameLoop); // Repeat the loop
         }
 
         // Start the game loop
