@@ -1,37 +1,130 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-        "http://www.w3.org/TR/html4/loose.dtd">
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Jumpy</title>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
-    <meta name="description" content="3DS game">
-    <link rel="stylesheet" href="global.css">
-    <link rel="stylesheet" href="jumpy.css">
-
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Platformer Game</title>
     <script src="global.js" type="text/javascript"></script>
-    <script src="jumpy.js" type="text/javascript"></script>
-
+    <link rel="stylesheet" href="global.css">
+    <style>
+        body {
+            margin: 0;
+            overflow: hidden;
+            background-color: #87CEEB;
+        }
+        #gameCanvas {
+            background-color: #8B4513;
+            display: block;
+            margin: 0 auto;
+        }
+        .platform {
+            position: absolute;
+            background-color: #228B22;
+            height: 20px;
+        }
+        .player {
+            position: absolute;
+            background-color: #FF0000;
+            width: 30px;
+            height: 30px;
+        }
+    </style>
 </head>
 <body>
-    <div id="screens">
-        <div id="top-screen">
-            <h1 id="gameover"></h1>
-            <div id="player"></div>
-        </div>
-        <div id="bottom-screen">
-            <img src="jumpy.png" id="img-jumpy" alt="Jumpy spritesheet">
-            <img src="spike.png" id="img-spike" alt="Spike sprite">
-
-
-            <div id="stats">
-                <p id="time">Time: 0:00:00</p>
-                <p id="high-score">High score: 0:00:00</p>
-            </div>
-            <h2 id="manual">&#xE079;, &#xE000; or tap to jump<br>&#xE07A; to quickly fall</h2>
-            <p class="note">Based on Chrome T-rex game</p>
-
-        </div>
+    <div id="gameContainer">
+        <canvas id="gameCanvas" width="320" height="240"></canvas>
     </div>
+    <script>
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+
+        const player = {
+            x: 50,
+            y: 200,
+            width: 30,
+            height: 30,
+            speed: 2,
+            dy: 0,
+            gravity: 0.5,
+            jumpPower: -10,
+            grounded: false
+        };
+
+        const platforms = [
+            { x: 0, y: 220, width: 320, height: 20 },
+            { x: 100, y: 180, width: 100, height: 20 },
+            { x: 200, y: 140, width: 100, height: 20 }
+        ];
+
+        function drawPlayer() {
+            ctx.fillStyle = '#FF0000';
+            ctx.fillRect(player.x, player.y, player.width, player.height);
+        }
+
+        function drawPlatforms() {
+            ctx.fillStyle = '#228B22';
+            platforms.forEach(platform => {
+                ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
+            });
+        }
+
+        function update() {
+            player.dy += player.gravity;
+            player.y += player.dy;
+
+            // Check for collision with platforms
+            player.grounded = false;
+            platforms.forEach(platform => {
+                if (player.x < platform.x + platform.width &&
+                    player.x + player.width > platform.x &&
+                    player.y + player.height < platform.y + platform.height &&
+                    player.y + player.height + player.dy >= platform.y) {
+                    player.dy = 0;
+                    player.y = platform.y - player.height;
+                    player.grounded = true;
+                }
+            });
+
+            // Prevent falling through the ground
+            if (player.y > canvas.height) {
+                player.y = canvas.height;
+                player.dy = 0;
+            }
+
+            // Handle player movement
+            if (keys['ArrowLeft']) {
+                player.x -= player.speed;
+            }
+            if (keys['ArrowRight']) {
+                player.x += player.speed;
+            }
+            if (keys['ArrowUp'] && player.grounded) {
+                player.dy = player.jumpPower;
+            }
+
+            // Keep player within canvas bounds
+            if (player.x < 0) player.x = 0;
+            if (player.x + player.width > canvas.width) player.x = canvas.width - player.width;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            drawPlatforms();
+            drawPlayer();
+        }
+
+        const keys = {};
+        window.addEventListener('keydown', (e) => {
+            keys[e.key] = true;
+        });
+        window.addEventListener('keyup', (e) => {
+            keys[e.key] = false;
+        });
+
+        function gameLoop() {
+            update();
+            requestAnimationFrame(gameLoop);
+        }
+
+        gameLoop();
+    </script>
 </body>
 </html>
