@@ -9,21 +9,15 @@
             margin: 0;
             overflow: hidden; /* Prevent scrolling */
             background-color: #87CEEB; /* Sky blue background */
-            position: relative; /* Enable positioning of the canvas */
-            height: 457px; /* Height of the top screen */
-            width: 321px; /* Width of the top screen */
-        }
-
-        .dual-screen {
-            position: absolute;
-            margin-left: 39.4667px; /* Adjust margin for 3DS top screen */
-            height: 240px; /* Keep the canvas height for the game */
-            width: 320px; /* Keep the canvas width */
+            height: 240px; /* Fixed height for top screen */
+            width: 321px; /* Fixed width for top screen */
+            position: relative; /* Enable positioning of elements */
         }
 
         #gameCanvas {
             display: block;
             background-color: #8B4513; /* Brown ground color */
+            margin: 0 auto; /* Center the canvas horizontally */
         }
 
         #timeDisplay {
@@ -53,9 +47,7 @@
     </style>
 </head>
 <body>
-    <div class="dual-screen">
-        <canvas id="gameCanvas" width="320" height="240"></canvas>
-    </div>
+    <canvas id="gameCanvas" width="320" height="240"></canvas>
     <div id="timeDisplay">Time Played: 0s</div> <!-- Time display -->
     <script>
         var canvas = document.getElementById('gameCanvas');
