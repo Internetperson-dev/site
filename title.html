@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Platformer Game Title Screen</title>
     <style>
-        /* CSS: Modern Design with Vendor Prefixes */
+        /* CSS: Basic Layout Compatible with Older Browsers */
         * {
             margin: 0;
             padding: 0;
@@ -15,75 +15,34 @@
             height: 100%;
             font-family: Arial, sans-serif;
             overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: #f8b500;
-            background: -webkit-linear-gradient(135deg, #f8b500, #fc5c7d);
-            background: linear-gradient(135deg, #f8b500, #fc5c7d);
+            text-align: center;
+            background-color: #f8b500;
+            color: white;
         }
         .title-screen {
-            text-align: center;
-            color: white;
-            -webkit-animation: fadeIn 2s ease;
-            -moz-animation: fadeIn 2s ease;
-            -o-animation: fadeIn 2s ease;
-            animation: fadeIn 2s ease;
+            display: inline-block;
+            width: 100%;
+            padding: 20px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
         }
         .title-screen h1 {
-            font-size: 3em;
-            letter-spacing: 2px;
-            margin-bottom: 0.5em;
+            font-size: 2em;
+            margin-bottom: 20px;
             text-transform: uppercase;
-            -webkit-animation: slideIn 1.5s ease;
-            -moz-animation: slideIn 1.5s ease;
-            -o-animation: slideIn 1.5s ease;
-            animation: slideIn 1.5s ease;
         }
         .button {
-            padding: 15px 30px;
-            font-size: 1.2em;
+            padding: 10px 20px;
+            font-size: 1em;
             color: white;
             background-color: #ff7e5f;
             border: none;
-            border-radius: 30px;
             cursor: pointer;
-            -webkit-transition: background 0.3s ease;
-            -moz-transition: background 0.3s ease;
-            -o-transition: background 0.3s ease;
-            transition: background 0.3s ease;
-            -webkit-animation: bounce 2s infinite;
-            -moz-animation: bounce 2s infinite;
-            -o-animation: bounce 2s infinite;
-            animation: bounce 2s infinite;
         }
         .button:hover {
             background-color: #ff3a3a;
-        }
-        /* Animations with vendor prefixes */
-        @-webkit-keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-        @-webkit-keyframes slideIn {
-            from { -webkit-transform: translateY(-50px); transform: translateY(-50px); opacity: 0; }
-            to { -webkit-transform: translateY(0); transform: translateY(0); opacity: 1; }
-        }
-        @keyframes slideIn {
-            from { transform: translateY(-50px); opacity: 0; }
-            to { transform: translateY(0); opacity: 1; }
-        }
-        @-webkit-keyframes bounce {
-            0%, 100% { -webkit-transform: translateY(0); transform: translateY(0); }
-            50% { -webkit-transform: translateY(-10px); transform: translateY(-10px); }
-        }
-        @keyframes bounce {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
         }
     </style>
 </head>
