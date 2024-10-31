@@ -34,31 +34,27 @@
     <audio id="background-music" src="https://www.bensound.com/bensound-music/bensound-sunny.mp3" preload="auto" loop></audio>
 
     <script>
-        // JavaScript for Music and Button Action
-        (function() {
+        // Define function in the global scope
+        function enterSite() {
             var audio = document.getElementById('background-music');
-
-            function playMusic() {
-                try {
-                    audio.play();
-                } catch (error) {
-                    console.log("Autoplay prevented, starting on button click");
-                }
-            }
-
-            // Play music on page load or button click
-            if (window.addEventListener) {
-                window.addEventListener('load', playMusic, false);
-            } else if (window.attachEvent) { // IE8 and below
-                window.attachEvent('onload', playMusic);
-            }
-
-            // Enter Site function for button click
-            window.enterSite = function() {
+            try {
                 audio.play();
-                window.location.href = "3ds.html"; // Replace with your main page URL
-            };
-        })();
+            } catch (error) {
+                console.log("Autoplay prevented; music will start on button click.");
+            }
+            // Redirect to the main page
+            window.location.href = "3ds.html"; // Replace with your actual main page URL
+        }
+        
+        // Play audio on load
+        window.onload = function() {
+            var audio = document.getElementById('background-music');
+            try {
+                audio.play();
+            } catch (error) {
+                console.log("Autoplay prevented; music will start on button click.");
+            }
+        };
     </script>
 </body>
 </html>
