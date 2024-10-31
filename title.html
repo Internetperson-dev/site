@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern Title Screen</title>
+    <style>
+        /* CSS: Modern Design */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body, html {
+            height: 100%;
+            font-family: Arial, sans-serif;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #f8b500, #fc5c7d);
+        }
+        .title-screen {
+            text-align: center;
+            color: white;
+            animation: fadeIn 2s ease;
+        }
+        .title-screen h1 {
+            font-size: 3em;
+            letter-spacing: 2px;
+            margin-bottom: 0.5em;
+            text-transform: uppercase;
+            animation: slideIn 1.5s ease;
+        }
+        .title-screen p {
+            font-size: 1.2em;
+            margin-bottom: 2em;
+            color: rgba(255, 255, 255, 0.8);
+        }
+        .button {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            color: white;
+            background-color: #ff7e5f;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: background 0.3s ease;
+            animation: bounce 2s infinite;
+        }
+        .button:hover {
+            background-color: #ff3a3a;
+        }
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+        @keyframes slideIn {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="title-screen">
+        <h1>Welcome to Our Site</h1>
+        <p>Immerse yourself in the experience</p>
+        <button class="button" onclick="enterSite()">Enter</button>
+    </div>
+
+    <!-- Audio: Copyright-Free Music -->
+    <audio id="background-music" src="https://www.bensound.com/bensound-music/bensound-sunny.mp3" preload="auto" loop></audio>
+
+    <script>
+        // JavaScript: Music & Button Action
+        window.addEventListener('load', () => {
+            const music = document.getElementById('background-music');
+            music.play().catch(error => {
+                // Handles autoplay restrictions
+                console.log("Autoplay prevented, starting on button click");
+            });
+        });
+
+        function enterSite() {
+            // Start music if it hasn’t started already
+            document.getElementById('background-music').play();
+            // Navigate to main page
+            window.location.href = "main.html"; // Replace with your main page URL
+        }
+    </script>
+</body>
+</html>
