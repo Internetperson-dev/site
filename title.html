@@ -3,9 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern Title Screen</title>
+    <title>Platformer Game Title Screen</title>
     <style>
-        /* CSS: Modern Design */
+        /* CSS: Modern Design with Vendor Prefixes */
         * {
             margin: 0;
             padding: 0;
@@ -18,11 +18,16 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            background: #f8b500;
+            background: -webkit-linear-gradient(135deg, #f8b500, #fc5c7d);
             background: linear-gradient(135deg, #f8b500, #fc5c7d);
         }
         .title-screen {
             text-align: center;
             color: white;
+            -webkit-animation: fadeIn 2s ease;
+            -moz-animation: fadeIn 2s ease;
+            -o-animation: fadeIn 2s ease;
             animation: fadeIn 2s ease;
         }
         .title-screen h1 {
@@ -30,12 +35,10 @@
             letter-spacing: 2px;
             margin-bottom: 0.5em;
             text-transform: uppercase;
+            -webkit-animation: slideIn 1.5s ease;
+            -moz-animation: slideIn 1.5s ease;
+            -o-animation: slideIn 1.5s ease;
             animation: slideIn 1.5s ease;
-        }
-        .title-screen p {
-            font-size: 1.2em;
-            margin-bottom: 2em;
-            color: rgba(255, 255, 255, 0.8);
         }
         .button {
             padding: 15px 30px;
@@ -45,20 +48,38 @@
             border: none;
             border-radius: 30px;
             cursor: pointer;
+            -webkit-transition: background 0.3s ease;
+            -moz-transition: background 0.3s ease;
+            -o-transition: background 0.3s ease;
             transition: background 0.3s ease;
+            -webkit-animation: bounce 2s infinite;
+            -moz-animation: bounce 2s infinite;
+            -o-animation: bounce 2s infinite;
             animation: bounce 2s infinite;
         }
         .button:hover {
             background-color: #ff3a3a;
         }
-        /* Animations */
+        /* Animations with vendor prefixes */
+        @-webkit-keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
+        @-webkit-keyframes slideIn {
+            from { -webkit-transform: translateY(-50px); transform: translateY(-50px); opacity: 0; }
+            to { -webkit-transform: translateY(0); transform: translateY(0); opacity: 1; }
+        }
         @keyframes slideIn {
             from { transform: translateY(-50px); opacity: 0; }
             to { transform: translateY(0); opacity: 1; }
+        }
+        @-webkit-keyframes bounce {
+            0%, 100% { -webkit-transform: translateY(0); transform: translateY(0); }
+            50% { -webkit-transform: translateY(-10px); transform: translateY(-10px); }
         }
         @keyframes bounce {
             0%, 100% { transform: translateY(0); }
@@ -68,7 +89,7 @@
 </head>
 <body>
     <div class="title-screen">
-        <h1>Platformer game Title screen</h1>
+        <h1>Platformer Game Title Screen</h1>
         <button class="button" onclick="enterSite()">Enter</button>
     </div>
 
@@ -76,22 +97,31 @@
     <audio id="background-music" src="https://www.bensound.com/bensound-music/bensound-sunny.mp3" preload="auto" loop></audio>
 
     <script>
-        // JavaScript: Music & Button Action
-        window.addEventListener('load', () => {
-            const music = document.getElementById('background-music');
-            music.play().catch(error => {
-                // Handles autoplay restrictions
-                console.log("Autoplay prevented, starting on button click");
-            });
-        });
+        // JavaScript for Older Browsers
+        (function() {
+            var audio = document.getElementById('background-music');
 
-        function enterSite() {
-            // Start music if it hasn’t started already
-            document.getElementById('background-music').play();
-            // Navigate to main page
-            window.location.href = "3ds.html"; // Replace with your main page URL
-        }
+            function playMusic() {
+                try {
+                    audio.play();
+                } catch (error) {
+                    console.log("Autoplay prevented, starting on button click");
+                }
+            }
+
+            // Play music on page load or button click
+            if (window.addEventListener) {
+                window.addEventListener('load', playMusic, false);
+            } else if (window.attachEvent) { // IE8 and below
+                window.attachEvent('onload', playMusic);
+            }
+
+            // Enter Site function for button click
+            window.enterSite = function() {
+                audio.play();
+                window.location.href = "3ds.html"; // Change to your main page URL
+            };
+        })();
     </script>
 </body>
 </html>
-
