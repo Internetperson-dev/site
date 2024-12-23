@@ -10,7 +10,7 @@
   <!-- Google Font: Roboto -->
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
 
-  <!-- Material Web Components CDN -->
+  <!-- Material Web Components CDN for MD3 -->
   <script type="module" src="https://unpkg.com/@material/web/dist/material-web.js"></script>
 
   <!-- Material Typography Styles -->
@@ -19,18 +19,19 @@
     document.adoptedStyleSheets.push(typescaleStyles.styleSheet);
   </script>
 
-  <!-- Inline Styles for Layout and Material Design -->
+  <!-- Dark mode and Material Design custom styles -->
   <style>
+    /* Global styles for light and dark mode */
     body {
       font-family: 'Roboto', sans-serif;
       margin: 0;
       padding: 0;
-      background-color: #f5f5f5;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
       min-height: 100vh;
+      transition: background-color 0.3s, color 0.3s;
     }
 
     header, footer {
@@ -77,6 +78,32 @@
       color: #555;
     }
 
+    /* Light mode */
+    body {
+      background-color: #f5f5f5;
+      color: #000;
+    }
+
+    /* Dark mode */
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-color: #121212;
+        color: #fff;
+      }
+
+      main {
+        background-color: #333;
+      }
+
+      a {
+        color: #bb86fc;
+      }
+
+      footer p {
+        color: #bbb;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -87,13 +114,45 @@
 
   <main>
     <ul>
-      <li><a href="https://github.com/Internetperson-dev/artix-runit-install" target="_blank" rel="noopener noreferrer">Linux Installer</a></li>
-      <li><a href="https://github.com/Internetperson-dev/Linux-Desktop-Setup" target="_blank" rel="noopener noreferrer">Linux Desktop Setup</a></li>
-      <li><a href="https://wolfyxon.github.io/3ds-web-stuff/" target="_blank" rel="noopener noreferrer">3DS Games</a></li>
-      <li><a href="http://froxot.de/" target="_blank" rel="noopener noreferrer">3DS Games - 2</a></li>
-      <li><a href="https://www.elizium.nu/scripts/lemmings/" target="_blank" rel="noopener noreferrer">Lemmings</a></li>
-      <li><a href="https://internetperson-dev.github.io/site/title" target="_blank" rel="noopener noreferrer">Test game</a></li>
+      <li>
+        <a href="https://github.com/Internetperson-dev/artix-runit-install" target="_blank" rel="noopener noreferrer">
+          Linux Installer
+        </a>
+      </li>
+      <li>
+        <a href="https://github.com/Internetperson-dev/Linux-Desktop-Setup" target="_blank" rel="noopener noreferrer">
+          Linux Desktop Setup
+        </a>
+      </li>
+      <li>
+        <a href="https://wolfyxon.github.io/3ds-web-stuff/" target="_blank" rel="noopener noreferrer">
+          3DS Games
+        </a>
+      </li>
+      <li>
+        <a href="http://froxot.de/" target="_blank" rel="noopener noreferrer">
+          3DS Games - 2
+        </a>
+      </li>
+      <li>
+        <a href="https://www.elizium.nu/scripts/lemmings/" target="_blank" rel="noopener noreferrer">
+          Lemmings
+        </a>
+      </li>
+      <li>
+        <a href="https://internetperson-dev.github.io/site/title" target="_blank" rel="noopener noreferrer">
+          Test game
+        </a>
+      </li>
     </ul>
+
+    <!-- Material Design 3 Button Example -->
+    <md-filled-button href="https://github.com/Internetperson-dev/artix-runit-install" target="_blank">
+      Visit Linux Installer
+    </md-filled-button>
+    <md-outlined-button href="https://github.com/Internetperson-dev/Linux-Desktop-Setup" target="_blank">
+      Visit Desktop Setup
+    </md-outlined-button>
   </main>
 
   <footer>
