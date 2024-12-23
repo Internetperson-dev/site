@@ -3,28 +3,91 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Artix Runit encrypted installer, LARBS fork">
-  <meta name="author" content="Internetperson-dev">
-  <link rel="shortcut icon" href="data:image/x-icon;," type="image/x-icon"> 
-  <link rel="stylesheet" type="text/css" href="style.css">
-  <title>Links</title>
+  <meta name="description" content="Optimized Material Design Website">
+  <meta name="author" content="Your Name">
+  <title>Optimized Material Design Form</title>
+
+  <!-- Google Font: Roboto -->
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+
+  <!-- Material Web Components CDN -->
+  <script type="module" src="https://unpkg.com/@material/web/dist/material-web.js"></script>
+
+  <!-- Material Typography Styles -->
+  <script type="module">
+    import {styles as typescaleStyles} from '@material/web/typography/md-typescale-styles.js';
+    document.adoptedStyleSheets.push(typescaleStyles.styleSheet);
+  </script>
+
+  <!-- Inline Styles for Layout -->
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f5f5f5;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+    }
+
+    form {
+      background-color: white;
+      padding: 24px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 480px;
+    }
+
+    h1 {
+      margin-bottom: 16px;
+      font-weight: 500;
+    }
+
+    .md-typescale-body-medium {
+      margin-bottom: 16px;
+    }
+
+    md-outlined-button {
+      align-self: flex-start;
+      margin-top: 16px;
+    }
+
+    md-checkbox, md-radio {
+      margin-bottom: 16px;
+    }
+
+    .radio-group {
+      display: flex;
+      gap: 10px;
+    }
+
+  </style>
 </head>
 <body>
-  <header>
-    <h1>Useful Links</h1>
-  </header>
-  <main>
-    <ul>
-      <li><a href="https://github.com/Internetperson-dev/artix-runit-install" target="_blank" rel="noopener noreferrer">Linux Installer</a></li> 
-      <li><a href="https://github.com/Internetperson-dev/Linux-Desktop-Setup" target="_blank" rel="noopener noreferrer">Linux Desktop Setup</a></li>
-      <li><a href="https://wolfyxon.github.io/3ds-web-stuff/" target="_blank" rel="noopener noreferrer">3DS Games</a></li>
-      <li><a href="http://froxot.de/" target="_blank" rel="noopener noreferrer">3DS Games - 2</a></li>
-      <li><a href="https://www.elizium.nu/scripts/lemmings/" target="_blank" rel="noopener noreferrer">Lemmings</a></li>
-      <li><a href="https://internetperson-dev.github.io/site/title" target="_blank" rel="noopener noreferrer">Test game</a></li>
-    </ul>
-  </main>
-  <footer>
-    <p>Created by Internetperson-dev</p>
-  </footer>
+
+  <form>
+    <h1 class="md-typescale-display-medium">Welcome to Material Design!</h1>
+    <p class="md-typescale-body-medium">Experience Material components and clean UI.</p>
+
+    <!-- Material Checkbox -->
+    <md-checkbox>Accept terms</md-checkbox>
+
+    <!-- Material Radio Buttons -->
+    <div class="radio-group">
+      <md-radio name="group" value="option1" label="Option 1"></md-radio>
+      <md-radio name="group" value="option2" label="Option 2"></md-radio>
+      <md-radio name="group" value="option3" label="Option 3"></md-radio>
+    </div>
+
+    <!-- Material Outlined Text Field -->
+    <md-outlined-text-field label="Favorite color" value="Purple" required></md-outlined-text-field>
+
+    <!-- Material Outlined Button -->
+    <md-outlined-button type="reset">Reset</md-outlined-button>
+  </form>
+
 </body>
 </html>
