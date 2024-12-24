@@ -63,8 +63,25 @@ window.addEventListener('keyup', function(e) {
 
 // Update player and check collisions
 function update() {
-    player.dy += player.gravity; // Apply gravity
-    player.y += player.dy; // Move player by its vertical speed
+    // Apply gravity
+    player.dy += player.gravity;
+    player.y += player.dy;
+
+    // Handle player movement (debugging added)
+    console.log('Player keys:', keys);  // Debug: Check keys status
+    
+    if (keys["Left"]) {
+        player.x -= player.speed;
+        console.log("Moving left");  // Debug: Print movement direction
+    }
+    if (keys["Right"]) {
+        player.x += player.speed;
+        console.log("Moving right");  // Debug: Print movement direction
+    }
+    if (keys["Up"] && player.grounded) {
+        player.dy = player.jumpPower;
+        console.log("Jumping");  // Debug: Print jumping action
+    }
 
     // Check for collision with platforms
     player.grounded = false; // Reset grounded state
@@ -105,11 +122,6 @@ function update() {
         currentLevel++; // Move to Level 2
         resetLevel(); // Reset for the new level
     }
-
-    // Handle player movement
-    if (keys["Left"]) player.x -= player.speed;
-    if (keys["Right"]) player.x += player.speed;
-    if (keys["Up"] && player.grounded) player.dy = player.jumpPower;
 
     // Keep player within canvas bounds
     if (player.x < 0) player.x = 0;
