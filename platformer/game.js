@@ -36,7 +36,7 @@ var levels = [
             { x: 200, y: 120, width: 100, height: 20 }
         ],
         endObject: { x: 370, y: 150, width: 20, height: 30 },
-        completionURL: "https://internetperson-dev.github.io/site/3ds1.html"
+        completionURL: "https://internetperson-dev.github.io/site/platformer/3ds1.html" // URL for level 1 completion
     }
 ];
 
@@ -131,7 +131,8 @@ function update() {
         player.y < endObject.y + endObject.height &&
         player.y + player.height > endObject.y
     ) {
-        window.location.href = currentLevelData.completionURL; // Redirect to the specified URL
+        var completionURL = currentLevelData.completionURL; // Access the completion URL
+        window.location.href = completionURL; // Redirect to the completion URL
     }
 
     // Check if the player has reached the end of Level 1
