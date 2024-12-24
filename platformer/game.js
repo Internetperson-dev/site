@@ -27,21 +27,9 @@ var player = {
     grounded: false
 };
 
-// Define the levels and platforms
-var levels = [
-    {
-        platforms: [ // Level 1 platforms
-            { x: 0, y: 180, width: 400, height: 20 },
-            { x: 100, y: 160, width: 100, height: 20 },
-            { x: 200, y: 120, width: 100, height: 20 }
-        ],
-        endObject: { x: 370, y: 150, width: 20, height: 30 },
-        completionURL: "https://internetperson-dev.github.io/site/platformer/3ds1.html" // URL for level 1 completion
-    }
-];
-
-var currentLevel = 0; // Start with level 0
-var currentLevelData = levels[currentLevel]; // Platforms and end object for the current level
+// Ensure level1.js is loaded and its `levels` variable is available
+var currentLevel = 0;
+var currentLevelData = levels[currentLevel]; // Get level data from level1.js
 
 // Draw player
 function drawPlayer() {
@@ -52,8 +40,9 @@ function drawPlayer() {
 // Draw platforms
 function drawPlatforms() {
     ctx.fillStyle = '#228B22'; // Green color for platforms
-    for (var i = 0; i < currentLevelData.platforms.length; i++) {
-        var platform = currentLevelData.platforms[i];
+    var platforms = currentLevelData.platforms;
+    for (var i = 0; i < platforms.length; i++) {
+        var platform = platforms[i];
         ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
     }
 }
@@ -80,30 +69,25 @@ function update() {
     player.dy += player.gravity;
     player.y += player.dy;
 
-    // Handle player movement (debugging added)
-    console.log('Player keys:', keys);  // Debug: Check keys status
-    
+    // Handle player movement
     if (keys["Left"]) {
         player.x -= player.speed;
-        console.log("Moving left");  // Debug: Print movement direction
     }
     if (keys["Right"]) {
         player.x += player.speed;
-        console.log("Moving right");  // Debug: Print movement direction
     }
     if (keys["Up"] && player.grounded) {
         player.dy = player.jumpPower;
-        console.log("Jumping");  // Debug: Print jumping action
     }
     if (keys["A"] && player.grounded) {
         player.dy = player.jumpPower; // Jump with "A" key as well
-        console.log("Jumping with 'A' key"); // Debug: Print jumping with "A" key
     }
 
     // Check for collision with platforms
     player.grounded = false; // Reset grounded state
-    for (var i = 0; i < currentLevelData.platforms.length; i++) {
-        var platform = currentLevelData.platforms[i];
+    var platforms = currentLevelData.platforms;
+    for (var i = 0; i < platforms.length; i++) {
+        var platform = platforms[i];
         // Check for collision
         if (
             player.x < platform.x + platform.width &&
