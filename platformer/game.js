@@ -1,3 +1,16 @@
+// Define key mappings for 3DS buttons, WASD, and arrow keys
+var keyMap = {
+    13: "A",      // 3DS "A" Button
+    65: "A",      // "A" key on keyboard
+    87: "Up",     // "W" key on keyboard
+    68: "Right",  // "D" key on keyboard
+    83: "Down",   // "S" key on keyboard
+    37: "Left",   // Left Arrow
+    38: "Up",     // Up Arrow
+    39: "Right",  // Right Arrow
+    40: "Down"    // Down Arrow
+};
+
 var canvas = document.getElementById('gameCanvas');
 var ctx = canvas.getContext('2d');
 
