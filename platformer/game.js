@@ -1,7 +1,7 @@
 // Define key mappings for 3DS buttons, WASD, and arrow keys
 var keyMap = {
-    13: "A",      // 3DS "A" Button
-    65: "A",      // "A" key on keyboard
+    13: "A",      // 3DS "A" Button (Enter key)
+    65: "A",      // "A" key on keyboard (keycode 65)
     87: "Up",     // "W" key on keyboard
     68: "Right",  // "D" key on keyboard
     83: "Down",   // "S" key on keyboard
@@ -94,6 +94,10 @@ function update() {
     if (keys["Up"] && player.grounded) {
         player.dy = player.jumpPower;
         console.log("Jumping");  // Debug: Print jumping action
+    }
+    if (keys["A"] && player.grounded) {
+        player.dy = player.jumpPower; // Jump with "A" key as well
+        console.log("Jumping with 'A' key"); // Debug: Print jumping with "A" key
     }
 
     // Check for collision with platforms
