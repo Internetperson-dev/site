@@ -1,0 +1,19 @@
+body {
+    margin: 0;
+    overflow: hidden;
+    background-color: #87CEEB; /* Sky blue background */
+    height: 200px; /* Set to the height of the top screen */
+    display: flex;
+    flex-direction: column; /* Arrange children vertically */
+    align-items: center; /* Center elements horizontally */
+}
+
+#topSpace {
+    height: 0; /* Height of the blank space, adjust if needed */
+    width: 100%;
+}
+
+#gameCanvas {
+    background-color: #8B4513; /* Brown ground color */
+    border: 1px solid black; /* Optional: Add a border to make it more visible */
+}
