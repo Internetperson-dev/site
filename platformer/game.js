@@ -1,19 +1,6 @@
 var canvas = document.getElementById('gameCanvas');
 var ctx = canvas.getContext('2d');
 
-// Define key mappings for 3DS buttons, WASD, and arrow keys
-var keyMap = {
-    13: "A",      // 3DS "A" Button
-    65: "A",      // "A" key on keyboard
-    87: "Up",     // "W" key on keyboard
-    68: "Right",  // "D" key on keyboard
-    83: "Down",   // "S" key on keyboard
-    37: "Left",   // Left Arrow
-    38: "Up",     // Up Arrow
-    39: "Right",  // Right Arrow
-    40: "Down"    // Down Arrow
-};
-
 // Player properties
 var player = {
     x: 50,
@@ -27,16 +14,21 @@ var player = {
     grounded: false
 };
 
-// Define end object for level completion
-var endObject = {
-    x: 370, // Position near the right edge of the canvas
-    y: 150, // Same height as the player
-    width: 20,
-    height: 30
-};
+// Define the levels and platforms
+var levels = [
+    {
+        platforms: [ // Level 1 platforms
+            { x: 0, y: 180, width: 400, height: 20 },
+            { x: 100, y: 160, width: 100, height: 20 },
+            { x: 200, y: 120, width: 100, height: 20 }
+        ],
+        endObject: { x: 370, y: 150, width: 20, height: 30 },
+        completionURL: "https://internetperson-dev.github.io/site/3ds1.html"
+    }
+];
 
 var currentLevel = 0; // Start with level 0
-var platforms = levels[currentLevel]; // Platforms for the current level
+var currentLevelData = levels[currentLevel]; // Platforms and end object for the current level
 
 // Draw player
 function drawPlayer() {
@@ -47,8 +39,8 @@ function drawPlayer() {
 // Draw platforms
 function drawPlatforms() {
     ctx.fillStyle = '#228B22'; // Green color for platforms
-    for (var i = 0; i < platforms.length; i++) {
-        var platform = platforms[i];
+    for (var i = 0; i < currentLevelData.platforms.length; i++) {
+        var platform = currentLevelData.platforms[i];
         ctx.fillRect(platform.x, platform.y, platform.width, platform.height);
     }
 }
@@ -56,6 +48,7 @@ function drawPlatforms() {
 // Draw end object
 function drawEndObject() {
     ctx.fillStyle = '#FFD700'; // Gold color for the end object
+    var endObject = currentLevelData.endObject;
     ctx.fillRect(endObject.x, endObject.y, endObject.width, endObject.height);
 }
 
@@ -75,8 +68,8 @@ function update() {
 
     // Check for collision with platforms
     player.grounded = false; // Reset grounded state
-    for (var i = 0; i < platforms.length; i++) {
-        var platform = platforms[i];
+    for (var i = 0; i < currentLevelData.platforms.length; i++) {
+        var platform = currentLevelData.platforms[i];
         // Check for collision
         if (
             player.x < platform.x + platform.width &&
@@ -97,13 +90,14 @@ function update() {
     }
 
     // Check for collision with the end object
+    var endObject = currentLevelData.endObject;
     if (
         player.x < endObject.x + endObject.width &&
         player.x + player.width > endObject.x &&
         player.y < endObject.y + endObject.height &&
         player.y + player.height > endObject.y
     ) {
-        window.location.href = "https://internetperson-dev.github.io/site/3ds1"; // Redirect to the specified URL
+        window.location.href = currentLevelData.completionURL; // Redirect to the specified URL
     }
 
     // Check if the player has reached the end of Level 1
@@ -133,7 +127,7 @@ function resetLevel() {
     player.x = 50; // Reset player's position
     player.y = 150; // Reset player's height
     player.dy = 0; // Reset vertical speed
-    platforms = levels[currentLevel]; // Load the new level's platforms
+    currentLevelData = levels[currentLevel]; // Load the new level's platforms and endObject
 }
 
 // Start game loop at 60 FPS
