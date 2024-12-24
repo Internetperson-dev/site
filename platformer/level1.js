@@ -6,6 +6,6 @@ var levels = [
             { x: 200, y: 120, width: 100, height: 20 }
         ],
         endObject: { x: 370, y: 150, width: 20, height: 30 },
-        completionURL: "https://internetperson-dev.github.io/site/3ds1.html" // URL for level 1 completion
+        completionURL: "https://internetperson-dev.github.io/site/platformer/3ds1.html" // URL for level 1 completion
     }
 ];
