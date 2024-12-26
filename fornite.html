@@ -1,89 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="theme-color" content="#1B1464">
-    <link rel="icon" href="https://www.epicgames.com/favicon.ico">
-    <title>Play Fortnite</title>
-    <link rel="stylesheet" href="styles.css">
-    <style>
-        body {
-            margin: 0;
-            font-family: 'Arial', sans-serif;
-            background: #1B1464;
-            color: white;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-        }
-        header {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-        header img {
-            max-width: 300px;
-        }
-        .button-container {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        .button {
-            padding: 15px 20px;
-            font-size: 18px;
-            color: white;
-            background: #0078D7;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            text-align: center;
-            text-decoration: none;
-        }
-        .button:hover {
-            background: #005BB5;
-        }
-        .footer {
-            margin-top: 40px;
-            font-size: 14px;
-            color: #A5A5A5;
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Play Fortnite on the cloud with GeForce NOW or Xbox Cloud Gaming, optimized for iPhone.">
+<title>Fortnite Cloud Play</title>
+<link rel="icon" type="image/x-icon" href="https://www.epicgames.com/favicon.ico">
+<style>
+body {font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #1B1464; color: #fff; margin: 0; padding: 0; line-height: 1.6; text-align: center;}
+h1 {margin: 1rem 0;}
+ul {list-style: none; padding: 0;}
+li {margin: 0.5rem 0;}
+a {text-decoration: none; color: #0078D7; font-size: 1.2rem;}
+a:hover {color: #005BB5;}
+footer {font-size: 0.9rem; margin-top: 2rem;}
+</style>
 </head>
 <body>
-    <header>
-        <img src="https://upload.wikimedia.org/wikipedia/commons/6/64/FortniteLogo.png" alt="Fortnite Logo">
-        <h1>Play Fortnite Now!</h1>
-        <p>Choose your platform and start playing instantly.</p>
-    </header>
-
-    <div class="button-container">
-        <a href="https://play.geforcenow.com" class="button" target="_blank" rel="noopener noreferrer">
-            Play on GeForce NOW
-        </a>
-        <a href="https://www.xbox.com/en-US/play" class="button" target="_blank" rel="noopener noreferrer">
-            Play on Xbox Cloud Gaming
-        </a>
-    </div>
-
-    <div class="footer">
-        <p>Fortnite is a trademark of Epic Games, Inc. All rights reserved.</p>
-    </div>
-
-    <script>
-        // Optional: Redirect based on platform detection
-        const userAgent = navigator.userAgent.toLowerCase();
-        const isSafari = userAgent.includes('safari') && !userAgent.includes('chrome');
-
-        if (isSafari) {
-            document.querySelector('.button-container').innerHTML = `
-                <a href="https://play.geforcenow.com" class="button" target="_blank" rel="noopener noreferrer">
-                    Play on GeForce NOW (Recommended for Safari)
-                </a>
-            `;
-        }
-    </script>
+<h1>Play Fortnite Now!</h1>
+<p>Choose your platform and start playing instantly.</p>
+<ul>
+<li><a href="https://play.geforcenow.com" target="_blank" rel="noopener noreferrer">Play on GeForce NOW</a></li>
+<li><a href="https://www.xbox.com/en-US/play" target="_blank" rel="noopener noreferrer">Play on Xbox Cloud Gaming</a></li>
+</ul>
+<footer>Created by Internetperson-dev</footer>
 </body>
 </html>
