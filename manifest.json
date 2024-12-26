@@ -2,7 +2,7 @@
     "name": "Fortnite Cloud Play",
     "short_name": "Fortnite PWA",
     "description": "Play Fortnite on the cloud with GeForce NOW or Xbox Cloud Gaming.",
-    "start_url": "https://internetperson-dev.github.io/site/fornite",
+    "start_url": "https://internetperson-dev.github.io/site/fornite/",
     "display": "standalone",
     "background_color": "#000000",
     "theme_color": "#000000",
