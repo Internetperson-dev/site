@@ -1,22 +1,21 @@
 {
-    "name": "FORNITEPWAINSTALLTEST",
-    "short_name": "UnofficalFornite",
-    "description": "An unoffical PWA that links to places to stream Fornite",
+    "name": "Fortnite Cloud Play",
+    "short_name": "Fortnite PWA",
+    "description": "Play Fortnite on the cloud with GeForce NOW or Xbox Cloud Gaming.",
+    "start_url": "/index.html",
+    "display": "standalone",
+    "background_color": "#000000",
+    "theme_color": "#000000",
     "icons": [
         {
-            "src": "icons/icon-32.png",
-            "sizes": "32x32",
+            "src": "https://internetperson-dev.github.io/site/icon-192x192.png",
+            "sizes": "192x192",
             "type": "image/png"
         },
-        // ...
         {
-            "src": "icons/icon-512.png",
+            "src": "https://internetperson-dev.github.io/site/icon-512x512.png",
             "sizes": "512x512",
             "type": "image/png"
         }
-    ],
-    "start_url": "index.html",
-    "display": "standalone",
-    "theme_color": "#ffffff",
-    "background_color": "#ffffff"
+    ]
 }
