@@ -1,10 +1,10 @@
 const CACHE_NAME = 'fortnite-pwa-cache-v1';
 const urlsToCache = [
     '/',
-    'index.html',
-    'manifest.json',
-    'icon-192x192.png',
-    'icon-512x512.png',
+    '/index.html',
+    '/manifest.json',
+    '/icon-192x192.png',
+    '/icon-512x512.png',
 ];
 
 // Install event
@@ -12,7 +12,11 @@ self.addEventListener('install', event => {
     event.waitUntil(
         caches.open(CACHE_NAME).then(cache => {
             console.log('Opened cache');
-            return cache.addAll(urlsToCache);
+            return cache.addAll(
+                urlsToCache.map(url => new Request(url, { cache: 'reload' }))
+            );
+        }).catch(err => {
+            console.error('Caching failed:', err);
         })
     );
 });
@@ -21,7 +25,6 @@ self.addEventListener('install', event => {
 self.addEventListener('fetch', event => {
     event.respondWith(
         caches.match(event.request).then(response => {
-            // Serve cached content if available, otherwise fetch from network
             return response || fetch(event.request);
         })
     );
