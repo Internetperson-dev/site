@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+<link rel="manifest" href="manifest.json">
 
 <head>
     <meta charset="UTF-8">
@@ -20,6 +21,54 @@
 
 <body>
     <iframe src="https://kinoposts.web.app/test/playlistmaker.html" title="Playlist Maker"></iframe>
-</body>
 
+<script> 
+const CACHE_NAME = 'fortnite-pwa-cache-v1';
+const urlsToCache = [
+    'https://internetperson-dev.github.io/site/musicpwa/musictest.html',
+    'https://kinoposts.web.app/test/playlistmaker.html',
+    'https://internetperson-dev.github.io/site/icon-192x192.png',
+    'https://internetperson-dev.github.io/site/icon-512x512.png',
+    'https://kinoposts.web.app/test/style.css', 
+    'https://kinoposts.web.app/test/backgrounds/EOEBuildings2.mp4'  
+    'https://kinoposts.web.app/index.html'  
+    'https://kinoposts.web.app/test/loading playlist.mp3'  
+    'https://internetperson-dev.github.io/site/fornite/script.js'  
+    'https://kinoposts.web.app/test/audioPlayer.js'  
+];
+
+self.addEventListener('install', event => {
+    event.waitUntil(
+        caches.open(CACHE_NAME).then(cache => {
+            return cache.addAll(urlsToCache);
+        }).catch(err => {
+            console.error('Failed to cache resources:', err);
+        })
+    );
+});
+
+self.addEventListener('fetch', event => {
+    event.respondWith(
+        caches.match(event.request).then(response => {
+            return response || fetch(event.request);
+        })
+    );
+});
+
+self.addEventListener('activate', event => {
+    event.waitUntil(
+        caches.keys().then(cacheNames => {
+            return Promise.all(
+                cacheNames.map(cache => {
+                    if (cache !== CACHE_NAME) {
+                        return caches.delete(cache);
+                    }
+                })
+            );
+        })
+    );
+});
+
+</script>
+</body>
 </html>
