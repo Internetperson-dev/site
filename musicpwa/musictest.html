@@ -6,21 +6,22 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#000000">
     <title>Playlist Maker</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="style.css"> <!-- Ensure this path is correct -->
 </head>
 
 <body onload="startUpEvents()">
-    <video src="backgrounds/EOEBuildings2.mp4" autoplay loop muted playsinline id="videoBG"></video>
+    <video src="backgrounds/EOEBuildings2.mp4" autoplay loop muted playsinline id="videoBG"></video> <!-- Verify path -->
     <nav>
-        <a href="https://kinoposts.web.app/index.html">Back</a>
+        <a href="index.html">Back</a> <!-- Update with a correct path to the homepage -->
     </nav>
 
     <p>Use the options below to make a playlist of your own!</p>
 
     <button onclick="p3go()">/// Test - Load Persona 3 songs///</button>
 
-    <audio id="audio" src="loading playlist.mp3" preload="auto"></audio>
-    <script type="text/javascript" src="https://kinoposts.web.app/test/audioPlayer.js" id="audioPlayerScript" defer></script>
+    <audio id="audio" src="audio/loading_playlist.mp3" preload="auto"></audio> <!-- Correct path -->
+    <script type="text/javascript" src="audioPlayer.js" id="audioPlayerScript" defer></script> <!-- Correct path -->
+
     <div id="audioStatus" class="hidden">
         <span id="BGMName">Music</span></br>
         <button style="vertical-align: middle"><img src="" id="playIcon"></button>
@@ -31,7 +32,7 @@
     <noscript>
         <blockquote class="fail"><b>JAVASCRIPT DISABLED</b><br />
             Javascript is needed to use this page<br />
-            <a href="I DON'T KNOW WHAT THE CHANGE LOG LINK IS AHHHHHH AH AH AH">Javascript license information</a>
+            <a href="https://www.javascript.com">Learn more about JavaScript</a>
         </blockquote>
     </noscript>
     <hr>
