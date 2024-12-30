@@ -1,5 +1,5 @@
 const apiUrl = 'https://api.football-data.org/v4/matches';
-const apiKey = 'YOUR_API_KEY';  // Get an API key from a service like football-data.org
+const apiKey = 'e8dd581611fd4e14b82716ff6e3a46b0';  // Don't do this.
 
 const matchList = document.getElementById('match-list');
 const refreshBtn = document.getElementById('refresh-btn');
@@ -17,7 +17,7 @@ async function fetchMatches() {
     matchList.innerHTML = '';
 
     // Check if there are matches and display them
-    if (data.matches.length > 0) {
+    if (data.matches && data.matches.length > 0) {
       data.matches.forEach(match => {
         const li = document.createElement('li');
         li.innerHTML = `
@@ -39,3 +39,16 @@ refreshBtn.addEventListener('click', fetchMatches);
 
 // Initial fetch on load
 fetchMatches();
+
+// Register the service worker
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => {
+    navigator.serviceWorker.register('/sw.js')
+      .then((registration) => {
+        console.log('Service Worker registered:', registration);
+      })
+      .catch((error) => {
+        console.log('Service Worker registration failed:', error);
+      });
+  });
+}
