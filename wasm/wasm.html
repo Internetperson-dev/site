@@ -17,13 +17,16 @@
 
 <script>
   // Load WebAssembly Module
-  async function loadWasm() {
+async function loadWasm() {
+  try {
     const response = await fetch('example.wasm');
     const buffer = await response.arrayBuffer();
-    const wasmModule = await WebAssembly.instantiate(buffer);
-
+    const wasmModule = await WebAssembly.instantiate(buffer, {}); // Provide an empty object for imports
     return wasmModule.instance.exports;
+  } catch (error) {
+    console.error('Error loading WebAssembly:', error);
   }
+}
 
   // Initialize WebAssembly
   let wasmExports;
