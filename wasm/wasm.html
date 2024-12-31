@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+<body>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>WASM Buttons</title>
@@ -8,7 +9,6 @@
   body {font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #000; color: #fff; margin: 0; padding: 0; line-height: 1.6; text-align: center;}
   button {margin: 1rem; padding: 0.5rem 1rem; font-size: 1rem;}
 </style>
-</head>
 
 <script>
 fetch('add.wasm')
@@ -19,5 +19,6 @@ fetch('add.wasm')
     console.log(add(5, 3));  // Outputs: 8
   });
 </script>
+</head>
 </body>
 </html>
