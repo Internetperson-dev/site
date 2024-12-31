@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>WASM Buttons</title>
+<style>
+  body {font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; background: #000; color: #fff; margin: 0; padding: 0; line-height: 1.6; text-align: center;}
+  button {margin: 1rem; padding: 0.5rem 1rem; font-size: 1rem;}
+</style>
+</head>
+<body>
+<h1>WebAssembly Buttons</h1>
+<button id="button1">Run WASM Function 1</button>
+<button id="button2">Run WASM Function 2</button>
+<div id="output"></div>
+
+<script>
+  // Load WebAssembly Module
+  async function loadWasm() {
+    const response = await fetch('example.wasm');
+    const buffer = await response.arrayBuffer();
+    const wasmModule = await WebAssembly.instantiate(buffer);
+
+    return wasmModule.instance.exports;
+  }
+
+  // Initialize WebAssembly
+  let wasmExports;
+  loadWasm().then((exports) => {
+    wasmExports = exports;
+    document.getElementById('output').innerText = 'WASM Loaded!';
+  });
+
+  // Button Actions
+  document.getElementById('button1').addEventListener('click', () => {
+    if (wasmExports) {
+      const result = wasmExports.function1(); // Call WASM function1
+      document.getElementById('output').innerText = `Result: ${result}`;
+    }
+  });
+
+  document.getElementById('button2').addEventListener('click', () => {
+    if (wasmExports) {
+      const result = wasmExports.function2(); // Call WASM function2
+      document.getElementById('output').innerText = `Result: ${result}`;
+    }
+  });
+</script>
+</body>
+</html>
