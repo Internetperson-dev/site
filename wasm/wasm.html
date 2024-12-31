@@ -9,45 +9,14 @@
   button {margin: 1rem; padding: 0.5rem 1rem; font-size: 1rem;}
 </style>
 </head>
-<body>
-<h1>WebAssembly Buttons</h1>
-<button id="button1">Run WASM Function 1</button>
-<button id="button2">Run WASM Function 2</button>
-<div id="output"></div>
 
 <script>
-  // Load WebAssembly Module
-async function loadWasm() {
-  try {
-    const response = await fetch('example.wasm');
-    const buffer = await response.arrayBuffer();
-    const wasmModule = await WebAssembly.instantiate(buffer, {}); // Provide an empty object for imports
-    return wasmModule.instance.exports;
-  } catch (error) {
-    console.error('Error loading WebAssembly:', error);
-  }
-}
-
-  // Initialize WebAssembly
-  let wasmExports;
-  loadWasm().then((exports) => {
-    wasmExports = exports;
-    document.getElementById('output').innerText = 'WASM Loaded!';
-  });
-
-  // Button Actions
-  document.getElementById('button1').addEventListener('click', () => {
-    if (wasmExports) {
-      const result = wasmExports.function1(); // Call WASM function1
-      document.getElementById('output').innerText = `Result: ${result}`;
-    }
-  });
-
-  document.getElementById('button2').addEventListener('click', () => {
-    if (wasmExports) {
-      const result = wasmExports.function2(); // Call WASM function2
-      document.getElementById('output').innerText = `Result: ${result}`;
-    }
+fetch('add.wasm')
+  .then(response => response.arrayBuffer())
+  .then(bytes => WebAssembly.instantiate(bytes))
+  .then(results => {
+    const add = results.instance.exports.add;
+    console.log(add(5, 3));  // Outputs: 8
   });
 </script>
 </body>
