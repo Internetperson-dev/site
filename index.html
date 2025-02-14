@@ -9,36 +9,95 @@
 <style>
 body { 
     font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif; 
-    background: #000; 
+    background: #1e1e1e; 
     color: #fff; 
     margin: 0; 
-    padding: 0; 
-    line-height: 1.6; 
-    text-align: center;
+    padding: 50px 0; 
+    display: flex; 
+    justify-content: center; 
+    align-items: center; 
+    height: 100vh;
 }
+
+.window {
+    background: #2d2d2d;
+    border-radius: 12px;
+    width: 400px;
+    box-shadow: 0px 10px 30px rgba(0, 0, 0, 0.3);
+    overflow: hidden;
+}
+
+.window-header {
+    background: #444;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    border-radius: 12px 12px 0 0;
+}
+
+.window-buttons {
+    display: flex;
+    gap: 6px;
+    padding-left: 10px;
+}
+
+.window-button {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.red { background: #ff5f57; }
+.yellow { background: #ffbd2e; }
+.green { background: #28c940; }
+
+.window-content {
+    text-align: center;
+    padding: 20px;
+}
+
 button {
-    display: block;  /* Makes buttons stack vertically */
-    width: 80%;  /* Adjusts button width */
-    margin: 10px auto; /* Centers buttons and adds spacing */
+    display: block;
+    width: 100%;
+    margin: 10px 0;
     padding: 10px;
     font-size: 1rem;
+    background: #3a3a3a;
+    border: none;
+    color: white;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+button:hover {
+    background: #555;
 }
 </style>
 </head>
 <body>
-<h1>Useful Links</h1>
-<div>
-    <button onclick="location.href='https://github.com/Internetperson-dev/artix-runit-install'">Linux Installer</button>
-    <button onclick="location.href='https://github.com/Internetperson-dev/Linux-Desktop-Setup'">Linux Desktop Setup</button>
-    <button onclick="location.href='https://wolfyxon.github.io/3ds-web-stuff/'">3DS Games</button>
-    <button onclick="location.href='http://froxot.de/'">3DS Games - 2</button>
-    <button onclick="location.href='https://www.elizium.nu/scripts/lemmings/'">Lemmings</button>
-    <button onclick="location.href='https://internetperson-dev.github.io/site/platformer/title.html'">Test game</button>
-    <button onclick="location.href='https://internetperson-dev.github.io/site/fortnite'">Fortnite Game Streaming</button>
-    <button onclick="location.href='https://internetperson-dev.github.io/site/musicpwa/musictest.html'">Music PWA Test</button>
-    <button onclick="location.href='https://internetperson-dev.github.io/site/yt-bad.html'">yt-bad</button>
-    <button onclick="location.href='https://internetperson-dev.github.io/site/yt-good.html'">yt-good</button>
+<div class="window">
+    <div class="window-header">
+        <div class="window-buttons">
+            <span class="window-button red"></span>
+            <span class="window-button yellow"></span>
+            <span class="window-button green"></span>
+        </div>
+    </div>
+    <div class="window-content">
+        <h1>Useful Links</h1>
+        <button onclick="location.href='https://github.com/Internetperson-dev/artix-runit-install'">Linux Installer</button>
+        <button onclick="location.href='https://github.com/Internetperson-dev/Linux-Desktop-Setup'">Linux Desktop Setup</button>
+        <button onclick="location.href='https://wolfyxon.github.io/3ds-web-stuff/'">3DS Games</button>
+        <button onclick="location.href='http://froxot.de/'">3DS Games - 2</button>
+        <button onclick="location.href='https://www.elizium.nu/scripts/lemmings/'">Lemmings</button>
+        <button onclick="location.href='https://internetperson-dev.github.io/site/platformer/title.html'">Test game</button>
+        <button onclick="location.href='https://internetperson-dev.github.io/site/fortnite'">Fortnite Game Streaming</button>
+        <button onclick="location.href='https://internetperson-dev.github.io/site/musicpwa/musictest.html'">Music PWA Test</button>
+        <button onclick="location.href='https://internetperson-dev.github.io/site/yt-bad.html'">yt-bad</button>
+        <button onclick="location.href='https://internetperson-dev.github.io/site/yt-good.html'">yt-good</button>
+    </div>
 </div>
-<footer>Created by Internetperson-dev</footer>
 </body>
 </html>
