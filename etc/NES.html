@@ -1,132 +1,147 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <title>WASM NES Emulator - Upload Your ROM</title>
-    <style>
-      body {
-        font-family: sans-serif;
-        text-align: center;
-        background: #f0f0f0;
-        padding: 20px;
-      }
-      canvas {
-        border: 1px solid #000;
-      }
-    </style>
-  </head>
-  <body>
-    <h1>WASM NES Emulator</h1>
-    <p>Upload your NES ROM (.nes file):</p>
-    <input type="file" id="rom-file" accept=".nes" />
-    <div>
-      <canvas id="nes-canvas" width="256" height="240"></canvas>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>WebNES Full Screen with Touch Controls</title>
+  <style>
+    /* Remove default margin/padding and fill the viewport */
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+    }
+    /* Full screen iframe styling */
+    #gameFrame {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      border: none;
+    }
+    /* Overlay container for touch controls */
+    .touch-controls {
+      position: absolute;
+      bottom: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 100;
+      pointer-events: none; /* Allows touches to pass through except on the buttons */
+    }
+    /* Style for each button */
+    .touch-controls button {
+      pointer-events: auto; /* Enable touch/mouse events on buttons */
+      background-color: rgba(0, 0, 0, 0.6);
+      border: none;
+      border-radius: 50%;
+      color: #fff;
+      font-size: 24px;
+      margin: 10px;
+      width: 60px;
+      height: 60px;
+    }
+    /* Layout containers */
+    .dpad {
+      display: grid;
+      grid-template-areas:
+        ". up ."
+        "left . right"
+        ". down .";
+      grid-gap: 5px;
+      margin-bottom: 20px;
+    }
+    .dpad button.up { grid-area: up; }
+    .dpad button.down { grid-area: down; }
+    .dpad button.left { grid-area: left; }
+    .dpad button.right { grid-area: right; }
+    .action-buttons, .menu-buttons {
+      display: flex;
+      justify-content: center;
+    }
+  </style>
+</head>
+<body>
+  <!-- Full screen iframe loading the emulator -->
+  <iframe id="gameFrame" src="https://peteward44.github.io/WebNES/index_app.html"></iframe>
+
+  <!-- Overlay for touch controls -->
+  <div class="touch-controls">
+    <!-- D-Pad for directional controls -->
+    <div class="dpad">
+      <button id="btn-up" class="up">↑</button>
+      <button id="btn-left" class="left">←</button>
+      <button id="btn-right" class="right">→</button>
+      <button id="btn-down" class="down">↓</button>
     </div>
-    <p>
-      Controls: DPad = Arrow keys, A = A, B = S, Start = Enter, Select = Tab
-    </p>
+    <!-- Action buttons (A and B) -->
+    <div class="action-buttons">
+      <button id="btn-a">A</button>
+      <button id="btn-b">B</button>
+    </div>
+    <!-- Menu buttons (Select and Start) -->
+    <div class="menu-buttons">
+      <button id="btn-select">Select</button>
+      <button id="btn-start">Start</button>
+    </div>
+  </div>
 
-    <!-- Use a module script to import the WASM NES emulator -->
-    <script type="module">
-      // Import the NES class from the wasm-nes package
-      import { NES } from "https://unpkg.com/@kabukki/wasm-nes@1.0.0/dist/wasm-nes.esm.js";
+  <script>
+    // Helper function to send messages to the iframe.
+    // The target page must be set up to listen for these messages.
+    function sendButtonPress(button, action) {
+      const iframeWindow = document.getElementById('gameFrame').contentWindow;
+      iframeWindow.postMessage({ button, action }, '*');
+    }
 
-      const canvas = document.getElementById("nes-canvas");
-      let nesEmulator = null;
-
-      async function initNES(romData) {
-        // Create a new emulator instance bound to the canvas
-        nesEmulator = new NES(canvas);
-        // Load the ROM (expects a Uint8Array)
-        await nesEmulator.loadROM(new Uint8Array(romData));
-        // Start the emulator
-        nesEmulator.start();
-      }
-
-      // Handle ROM file uploads
-      document.getElementById("rom-file").addEventListener("change", async (event) => {
-        const file = event.target.files[0];
-        if (!file) return;
-        try {
-          const romData = await file.arrayBuffer();
-
-          // (Optional) Debug: Log the first four header bytes
-          const header = new Uint8Array(romData.slice(0, 4));
-          console.log("ROM header bytes:", header);
-
-          await initNES(romData);
-        } catch (error) {
-          console.error("Error loading ROM:", error);
-        }
+    // Attach both touch and mouse events for each control button.
+    function addControlListener(id, buttonName) {
+      const btn = document.getElementById(id);
+      if (!btn) return;
+      
+      // When the button is pressed
+      btn.addEventListener('touchstart', e => {
+        e.preventDefault();
+        sendButtonPress(buttonName, 'down');
       });
-
-      // Map keyboard events to emulator controls.
-      // The API provides an enum (NES.Controller.Button) for controller buttons.
-      window.addEventListener("keydown", (event) => {
-        if (!nesEmulator) return;
-        switch (event.key) {
-          case "ArrowUp":
-            nesEmulator.buttonDown(0, NES.Controller.Button.Up);
-            break;
-          case "ArrowDown":
-            nesEmulator.buttonDown(0, NES.Controller.Button.Down);
-            break;
-          case "ArrowLeft":
-            nesEmulator.buttonDown(0, NES.Controller.Button.Left);
-            break;
-          case "ArrowRight":
-            nesEmulator.buttonDown(0, NES.Controller.Button.Right);
-            break;
-          case "a":
-          case "A":
-            nesEmulator.buttonDown(0, NES.Controller.Button.A);
-            break;
-          case "s":
-          case "S":
-            nesEmulator.buttonDown(0, NES.Controller.Button.B);
-            break;
-          case "Enter":
-            nesEmulator.buttonDown(0, NES.Controller.Button.Start);
-            break;
-          case "Tab":
-            event.preventDefault();
-            nesEmulator.buttonDown(0, NES.Controller.Button.Select);
-            break;
-        }
+      btn.addEventListener('mousedown', e => {
+        e.preventDefault();
+        sendButtonPress(buttonName, 'down');
       });
-
-      window.addEventListener("keyup", (event) => {
-        if (!nesEmulator) return;
-        switch (event.key) {
-          case "ArrowUp":
-            nesEmulator.buttonUp(0, NES.Controller.Button.Up);
-            break;
-          case "ArrowDown":
-            nesEmulator.buttonUp(0, NES.Controller.Button.Down);
-            break;
-          case "ArrowLeft":
-            nesEmulator.buttonUp(0, NES.Controller.Button.Left);
-            break;
-          case "ArrowRight":
-            nesEmulator.buttonUp(0, NES.Controller.Button.Right);
-            break;
-          case "a":
-          case "A":
-            nesEmulator.buttonUp(0, NES.Controller.Button.A);
-            break;
-          case "s":
-          case "S":
-            nesEmulator.buttonUp(0, NES.Controller.Button.B);
-            break;
-          case "Enter":
-            nesEmulator.buttonUp(0, NES.Controller.Button.Start);
-            break;
-          case "Tab":
-            event.preventDefault();
-            nesEmulator.buttonUp(0, NES.Controller.Button.Select);
-            break;
-        }
+      
+      // When the button is released
+      btn.addEventListener('touchend', e => {
+        e.preventDefault();
+        sendButtonPress(buttonName, 'up');
       });
-    </script>
-  </body>
+      btn.addEventListener('mouseup', e => {
+        e.preventDefault();
+        sendButtonPress(buttonName, 'up');
+      });
+      
+      // In case the touch is cancelled
+      btn.addEventListener('touchcancel', e => {
+        e.preventDefault();
+        sendButtonPress(buttonName, 'up');
+      });
+    }
+
+    // List of controls to add listeners for.
+    const controls = [
+      { id: 'btn-up', button: 'up' },
+      { id: 'btn-down', button: 'down' },
+      { id: 'btn-left', button: 'left' },
+      { id: 'btn-right', button: 'right' },
+      { id: 'btn-a', button: 'a' },
+      { id: 'btn-b', button: 'b' },
+      { id: 'btn-select', button: 'select' },
+      { id: 'btn-start', button: 'start' }
+    ];
+
+    controls.forEach(control => {
+      addControlListener(control.id, control.button);
+    });
+  </script>
+</body>
 </html>
