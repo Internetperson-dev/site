@@ -1,102 +1,26 @@
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <title>Upload Your NES ROM</title>
-    <script type="text/javascript" src="https://unpkg.com/jsnes/dist/jsnes.min.js"></script>
-    <style>
-      body {
-        font-family: sans-serif;
-        background: #f0f0f0;
-        text-align: center;
-        padding: 20px;
-      }
-      #nes-canvas {
-        border: 1px solid #000;
-      }
-      input {
-        margin-bottom: 20px;
-      }
-    </style>
-  </head>
-  <body>
-    <h1>Upload Your NES ROM</h1>
-    <input type="file" id="rom-file" accept=".nes">
-    <div>
-      <canvas id="nes-canvas" width="256" height="240"></canvas>
-    </div>
-    <p>DPad: Arrow keys<br>Start: Return, Select: Tab<br>A Button: A, B Button: S</p>
+    <body>
+        <canvas style="display: block; width: 100%; aspect-ratio: 64 / 32; image-rendering: pixelated"></canvas>
+        <input type="file" />
+        <script type="module">
+            import { Nes } from '@kabukki/wasm-nes';
 
-    <script>
-      let nes, canvas, ctx;
+            const canvas = document.querySelector('canvas');
+            canvas.width = Nes.VIDEO_WIDTH;
+            canvas.height = Nes.VIDEO_HEIGHT;
 
-      window.onload = function() {
-        // Get the canvas and context
-        canvas = document.getElementById('nes-canvas');
-        ctx = canvas.getContext('2d');
-
-        // Initialize the NES emulator instance
-        nes = new jsnes.NES({
-          onFrame: function(frameBuffer) {
-            // Create image data and draw the frame to the canvas
-            let imageData = new ImageData(new Uint8ClampedArray(frameBuffer), 256, 240);
-            ctx.putImageData(imageData, 0, 0);
-          }
-        });
-
-        // Set up file input change event to load the ROM
-        document.getElementById('rom-file').addEventListener('change', function(event) {
-          const file = event.target.files[0];
-          if (!file) return;
-
-          const reader = new FileReader();
-          reader.onload = function(e) {
-            const romData = new Uint8Array(e.target.result);
-            try {
-              nes.loadROM(romData);
-              nes.start();
-            } catch (error) {
-              console.error("Error loading ROM:", error);
-            }
-          };
-          reader.readAsArrayBuffer(file);
-        });
-      };
-
-      // Optional: Set up keyboard events for emulator controls
-      document.addEventListener("keydown", function(e) {
-        const keyMap = {
-          "ArrowUp": jsnes.Controller.BUTTON_UP,
-          "ArrowDown": jsnes.Controller.BUTTON_DOWN,
-          "ArrowLeft": jsnes.Controller.BUTTON_LEFT,
-          "ArrowRight": jsnes.Controller.BUTTON_RIGHT,
-          "a": jsnes.Controller.BUTTON_A,
-          "s": jsnes.Controller.BUTTON_B,
-          "Enter": jsnes.Controller.BUTTON_START,
-          "Tab": jsnes.Controller.BUTTON_SELECT
-        };
-        if(keyMap[e.key]) {
-          nes.buttonDown(1, keyMap[e.key]);
-          e.preventDefault();
-        }
-      });
-
-      document.addEventListener("keyup", function(e) {
-        const keyMap = {
-          "ArrowUp": jsnes.Controller.BUTTON_UP,
-          "ArrowDown": jsnes.Controller.BUTTON_DOWN,
-          "ArrowLeft": jsnes.Controller.BUTTON_LEFT,
-          "ArrowRight": jsnes.Controller.BUTTON_RIGHT,
-          "a": jsnes.Controller.BUTTON_A,
-          "s": jsnes.Controller.BUTTON_B,
-          "Enter": jsnes.Controller.BUTTON_START,
-          "Tab": jsnes.Controller.BUTTON_SELECT
-        };
-        if(keyMap[e.key]) {
-          nes.buttonUp(1, keyMap[e.key]);
-          e.preventDefault();
-        }
-      });
-    </script>
-  </body>
+            const input = document.querySelector('input');
+            input.addEventListener('change', async (e) => {
+                try {
+                    const rom = new Uint8Array(await e.target.files[0]?.arrayBuffer());
+                    const emulator = await Nes.new(rom)
+                    emulator.canvas = canvas;
+                    emulator.start();
+                } catch (err) {
+                    console.error(err);
+                }
+            });
+        </script>
+    </body>
 </html>
