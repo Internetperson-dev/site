@@ -1,26 +1,132 @@
 <!DOCTYPE html>
 <html lang="en">
-    <body>
-        <canvas style="display: block; width: 100%; aspect-ratio: 64 / 32; image-rendering: pixelated"></canvas>
-        <input type="file" />
-        <script type="module">
-            import { Nes } from '@kabukki/wasm-nes';
+  <head>
+    <meta charset="UTF-8" />
+    <title>WASM NES Emulator - Upload Your ROM</title>
+    <style>
+      body {
+        font-family: sans-serif;
+        text-align: center;
+        background: #f0f0f0;
+        padding: 20px;
+      }
+      canvas {
+        border: 1px solid #000;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>WASM NES Emulator</h1>
+    <p>Upload your NES ROM (.nes file):</p>
+    <input type="file" id="rom-file" accept=".nes" />
+    <div>
+      <canvas id="nes-canvas" width="256" height="240"></canvas>
+    </div>
+    <p>
+      Controls: DPad = Arrow keys, A = A, B = S, Start = Enter, Select = Tab
+    </p>
 
-            const canvas = document.querySelector('canvas');
-            canvas.width = Nes.VIDEO_WIDTH;
-            canvas.height = Nes.VIDEO_HEIGHT;
+    <!-- Use a module script to import the WASM NES emulator -->
+    <script type="module">
+      // Import the NES class from the wasm-nes package
+      import { NES } from "https://unpkg.com/@kabukki/wasm-nes@1.0.0/dist/wasm-nes.esm.js";
 
-            const input = document.querySelector('input');
-            input.addEventListener('change', async (e) => {
-                try {
-                    const rom = new Uint8Array(await e.target.files[0]?.arrayBuffer());
-                    const emulator = await Nes.new(rom)
-                    emulator.canvas = canvas;
-                    emulator.start();
-                } catch (err) {
-                    console.error(err);
-                }
-            });
-        </script>
-    </body>
+      const canvas = document.getElementById("nes-canvas");
+      let nesEmulator = null;
+
+      async function initNES(romData) {
+        // Create a new emulator instance bound to the canvas
+        nesEmulator = new NES(canvas);
+        // Load the ROM (expects a Uint8Array)
+        await nesEmulator.loadROM(new Uint8Array(romData));
+        // Start the emulator
+        nesEmulator.start();
+      }
+
+      // Handle ROM file uploads
+      document.getElementById("rom-file").addEventListener("change", async (event) => {
+        const file = event.target.files[0];
+        if (!file) return;
+        try {
+          const romData = await file.arrayBuffer();
+
+          // (Optional) Debug: Log the first four header bytes
+          const header = new Uint8Array(romData.slice(0, 4));
+          console.log("ROM header bytes:", header);
+
+          await initNES(romData);
+        } catch (error) {
+          console.error("Error loading ROM:", error);
+        }
+      });
+
+      // Map keyboard events to emulator controls.
+      // The API provides an enum (NES.Controller.Button) for controller buttons.
+      window.addEventListener("keydown", (event) => {
+        if (!nesEmulator) return;
+        switch (event.key) {
+          case "ArrowUp":
+            nesEmulator.buttonDown(0, NES.Controller.Button.Up);
+            break;
+          case "ArrowDown":
+            nesEmulator.buttonDown(0, NES.Controller.Button.Down);
+            break;
+          case "ArrowLeft":
+            nesEmulator.buttonDown(0, NES.Controller.Button.Left);
+            break;
+          case "ArrowRight":
+            nesEmulator.buttonDown(0, NES.Controller.Button.Right);
+            break;
+          case "a":
+          case "A":
+            nesEmulator.buttonDown(0, NES.Controller.Button.A);
+            break;
+          case "s":
+          case "S":
+            nesEmulator.buttonDown(0, NES.Controller.Button.B);
+            break;
+          case "Enter":
+            nesEmulator.buttonDown(0, NES.Controller.Button.Start);
+            break;
+          case "Tab":
+            event.preventDefault();
+            nesEmulator.buttonDown(0, NES.Controller.Button.Select);
+            break;
+        }
+      });
+
+      window.addEventListener("keyup", (event) => {
+        if (!nesEmulator) return;
+        switch (event.key) {
+          case "ArrowUp":
+            nesEmulator.buttonUp(0, NES.Controller.Button.Up);
+            break;
+          case "ArrowDown":
+            nesEmulator.buttonUp(0, NES.Controller.Button.Down);
+            break;
+          case "ArrowLeft":
+            nesEmulator.buttonUp(0, NES.Controller.Button.Left);
+            break;
+          case "ArrowRight":
+            nesEmulator.buttonUp(0, NES.Controller.Button.Right);
+            break;
+          case "a":
+          case "A":
+            nesEmulator.buttonUp(0, NES.Controller.Button.A);
+            break;
+          case "s":
+          case "S":
+            nesEmulator.buttonUp(0, NES.Controller.Button.B);
+            break;
+          case "Enter":
+            nesEmulator.buttonUp(0, NES.Controller.Button.Start);
+            break;
+          case "Tab":
+            event.preventDefault();
+            nesEmulator.buttonUp(0, NES.Controller.Button.Select);
+            break;
+        }
+      });
+    </script>
+  </body>
 </html>
