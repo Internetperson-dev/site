@@ -1,89 +1,90 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SNES Emulator</title>
-    <script src="https://unpkg.com/jsnes/dist/jsnes.min.js"></script>
-    <style>
-        body { text-align: center; background: black; color: white; }
-        canvas { image-rendering: pixelated; width: 512px; height: 448px; }
-    </style>
-</head>
-<body>
-    <h1>SNES Emulator</h1>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=0">
+    <link rel="shortcut icon" href="/favicon.ico">
+    <title>JSNES: A JavaScript NES emulator</title>
     
-    <!-- File input for ROM -->
-    <input type="file" id="romInput" accept=".sfc,.smc" />
-    
-    <canvas id="gameCanvas" width="256" height="224"></canvas>
+    <!-- Link to the CSS file -->
+    <link href="/static/css/main.8653e781.chunk.css" rel="stylesheet">
+  </head>
+  
+  <body>
+    <!-- Root div where the application will be rendered -->
+    <div id="root"></div>
 
+    <!-- JavaScript bundle -->
     <script>
-        const canvas = document.getElementById("gameCanvas");
-        const ctx = canvas.getContext("2d");
-        const frameBuffer = new Uint32Array(256 * 224);
-
-        const nes = new jsnes.NES({
-            onFrame: function(buffer) {
-                for (let i = 0; i < buffer.length; i++) {
-                    const color = buffer[i];
-                    frameBuffer[i] = 0xFF000000 | (color[0] << 16) | (color[1] << 8) | color[2];
-                }
-                const imageData = new ImageData(new Uint8ClampedArray(frameBuffer.buffer), 256, 224);
-                ctx.putImageData(imageData, 0, 0);
-            }
-        });
-
-        // ROM file input handler
-        document.getElementById("romInput").addEventListener("change", function(event) {
-            const file = event.target.files[0];
-            if (!file) return;
-
-            const reader = new FileReader();
-            reader.onload = function() {
-                const romData = new Uint8Array(reader.result);
-                nes.loadROM(romData);
-                startEmulation();
-            };
-            reader.readAsArrayBuffer(file);
-        });
-
-        function startEmulation() {
-            function step() {
-                nes.frame();
-                requestAnimationFrame(step);
-            }
-            step();
+      !function(e) {
+        function r(r) {
+          for (var n, l, f = r[0], i = r[1], a = r[2], c = 0, s = []; c < f.length; c++) {
+            l = f[c];
+            Object.prototype.hasOwnProperty.call(o, l) && o[l] && s.push(o[l][0]);
+            o[l] = 0;
+          }
+          for (n in i) Object.prototype.hasOwnProperty.call(i, n) && (e[n] = i[n]);
+          for (p && p(r); s.length;) s.shift()();
+          return u.push.apply(u, a || []), t();
         }
 
-        // Keyboard input mapping
-        document.addEventListener("keydown", (event) => {
-            const keyMap = {
-                ArrowUp: jsnes.Controller.BUTTON_UP,
-                ArrowDown: jsnes.Controller.BUTTON_DOWN,
-                ArrowLeft: jsnes.Controller.BUTTON_LEFT,
-                ArrowRight: jsnes.Controller.BUTTON_RIGHT,
-                z: jsnes.Controller.BUTTON_A,
-                x: jsnes.Controller.BUTTON_B,
-                a: jsnes.Controller.BUTTON_SELECT,
-                s: jsnes.Controller.BUTTON_START
-            };
-            if (keyMap[event.key]) nes.buttonDown(1, keyMap[event.key]);
-        });
+        function t() {
+          for (var e, r = 0; r < u.length; r++) {
+            for (var t = u[r], n = !0, f = 1; f < t.length; f++) {
+              var i = t[f];
+              0 !== o[i] && (n = !1);
+            }
+            n && (u.splice(r--, 1), e = l(l.s = t[0]));
+          }
+          return e;
+        }
 
-        document.addEventListener("keyup", (event) => {
-            const keyMap = {
-                ArrowUp: jsnes.Controller.BUTTON_UP,
-                ArrowDown: jsnes.Controller.BUTTON_DOWN,
-                ArrowLeft: jsnes.Controller.BUTTON_LEFT,
-                ArrowRight: jsnes.Controller.BUTTON_RIGHT,
-                z: jsnes.Controller.BUTTON_A,
-                x: jsnes.Controller.BUTTON_B,
-                a: jsnes.Controller.BUTTON_SELECT,
-                s: jsnes.Controller.BUTTON_START
-            };
-            if (keyMap[event.key]) nes.buttonUp(1, keyMap[event.key]);
-        });
+        var n = {},
+          o = { 1: 0 },
+          u = [];
+
+        function l(r) {
+          if (n[r]) return n[r].exports;
+          var t = n[r] = { i: r, l: !1, exports: {} };
+          return e[r].call(t.exports, t, t.exports, l), t.l = !0, t.exports;
+        }
+
+        l.m = e;
+        l.c = n;
+        l.d = function(e, r, t) {
+          l.o(e, r) || Object.defineProperty(e, r, { enumerable: !0, get: t });
+        };
+        l.r = function(e) {
+          "undefined" != typeof Symbol && Symbol.toStringTag && Object.defineProperty(e, Symbol.toStringTag, { value: "Module" });
+          Object.defineProperty(e, "__esModule", { value: !0 });
+        };
+        l.t = function(e, r) {
+          if (1 & r && (e = l(e)), 8 & r) return e;
+          if (4 & r && "object" == typeof e && e && e.__esModule) return e;
+          var t = Object.create(null);
+          if (l.r(t), Object.defineProperty(t, "default", { enumerable: !0, value: e }), 2 & r && "string" != typeof e)
+            for (var n in e) l.d(t, n, function(r) { return e[r]; }.bind(null, n));
+          return t;
+        };
+        l.n = function(e) {
+          var r = e && e.__esModule ? function() { return e.default; } : function() { return e; };
+          return l.d(r, "a", r), r;
+        };
+        l.o = function(e, r) { return Object.prototype.hasOwnProperty.call(e, r); };
+
+        l.p = "/";
+        var f = this["webpackJsonpjsnes-web"] = this["webpackJsonpjsnes-web"] || [],
+          i = f.push.bind(f);
+        f.push = r;
+        f = f.slice();
+        for (var a = 0; a < f.length; a++) r(f[a]);
+        var p = i;
+        t();
+      }([]);
     </script>
-</body>
+
+    <!-- Static JavaScript files -->
+    <script src="/static/js/2.fa5df9e5.chunk.js"></script>
+    <script src="/static/js/main.6056b21a.chunk.js"></script>
+  </body>
 </html>
