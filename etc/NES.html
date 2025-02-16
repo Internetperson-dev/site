@@ -18,7 +18,7 @@
         });
 
         // Fetch the ROM from the URL and load it into the emulator
-        fetch('https://archive.org/download/8bit-adv-steinsgate/steinsgate.nes')
+        fetch('https://github.com/Internetperson-dev/site/blob/1c10147b51ad3b9062f0a39eec03490f30bab967/etc/steinsgate.nes')
           .then(response => response.arrayBuffer())
           .then(buffer => {
             nes.loadROM(new Uint8Array(buffer));  // Load the ROM into the emulator
