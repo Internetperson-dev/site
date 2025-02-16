@@ -5,14 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>WebNES Full Screen with Touch Controls</title>
   <style>
-    /* Remove default margin/padding and fill the viewport */
     html, body {
       margin: 0;
       padding: 0;
       height: 100%;
       overflow: hidden;
     }
-    /* Full screen iframe styling */
     #gameFrame {
       position: absolute;
       top: 0;
@@ -21,18 +19,16 @@
       height: 100%;
       border: none;
     }
-    /* Overlay container for touch controls */
     .touch-controls {
       position: absolute;
       bottom: 20px;
       left: 50%;
       transform: translateX(-50%);
       z-index: 100;
-      pointer-events: none; /* Allows touches to pass through except on the buttons */
+      pointer-events: none;
     }
-    /* Style for each button */
     .touch-controls button {
-      pointer-events: auto; /* Enable touch/mouse events on buttons */
+      pointer-events: auto;
       background-color: rgba(0, 0, 0, 0.6);
       border: none;
       border-radius: 50%;
@@ -42,7 +38,6 @@
       width: 60px;
       height: 60px;
     }
-    /* Layout containers */
     .dpad {
       display: grid;
       grid-template-areas:
@@ -63,24 +58,19 @@
   </style>
 </head>
 <body>
-  <!-- Full screen iframe loading the emulator -->
   <iframe id="gameFrame" src="https://peteward44.github.io/WebNES/index_app.html"></iframe>
 
-  <!-- Overlay for touch controls -->
   <div class="touch-controls">
-    <!-- D-Pad for directional controls -->
     <div class="dpad">
       <button id="btn-up" class="up">↑</button>
       <button id="btn-left" class="left">←</button>
       <button id="btn-right" class="right">→</button>
       <button id="btn-down" class="down">↓</button>
     </div>
-    <!-- Action buttons (A and B) -->
     <div class="action-buttons">
       <button id="btn-a">A</button>
       <button id="btn-b">B</button>
     </div>
-    <!-- Menu buttons (Select and Start) -->
     <div class="menu-buttons">
       <button id="btn-select">Select</button>
       <button id="btn-start">Start</button>
@@ -88,46 +78,51 @@
   </div>
 
   <script>
-    // Helper function to send messages to the iframe.
-    // The target page must be set up to listen for these messages.
+    // Get reference to the iframe
+    const iframe = document.getElementById('gameFrame');
+    
+    // Send button press/release data to iframe
     function sendButtonPress(button, action) {
-      const iframeWindow = document.getElementById('gameFrame').contentWindow;
-      iframeWindow.postMessage({ button, action }, '*');
+      const iframeWindow = iframe.contentWindow;
+      // Send message to iframe window
+      iframeWindow.postMessage({ type: 'button', button, action }, '*');
     }
 
-    // Attach both touch and mouse events for each control button.
+    // Add event listeners for each button
     function addControlListener(id, buttonName) {
       const btn = document.getElementById(id);
       if (!btn) return;
-      
-      // When the button is pressed
-      btn.addEventListener('touchstart', e => {
+
+      // When button is pressed
+      btn.addEventListener('touchstart', (e) => {
         e.preventDefault();
         sendButtonPress(buttonName, 'down');
       });
-      btn.addEventListener('mousedown', e => {
+
+      // When button is released
+      btn.addEventListener('touchend', (e) => {
+        e.preventDefault();
+        sendButtonPress(buttonName, 'up');
+      });
+
+      // For mouse users (also for touch cancel)
+      btn.addEventListener('mousedown', (e) => {
         e.preventDefault();
         sendButtonPress(buttonName, 'down');
       });
-      
-      // When the button is released
-      btn.addEventListener('touchend', e => {
+
+      btn.addEventListener('mouseup', (e) => {
         e.preventDefault();
         sendButtonPress(buttonName, 'up');
       });
-      btn.addEventListener('mouseup', e => {
-        e.preventDefault();
-        sendButtonPress(buttonName, 'up');
-      });
-      
-      // In case the touch is cancelled
-      btn.addEventListener('touchcancel', e => {
+
+      btn.addEventListener('touchcancel', (e) => {
         e.preventDefault();
         sendButtonPress(buttonName, 'up');
       });
     }
 
-    // List of controls to add listeners for.
+    // Add event listeners for all control buttons
     const controls = [
       { id: 'btn-up', button: 'up' },
       { id: 'btn-down', button: 'down' },
@@ -139,8 +134,14 @@
       { id: 'btn-start', button: 'start' }
     ];
 
-    controls.forEach(control => {
+    controls.forEach((control) => {
       addControlListener(control.id, control.button);
+    });
+
+    // Listen for messages from iframe for debugging
+    window.addEventListener('message', (event) => {
+      if (event.origin !== 'https://peteward44.github.io') return;  // Check origin for security
+      console.log('Message from iframe:', event.data);
     });
   </script>
 </body>
