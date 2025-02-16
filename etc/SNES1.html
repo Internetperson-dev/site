@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="A fullscreen macOS-like web app.">
+<title>SNES emulator</title>
+<link rel="icon" type="image/x-icon" href="favicon.ico">
+<style>
+/* Global Styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: #1e1e1e;
+  color: #fff;
+  overflow: hidden;
+}
+body,
+.app {
+  text-align: center;
+  align-content: center; <!-- This seems like the the most sane way to center something -->
+}
+h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+button {
+  width: 300px;
+  padding: 12px;
+  margin: 8px 0;
+  font-size: 1rem;
+  border: none;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
+  backdrop-filter: blur(10px);
+}
+button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+</style>
+</head>
+<body>
+<div class="app">
+<script type="text/javascript" src="https://unpkg.com/jsnes/dist/jsnes.min.js"></script>
+
+<canvas id="gameCanvas" width="256" height="224"></canvas>
+<script>
+    var nes = new JSNES({ canvasId: "gameCanvas" });
+    fetch("https://github.com/Internetperson-dev/site/raw/refs/heads/main/etc/240pSuite.sfc") // Replace with your ROM URL
+        .then(response => response.arrayBuffer())
+        .then(buffer => nes.loadROM(new Uint8Array(buffer)));
+</script>
+  
+</div>
+</body>
+</html>
