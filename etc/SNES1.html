@@ -5,59 +5,46 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="A fullscreen macOS-like web app.">
 <title>SNES emulator</title>
-<link rel="icon" type="image/x-icon" href="favicon.ico">
-<style>
-/* Global Styles */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  background: #1e1e1e;
-  color: #fff;
-  overflow: hidden;
-}
-body,
-.app {
-  text-align: center;
-  align-content: center; <!-- This seems like the the most sane way to center something -->
-}
-h1 {
-  font-size: 2rem;
-  margin-bottom: 20px;
-}
-button {
-  width: 300px;
-  padding: 12px;
-  margin: 8px 0;
-  font-size: 1rem;
-  border: none;
-  border-radius: 10px;
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
-  cursor: pointer;
-  transition: background 0.2s;
-  backdrop-filter: blur(10px);
-}
-button:hover {
-  background: rgba(255, 255, 255, 0.2);
-}
-</style>
-</head>
 <body>
 <div class="app">
 <script type="text/javascript" src="https://unpkg.com/jsnes/dist/jsnes.min.js"></script>
-
-<canvas id="gameCanvas" width="256" height="224"></canvas>
 <script>
+
+// Initialize and set up outputs
+var nes = new jsnes.NES({
+  onFrame: function(frameBuffer) {
+    // ... write frameBuffer to screen
+  },
+  onAudioSample: function(left, right) {
+    // ... play audio sample
+  }
+});
+
+// Read ROM data from disk (using Node.js APIs, for the sake of this example)
+const fs = require('fs');
+var romData = fs.readFileSync('path/to/rom.nes', {encoding: 'binary'});
+
+// Load ROM data as a string or byte array
+nes.loadROM(romData);
+
+// Run frames at 60 fps, or as fast as you can.
+// You are responsible for reliable timing as best you can on your platform.
+nes.frame();
+nes.frame();
+// ...
+
+// Hook up whatever input device you have to the controller.
+nes.buttonDown(1, jsnes.Controller.BUTTON_A);
+nes.frame();
+nes.buttonUp(1, jsnes.Controller.BUTTON_A);
+nes.frame();
+// ...
+
     var nes = new JSNES({ canvasId: "gameCanvas" });
     fetch("https://github.com/Internetperson-dev/site/raw/refs/heads/main/etc/240pSuite.sfc") // Replace with your ROM URL
         .then(response => response.arrayBuffer())
         .then(buffer => nes.loadROM(new Uint8Array(buffer)));
 </script>
   
-</div>
 </body>
 </html>
