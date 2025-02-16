@@ -3,7 +3,6 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="A fullscreen macOS-like web app.">
     <title>SNES Emulator</title>
     <script src="https://unpkg.com/jsnes/dist/jsnes.min.js"></script>
     <style>
@@ -13,7 +12,12 @@
 </head>
 <body>
     <h1>SNES Emulator</h1>
+    
+    <!-- File input for ROM -->
+    <input type="file" id="romInput" accept=".sfc,.smc" />
+    
     <canvas id="gameCanvas" width="256" height="224"></canvas>
+
     <script>
         const canvas = document.getElementById("gameCanvas");
         const ctx = canvas.getContext("2d");
@@ -30,10 +34,19 @@
             }
         });
 
-        fetch("https://github.com/Internetperson-dev/site/raw/refs/heads/main/etc/240pSuite.sfc")
-            .then(response => response.arrayBuffer())
-            .then(buffer => nes.loadROM(new Uint8Array(buffer)))
-            .catch(error => console.error("Failed to load ROM:", error));
+        // ROM file input handler
+        document.getElementById("romInput").addEventListener("change", function(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function() {
+                const romData = new Uint8Array(reader.result);
+                nes.loadROM(romData);
+                startEmulation();
+            };
+            reader.readAsArrayBuffer(file);
+        });
 
         function startEmulation() {
             function step() {
@@ -43,10 +56,7 @@
             step();
         }
 
-        // Start the emulator
-        startEmulation();
-
-        // Handle keyboard input for controls
+        // Keyboard input mapping
         document.addEventListener("keydown", (event) => {
             const keyMap = {
                 ArrowUp: jsnes.Controller.BUTTON_UP,
