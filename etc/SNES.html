@@ -395,27 +395,5 @@ Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.<br>
   <script src="https://kazuki-4ys.github.io/web_apps/snes9x-2005-wasm/snes9x_2005.js"></script>
   <script src="https://kazuki-4ys.github.io/web_apps/snes9x-2005-wasm/gamepad.js"></script>
   <script src="https://kazuki-4ys.github.io/web_apps/snes9x-2005-wasm/script.js"></script>
-
-<script>
-  window.onload = function () {
-const romUrl = "https://corsproxy.io/?" + encodeURIComponent("https://github.com/Internetperson-dev/site/raw/refs/heads/main/etc/240pSuite.sfc");
-
-    fetch(romUrl)
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`Failed to fetch ROM: ${response.statusText}`);
-            }
-            return response.arrayBuffer();
-        })
-        .then(data => {
-            let romFile = new Uint8Array(data);
-            Module.FS.writeFile('/game.sfc', romFile);
-            Module.ccall('emu_load_rom', 'number', ['string'], ['/game.sfc']);
-            console.log("ROM loaded successfully!");
-        })
-        .catch(err => console.error("Error loading ROM:", err));
-};
-</script>
-
 </body>
 </html>
