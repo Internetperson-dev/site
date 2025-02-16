@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#000000">
+    <title>Fortnite GeForce Now</title>
+    <link rel="icon" href="icon.png">
+    <link rel="manifest" href="manifest.json">
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/service-worker.js').then(registration => {
+                console.log('Service Worker registered with scope:', registration.scope);
+            }).catch(error => {
+                console.log('Service Worker registration failed:', error);
+            });
+        }
+        
+        document.addEventListener("DOMContentLoaded", () => {
+            window.location.href = "https://www.nvidia.com/en-us/geforce-now/games/fortnite/";
+        });
+    </script>
+</head>
+<body>
+    <h1>Redirecting to Fortnite on GeForce Now...</h1>
+</body>
+</html>
