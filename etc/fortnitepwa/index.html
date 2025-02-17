@@ -8,6 +8,7 @@
     <link rel="icon" href="icon.png">
     <link rel="manifest" href="manifest.json">
     <script>
+        // Check if service workers are supported and register the service worker
         if ('serviceWorker' in navigator) {
             navigator.serviceWorker.register('/service-worker.js').then(registration => {
                 console.log('Service Worker registered with scope:', registration.scope);
@@ -16,12 +17,12 @@
             });
         }
 
-        // Check if running as a PWA
-        if (window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true) {
-            // Instant redirect if PWA
+        // Check if the site is running as a PWA
+        if (window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true) { // Ugly code to make Safari fullscreen 
+            // Instant redirect if accessed as a PWA
             window.location.replace("https://play.geforcenow.com/games?game-id=46bfab06-d864-465d-9e56-2d9e45cdee0a&lang=en_GB&asset-id=01_1d330568-227d-4856-b235-a54c4418ae5a");
         } else {
-            // If not PWA, show "Add to Home Screen" message
+            // If not a PWA, show the "Add to Home Screen" message
             document.addEventListener("DOMContentLoaded", () => {
                 document.getElementById("add-to-home-screen").style.display = "block";
             });
@@ -34,6 +35,7 @@
 </head>
 <body>
     <h1>Fortnite on GeForce Now</h1>
+    <!-- Message prompting users to add to home screen if not already a PWA -->
     <p id="add-to-home-screen">To add this to your home screen, tap <strong>Share</strong> in Safari and then <strong>Add to Home Screen</strong>.</p>
 </body>
 </html>
