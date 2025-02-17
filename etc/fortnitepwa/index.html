@@ -1,47 +1,52 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Apple PWA stuff -->
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="viewport" content="width=device-width; initial-scale=1; viewport-fit=cover">    
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style"  content="black-translucent">     <!-- possible content values: default, black or black-translucent -->
-    
-    <meta charset="UTF-8">
-    <meta name="theme-color" content="#000000">
-    <title>Fortnite</title>
-    <link rel="icon" href="icon.png">
-    <link rel="manifest" href="manifest.json">
-    <script>
-        // Check if service workers are supported and register the service worker
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/service-worker.js').then(registration => {
-                console.log('Service Worker registered with scope:', registration.scope);
-            }).catch(error => {
-                console.log('Service Worker registration failed:', error);
-            });
-        }
-
-        // Check if the site is running as a PWA
-        if (window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true) { // Ugly code to make Safari fullscreen 
-            // Instant redirect if accessed as a PWA
-            window.location.replace("https://play.geforcenow.com/games?game-id=46bfab06-d864-465d-9e56-2d9e45cdee0a&lang=en_GB&asset-id=01_1d330568-227d-4856-b235-a54c4418ae5a");
-        } else {
-            // If not a PWA, show the "Add to Home Screen" message
-            document.addEventListener("DOMContentLoaded", () => {
-                document.getElementById("add-to-home-screen").style.display = "block";
-            });
-        }
-    </script>
-    <style>
-        body { text-align: center; font-family: Arial, sans-serif; padding: 20px; }
-        #add-to-home-screen { display: none; padding: 10px 20px; font-size: 16px; background: #007aff; color: white; border: none; border-radius: 5px; cursor: pointer; }
-    </style>
+  <meta charset="UTF-8">
+  <!-- Set the viewport and enable fullscreen viewport on devices with notch (iOS) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <meta name="theme-color" content="#000000">
+  <title>Fortnite</title>
+  <link rel="icon" href="icon.png">
+  <link rel="manifest" href="manifest.json">
+  <!-- Apple-specific meta tags for PWA fullscreen -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-touch-fullscreen" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="GeForce NOW">
+  <style>
+    /* Remove default margin and padding, and make the iframe fill the screen */
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      overflow: hidden;
+    }
+    /* Style the iframe to occupy full width and height of the viewport */
+    iframe {
+      border: 0;
+      width: 100%;
+      height: 100%;
+    }
+  </style>
 </head>
 <body>
-    <h1>Fortnite on GeForce Now</h1>
-    <!-- Message prompting users to add to home screen if not already a PWA -->
-    <p id="add-to-home-screen">To add this to your home screen, tap <strong>Share</strong> in Safari and then <strong>Add to Home Screen</strong>.</p>
+  <!-- Embed GeForce NOW via iframe -->
+  <iframe id="geforce-iframe" 
+          src="https://play.geforcenow.com/games?game-id=46bfab06-d864-465d-9e56-2d9e45cdee0a&lang=en_GB&asset-id=01_1d330568-227d-4856-b235-a54c4418ae5a" 
+          allowfullscreen>
+  </iframe>
+
+  <script>
+    // Optional: Register the service worker if supported
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/service-worker.js')
+        .then(registration => {
+          console.log('Service Worker registered with scope:', registration.scope);
+        })
+        .catch(error => {
+          console.error('Service Worker registration failed:', error);
+        });
+    }
+  </script>
 </body>
 </html>
