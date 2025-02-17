@@ -17,12 +17,14 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background: #1e1e1e;
   color: #fff;
-  overflow: hidden;
+  overflow-x: hidden; /* Allow vertical scrolling */
 }
-body,
 .app {
-  text-align: center;
-  align-content: center; <!-- This seems like the the most sane way to center something -->
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
 }
 h1 {
   font-size: 2rem;
