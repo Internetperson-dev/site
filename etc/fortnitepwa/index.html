@@ -15,16 +15,25 @@
                 console.log('Service Worker registration failed:', error);
             });
         }
-        
-        document.addEventListener("DOMContentLoaded", () => {
+
+        // Check if running as a PWA
+        if (window.matchMedia('(display-mode: standalone)').matches || navigator.standalone === true) {
+            // Instant redirect if PWA
             window.location.replace("https://play.geforcenow.com/games?game-id=46bfab06-d864-465d-9e56-2d9e45cdee0a&lang=en_GB&asset-id=01_1d330568-227d-4856-b235-a54c4418ae5a");
-        });
+        } else {
+            // If not PWA, show "Add to Home Screen" message
+            document.addEventListener("DOMContentLoaded", () => {
+                document.getElementById("add-to-home-screen").style.display = "block";
+            });
+        }
     </script>
     <style>
         body { text-align: center; font-family: Arial, sans-serif; padding: 20px; }
+        #add-to-home-screen { display: none; padding: 10px 20px; font-size: 16px; background: #007aff; color: white; border: none; border-radius: 5px; cursor: pointer; }
     </style>
 </head>
 <body>
     <h1>Fortnite on GeForce Now</h1>
+    <p id="add-to-home-screen">To add this to your home screen, tap <strong>Share</strong> in Safari and then <strong>Add to Home Screen</strong>.</p>
 </body>
 </html>
