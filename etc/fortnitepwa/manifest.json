@@ -1,6 +1,6 @@
 {
-  "name": "Fortnite GeForce Now",
-  "short_name": "Fortnite GFN",
+  "name": "Fortnite",
+  "short_name": "Fortnite",
   "start_url": "/",
   "display": "standalone",
   "background_color": "#000000",
