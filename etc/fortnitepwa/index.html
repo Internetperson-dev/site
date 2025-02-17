@@ -17,24 +17,14 @@
         }
         
         document.addEventListener("DOMContentLoaded", () => {
-            setTimeout(() => {
-                document.getElementById("redirect-message").style.display = "none";
-                document.getElementById("go-now").style.display = "block";
-            }, 3000);
+            window.location.replace("https://play.geforcenow.com/games?game-id=46bfab06-d864-465d-9e56-2d9e45cdee0a&lang=en_GB&asset-id=01_1d330568-227d-4856-b235-a54c4418ae5a");
         });
-        
-        function goToFortnite() {
-            window.location.href = "https://play.geforcenow.com/games?game-id=46bfab06-d864-465d-9e56-2d9e45cdee0a&lang=en_GB&asset-id=01_1d330568-227d-4856-b235-a54c4418ae5a";
-        }
     </script>
     <style>
         body { text-align: center; font-family: Arial, sans-serif; padding: 20px; }
-        #go-now { display: none; padding: 10px 20px; font-size: 16px; background: #007aff; color: white; border: none; border-radius: 5px; cursor: pointer; }
     </style>
 </head>
 <body>
     <h1>Fortnite on GeForce Now</h1>
-    <p id="redirect-message">To add this to your iOS home screen, tap <strong>Share </strong> in Safari and then <strong>Add to Home Screen</strong>. The redirect will start in a few seconds.</p>
-    <button id="go-now" onclick="goToFortnite()">Go Now</button>
 </body>
 </html>
