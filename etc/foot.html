@@ -1,14 +1,12 @@
 <!DOCTYPE html>
-<html lang="en" data-theme="light">
+<html lang="en" data-theme="dark">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Sports Negotiation Game</title>
   <!-- Pico.css -->
-
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
-<article data-theme="dark">
-
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+  
   <style>
     /* Additional minor customizations (optional) */
     main {
@@ -25,56 +23,56 @@
   
   <script>
     let players = [
-  { id: 1,  name: "John Carter",      skill: 93, price: 55 },
-  { id: 2,  name: "Mike Johnson",     skill: 72, price: 20 },
-  { id: 3,  name: "Kevin Brown",      skill: 80, price: 35 },
-  { id: 4,  name: "James Wilson",     skill: 67, price: 18 },
-  { id: 5,  name: "Ryan Martinez",    skill: 85, price: 40 },
-  { id: 6,  name: "Tony Miller",      skill: 90, price: 60 },
-  { id: 7,  name: "Carlos Rodriguez", skill: 78, price: 25 },
-  { id: 8,  name: "David Garcia",     skill: 95, price: 70 },
-  { id: 9,  name: "Mark Anderson",    skill: 81, price: 33 },
-  { id: 10, name: "Steven Hall",      skill: 75, price: 28 },
-  { id: 11, name: "Frank White",      skill: 88, price: 48 },
-  { id: 12, name: "Daniel Lee",       skill: 65, price: 15 },
-  { id: 13, name: "Aaron Kim",        skill: 82, price: 38 },
-  { id: 14, name: "Ethan King",       skill: 76, price: 29 },
-  { id: 15, name: "George Lewis",     skill: 70, price: 22 },
-  { id: 16, name: "Bryan Moore",      skill: 87, price: 45 },
-  { id: 17, name: "Austin Taylor",    skill: 92, price: 58 },
-  { id: 18, name: "Jacob Young",      skill: 69, price: 19 },
-  { id: 19, name: "Anthony Clark",    skill: 85, price: 36 },
-  { id: 20, name: "Brian Walker",     skill: 74, price: 27 },
-  { id: 21, name: "Christopher Allen",skill: 89, price: 52 },
-  { id: 22, name: "Benjamin Wright",  skill: 77, price: 30 },
-  { id: 23, name: "Henry Hernandez",  skill: 66, price: 16 },
-  { id: 24, name: "Jonathan Adams",   skill: 83, price: 42 },
-  { id: 25, name: "Patrick Baker",    skill: 71, price: 21 },
-  { id: 26, name: "Andrew Nelson",    skill: 91, price: 56 },
-  { id: 27, name: "Jason Carter",     skill: 79, price: 34 },
-  { id: 28, name: "Sean Turner",      skill: 94, price: 62 },
-  { id: 29, name: "Peter Jackson",    skill: 68, price: 17 },
-  { id: 30, name: "Luke Thompson",    skill: 73, price: 26 },
-  { id: 31, name: "Adam Scott",       skill: 90, price: 50 },
-  { id: 32, name: "Jeffrey Morgan",   skill: 67, price: 15 },
-  { id: 33, name: "Raymond Parker",   skill: 84, price: 37 },
-  { id: 34, name: "Timothy Brooks",   skill: 76, price: 31 },
-  { id: 35, name: "Troy Carter",      skill: 81, price: 35 },
-  { id: 36, name: "Gabriel Morris",   skill: 88, price: 47 },
-  { id: 37, name: "Liam Morgan",      skill: 93, price: 59 },
-  { id: 38, name: "Owen Bailey",      skill: 64, price: 12 },
-  { id: 39, name: "Noah Phillips",    skill: 86, price: 43 },
-  { id: 40, name: "Logan Reed",       skill: 72, price: 24 },
-  { id: 41, name: "Oliver Campbell",  skill: 95, price: 65 },
-  { id: 42, name: "Elijah Bennett",   skill: 78, price: 28 },
-  { id: 43, name: "Carter Gray",      skill: 82, price: 33 },
-  { id: 44, name: "Evan Rivera",      skill: 70, price: 20 },
-  { id: 45, name: "Samuel Price",     skill: 89, price: 53 },
-  { id: 46, name: "Jackson Bell",     skill: 76, price: 29 },
-  { id: 47, name: "Connor Russell",   skill: 84, price: 38 },
-  { id: 48, name: "Isaac Stewart",    skill: 92, price: 57 },
-  { id: 49, name: "Henry Murphy",     skill: 65, price: 14 },
-  { id: 50, name: "Michael Clark",    skill: 77, price: 32 }
+      { id: 1,  name: "John Carter",      skill: 93, price: 55 },
+      { id: 2,  name: "Mike Johnson",     skill: 72, price: 20 },
+      { id: 3,  name: "Kevin Brown",      skill: 80, price: 35 },
+      { id: 4,  name: "James Wilson",     skill: 67, price: 18 },
+      { id: 5,  name: "Ryan Martinez",    skill: 85, price: 40 },
+      { id: 6,  name: "Tony Miller",      skill: 90, price: 60 },
+      { id: 7,  name: "Carlos Rodriguez", skill: 78, price: 25 },
+      { id: 8,  name: "David Garcia",     skill: 95, price: 70 },
+      { id: 9,  name: "Mark Anderson",    skill: 81, price: 33 },
+      { id: 10, name: "Steven Hall",      skill: 75, price: 28 },
+      { id: 11, name: "Frank White",      skill: 88, price: 48 },
+      { id: 12, name: "Daniel Lee",       skill: 65, price: 15 },
+      { id: 13, name: "Aaron Kim",        skill: 82, price: 38 },
+      { id: 14, name: "Ethan King",       skill: 76, price: 29 },
+      { id: 15, name: "George Lewis",     skill: 70, price: 22 },
+      { id: 16, name: "Bryan Moore",      skill: 87, price: 45 },
+      { id: 17, name: "Austin Taylor",    skill: 92, price: 58 },
+      { id: 18, name: "Jacob Young",      skill: 69, price: 19 },
+      { id: 19, name: "Anthony Clark",    skill: 85, price: 36 },
+      { id: 20, name: "Brian Walker",     skill: 74, price: 27 },
+      { id: 21, name: "Christopher Allen",skill: 89, price: 52 },
+      { id: 22, name: "Benjamin Wright",  skill: 77, price: 30 },
+      { id: 23, name: "Henry Hernandez",  skill: 66, price: 16 },
+      { id: 24, name: "Jonathan Adams",   skill: 83, price: 42 },
+      { id: 25, name: "Patrick Baker",    skill: 71, price: 21 },
+      { id: 26, name: "Andrew Nelson",    skill: 91, price: 56 },
+      { id: 27, name: "Jason Carter",     skill: 79, price: 34 },
+      { id: 28, name: "Sean Turner",      skill: 94, price: 62 },
+      { id: 29, name: "Peter Jackson",    skill: 68, price: 17 },
+      { id: 30, name: "Luke Thompson",    skill: 73, price: 26 },
+      { id: 31, name: "Adam Scott",       skill: 90, price: 50 },
+      { id: 32, name: "Jeffrey Morgan",   skill: 67, price: 15 },
+      { id: 33, name: "Raymond Parker",   skill: 84, price: 37 },
+      { id: 34, name: "Timothy Brooks",   skill: 76, price: 31 },
+      { id: 35, name: "Troy Carter",      skill: 81, price: 35 },
+      { id: 36, name: "Gabriel Morris",   skill: 88, price: 47 },
+      { id: 37, name: "Liam Morgan",      skill: 93, price: 59 },
+      { id: 38, name: "Owen Bailey",      skill: 64, price: 12 },
+      { id: 39, name: "Noah Phillips",    skill: 86, price: 43 },
+      { id: 40, name: "Logan Reed",       skill: 72, price: 24 },
+      { id: 41, name: "Oliver Campbell",  skill: 95, price: 65 },
+      { id: 42, name: "Elijah Bennett",   skill: 78, price: 28 },
+      { id: 43, name: "Carter Gray",      skill: 82, price: 33 },
+      { id: 44, name: "Evan Rivera",      skill: 70, price: 20 },
+      { id: 45, name: "Samuel Price",     skill: 89, price: 53 },
+      { id: 46, name: "Jackson Bell",     skill: 76, price: 29 },
+      { id: 47, name: "Connor Russell",   skill: 84, price: 38 },
+      { id: 48, name: "Isaac Stewart",    skill: 92, price: 57 },
+      { id: 49, name: "Henry Murphy",     skill: 65, price: 14 },
+      { id: 50, name: "Michael Clark",    skill: 77, price: 32 }
     ];
     
     let budget = 200;
@@ -87,7 +85,6 @@
       marketEl.innerHTML = "";
       
       players.forEach(player => {
-        // Use Pico's "card" style for each player
         const playerEl = document.createElement("article");
         playerEl.classList.add("card");
         playerEl.innerHTML = `
@@ -183,6 +180,7 @@
     document.addEventListener("DOMContentLoaded", updateUI);
   </script>
 </head>
+
 <body>
   <!-- Top navigation/header -->
   <header class="container">
