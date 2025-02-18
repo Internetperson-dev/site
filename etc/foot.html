@@ -30,7 +30,7 @@
                 `;
                 marketEl.appendChild(playerEl);
             });
-
+    
             const teamEl = document.getElementById("team");
             teamEl.innerHTML = team.map(player => `<li>${player.name} (Skill: ${player.skill}) <button onclick="removePlayer(${player.id})">Remove</button></li>`).join("");
         }
@@ -46,8 +46,8 @@
             }
             
             if (offer >= player.price * 0.9) {
-                alert(`${player.name} has accepted your offer!`);
                 if (budget >= offer) {
+                    alert(`${player.name} has accepted your offer!`);
                     budget -= offer;
                     team.push(player);
                     players = players.filter(p => p.id !== player.id);
@@ -84,15 +84,21 @@
         
         function simulateMatch() {
             const teamSkill = team.reduce((sum, player) => sum + player.skill, 0);
+            if (teamSkill === 0) {
+                alert("Your team has no players!");
+                return;
+            }
             const opponentSkill = Math.floor(Math.random() * (teamSkill + 50));
-            
             alert(`Your team skill: ${teamSkill}\nOpponent team skill: ${opponentSkill}`);
             
             if (teamSkill >= opponentSkill) {
-                alert("You won the match!");
+                alert("You won the match and earned $20M!");
+                budget += 20;
             } else {
-                alert("You lost the match!");
+                alert("You lost the match and lost $10M!");
+                budget = Math.max(0, budget - 10);
             }
+            updateUI();
         }
         
         document.addEventListener("DOMContentLoaded", updateUI);
