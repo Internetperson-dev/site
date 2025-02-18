@@ -6,7 +6,7 @@
     <title>Sports Negotiation Game</title>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/picocss@1.*/css/pico.min.css">
     <script>
-        const players = [
+        let players = [
             { id: 1, name: "John Doe", skill: 85, price: 50 },
             { id: 2, name: "Alex Smith", skill: 78, price: 30 },
             { id: 3, name: "Chris Johnson", skill: 90, price: 70 }
@@ -32,7 +32,7 @@
             });
 
             const teamEl = document.getElementById("team");
-            teamEl.innerHTML = team.map(player => `<li>${player.name} (Skill: ${player.skill})</li>`).join("");
+            teamEl.innerHTML = team.map(player => `<li>${player.name} (Skill: ${player.skill}) <button onclick="removePlayer(${player.id})">Remove</button></li>`).join("");
         }
         
         function negotiate(playerId) {
@@ -50,13 +50,48 @@
                 if (budget >= offer) {
                     budget -= offer;
                     team.push(player);
-                    players.splice(players.indexOf(player), 1);
+                    players = players.filter(p => p.id !== player.id);
                     updateUI();
                 } else {
                     alert("Not enough budget!");
                 }
             } else {
                 alert(`${player.name} has rejected your offer.`);
+            }
+        }
+        
+        function removePlayer(playerId) {
+            const player = team.find(p => p.id === playerId);
+            team = team.filter(p => p.id !== playerId);
+            players.push(player);
+            updateUI();
+        }
+        
+        function addPlayer() {
+            const name = prompt("Enter player name:");
+            const skill = parseInt(prompt("Enter player skill (1-100):"));
+            const price = parseInt(prompt("Enter player price in million:"));
+            
+            if (!name || isNaN(skill) || isNaN(price) || skill < 1 || skill > 100 || price <= 0) {
+                alert("Invalid player data!");
+                return;
+            }
+            
+            const newPlayer = { id: Date.now(), name, skill, price };
+            players.push(newPlayer);
+            updateUI();
+        }
+        
+        function simulateMatch() {
+            const teamSkill = team.reduce((sum, player) => sum + player.skill, 0);
+            const opponentSkill = Math.floor(Math.random() * (teamSkill + 50));
+            
+            alert(`Your team skill: ${teamSkill}\nOpponent team skill: ${opponentSkill}`);
+            
+            if (teamSkill >= opponentSkill) {
+                alert("You won the match!");
+            } else {
+                alert("You lost the match!");
             }
         }
         
@@ -67,9 +102,11 @@
     <main class="container">
         <h1>Sports Negotiation Game</h1>
         <p id="budget">Budget: $200M</p>
+        <button onclick="addPlayer()">Add New Player</button>
         <section id="market" class="grid"></section>
         <h2>Your Team</h2>
         <ul id="team"></ul>
+        <button onclick="simulateMatch()">Simulate Match</button>
     </main>
 </body>
 </html>
