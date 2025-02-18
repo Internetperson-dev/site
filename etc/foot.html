@@ -4,23 +4,52 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Sports Negotiation Game</title>
-  <!-- Pico.css -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
   
+  <!-- Pico.css (version 2) -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css">
+
   <style>
-    /* Additional minor customizations (optional) */
+    /* Optional minor customizations */
     main {
       margin-top: 2rem;
     }
-    /* Style the team list to appear more card-like */
     #team li {
       margin: 0.5rem 0;
       padding: 0.5rem;
+      /* If you see weird background issues, remove the var() usage: */
       background-color: var(--background-contrast);
       border-radius: 5px;
     }
   </style>
+</head>
+
+<body>
+  <header class="container">
+    <nav>
+      <ul>
+        <li><strong>Sports Negotiation Game</strong></li>
+      </ul>
+      <ul>
+        <li><button id="simulateMatchBtn">Simulate Match</button></li>
+      </ul>
+    </nav>
+  </header>
   
+  <main class="container">
+    <h2 id="budget">Budget: $200M</h2>
+    <button id="addPlayerBtn">Add New Player</button>
+
+    <h3>Player Market</h3>
+    <section id="market" class="grid"></section>
+    
+    <h3>Your Team</h3>
+    <ul id="team"></ul>
+  </main>
+  
+  <footer class="container">
+    <small>© 2025 Sports Negotiation Game</small>
+  </footer>
+
   <script>
     let players = [
       { id: 1,  name: "John Carter",      skill: 93, price: 55 },
@@ -77,50 +106,47 @@
     
     let budget = 200;
     let team = [];
-    
+
     function updateUI() {
       document.getElementById("budget").textContent = `Budget: $${budget}M`;
-      
+
       const marketEl = document.getElementById("market");
       marketEl.innerHTML = "";
-      
+
       players.forEach(player => {
-        const playerEl = document.createElement("article");
-        playerEl.classList.add("card");
-        playerEl.innerHTML = `
-          <header>
-            <h3>${player.name}</h3>
-          </header>
+        const card = document.createElement("article");
+        card.classList.add("card");
+        card.innerHTML = `
+          <header><h3>${player.name}</h3></header>
           <p><strong>Skill:</strong> ${player.skill}</p>
           <p><strong>Price:</strong> $${player.price}M</p>
           <footer>
             <button onclick="negotiate(${player.id})">Negotiate</button>
           </footer>
         `;
-        marketEl.appendChild(playerEl);
+        marketEl.appendChild(card);
       });
 
       const teamEl = document.getElementById("team");
       teamEl.innerHTML = team
         .map(player => 
           `<li>
-            <strong>${player.name}</strong> (Skill: ${player.skill})
-            <button onclick="removePlayer(${player.id})">Remove</button>
-          </li>`
+             <strong>${player.name}</strong> (Skill: ${player.skill})
+             <button onclick="removePlayer(${player.id})">Remove</button>
+           </li>`
         )
         .join("");
     }
-    
+
     function negotiate(playerId) {
       const player = players.find(p => p.id === playerId);
-      let offer = prompt(`Make an offer for ${player.name} (Current Price: $${player.price}M)`);
-      offer = parseInt(offer);
-      
+      const offer = parseInt(prompt(`Make an offer for ${player.name} (Current Price: $${player.price}M)`));
+
       if (!offer || offer <= 0) {
         alert("Invalid offer!");
         return;
       }
-      
+
       if (offer >= player.price * 0.9) {
         if (budget >= offer) {
           alert(`${player.name} has accepted your offer!`);
@@ -135,38 +161,39 @@
         alert(`${player.name} has rejected your offer.`);
       }
     }
-    
+
     function removePlayer(playerId) {
       const player = team.find(p => p.id === playerId);
       team = team.filter(p => p.id !== playerId);
       players.push(player);
       updateUI();
     }
-    
+
     function addPlayer() {
       const name = prompt("Enter player name:");
       const skill = parseInt(prompt("Enter player skill (1-100):"));
       const price = parseInt(prompt("Enter player price in million:"));
-      
+
       if (!name || isNaN(skill) || isNaN(price) || skill < 1 || skill > 100 || price <= 0) {
         alert("Invalid player data!");
         return;
       }
-      
+
       const newPlayer = { id: Date.now(), name, skill, price };
       players.push(newPlayer);
       updateUI();
     }
-    
+
     function simulateMatch() {
       const teamSkill = team.reduce((sum, player) => sum + player.skill, 0);
       if (teamSkill === 0) {
         alert("Your team has no players!");
         return;
       }
+
       const opponentSkill = Math.floor(Math.random() * (teamSkill + 50));
       alert(`Your team skill: ${teamSkill}\nOpponent team skill: ${opponentSkill}`);
-      
+
       if (teamSkill >= opponentSkill) {
         alert("You won the match and earned $20M!");
         budget += 20;
@@ -176,38 +203,13 @@
       }
       updateUI();
     }
-    
-    document.addEventListener("DOMContentLoaded", updateUI);
+
+    // Bind buttons after DOM loads
+    document.addEventListener("DOMContentLoaded", () => {
+      updateUI();
+      document.getElementById("simulateMatchBtn").addEventListener("click", simulateMatch);
+      document.getElementById("addPlayerBtn").addEventListener("click", addPlayer);
+    });
   </script>
-</head>
-
-<body>
-  <!-- Top navigation/header -->
-  <header class="container">
-    <nav>
-      <ul>
-        <li><strong>Sports Negotiation Game</strong></li>
-      </ul>
-      <ul>
-        <li><button onclick="simulateMatch()">Simulate Match</button></li>
-      </ul>
-    </nav>
-  </header>
-  
-  <main class="container">
-    <h2 id="budget">Budget: $200M</h2>
-    <button onclick="addPlayer()">Add New Player</button>
-
-    <h3>Player Market</h3>
-    <!-- Use Pico's grid class for layout -->
-    <section id="market" class="grid"></section>
-    
-    <h3>Your Team</h3>
-    <ul id="team"></ul>
-  </main>
-  
-  <footer class="container">
-    <small>© 2025 Sports Negotiation Game</small>
-  </footer>
 </body>
 </html>
