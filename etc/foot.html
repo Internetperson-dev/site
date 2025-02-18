@@ -1,60 +1,75 @@
-import { useState } from "react";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sports Negotiation Game</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/picocss@1.*/css/pico.min.css">
+    <script>
+        const players = [
+            { id: 1, name: "John Doe", skill: 85, price: 50 },
+            { id: 2, name: "Alex Smith", skill: 78, price: 30 },
+            { id: 3, name: "Chris Johnson", skill: 90, price: 70 }
+        ];
+        
+        let budget = 200;
+        let team = [];
+        
+        function updateUI() {
+            document.getElementById("budget").textContent = `Budget: $${budget}M`;
+            
+            const marketEl = document.getElementById("market");
+            marketEl.innerHTML = "";
+            players.forEach(player => {
+                const playerEl = document.createElement("article");
+                playerEl.innerHTML = `
+                    <h2>${player.name}</h2>
+                    <p>Skill: ${player.skill}</p>
+                    <p>Price: $${player.price}M</p>
+                    <button onclick="negotiate(${player.id})">Negotiate</button>
+                `;
+                marketEl.appendChild(playerEl);
+            });
 
-const players = [
-  { id: 1, name: "John Doe", skill: 85, price: 50, status: "Available" },
-  { id: 2, name: "Alex Smith", skill: 78, price: 30, status: "Available" },
-  { id: 3, name: "Chris Johnson", skill: 90, price: 70, status: "Available" }
-];
-
-export default function NegotiationGame() {
-  const [budget, setBudget] = useState(200);
-  const [team, setTeam] = useState([]);
-  const [market, setMarket] = useState(players);
-
-  const negotiate = (player) => {
-    let offer = prompt(`Make an offer for ${player.name} (Current Price: $${player.price}M)`);
-    offer = parseInt(offer);
-    
-    if (!offer || offer <= 0) return alert("Invalid offer!");
-    
-    if (offer >= player.price * 0.9) {
-      alert(`${player.name} has accepted your offer!`);
-      if (budget >= offer) {
-        setBudget(budget - offer);
-        setTeam([...team, player]);
-        setMarket(market.filter(p => p.id !== player.id));
-      } else {
-        alert("Not enough budget!");
-      }
-    } else {
-      alert(`${player.name} has rejected your offer.`);
-    }
-  };
-
-  return (
-    <div className="p-6 space-y-4">
-      <h1 className="text-2xl font-bold">Sports Negotiation Game</h1>
-      <p>Budget: ${budget}M</p>
-      <div className="grid grid-cols-3 gap-4">
-        {market.map((player) => (
-          <Card key={player.id} className="p-4">
-            <CardContent>
-              <h2 className="text-xl font-semibold">{player.name}</h2>
-              <p>Skill: {player.skill}</p>
-              <p>Price: ${player.price}M</p>
-              <Button onClick={() => negotiate(player)}>Negotiate</Button>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-      <h2 className="text-xl font-bold">Your Team</h2>
-      <ul>
-        {team.map((player) => (
-          <li key={player.id}>{player.name} (Skill: {player.skill})</li>
-        ))}
-      </ul>
-    </div>
-  );
-}
+            const teamEl = document.getElementById("team");
+            teamEl.innerHTML = team.map(player => `<li>${player.name} (Skill: ${player.skill})</li>`).join("");
+        }
+        
+        function negotiate(playerId) {
+            const player = players.find(p => p.id === playerId);
+            let offer = prompt(`Make an offer for ${player.name} (Current Price: $${player.price}M)`);
+            offer = parseInt(offer);
+            
+            if (!offer || offer <= 0) {
+                alert("Invalid offer!");
+                return;
+            }
+            
+            if (offer >= player.price * 0.9) {
+                alert(`${player.name} has accepted your offer!`);
+                if (budget >= offer) {
+                    budget -= offer;
+                    team.push(player);
+                    players.splice(players.indexOf(player), 1);
+                    updateUI();
+                } else {
+                    alert("Not enough budget!");
+                }
+            } else {
+                alert(`${player.name} has rejected your offer.`);
+            }
+        }
+        
+        document.addEventListener("DOMContentLoaded", updateUI);
+    </script>
+</head>
+<body>
+    <main class="container">
+        <h1>Sports Negotiation Game</h1>
+        <p id="budget">Budget: $200M</p>
+        <section id="market" class="grid"></section>
+        <h2>Your Team</h2>
+        <ul id="team"></ul>
+    </main>
+</body>
+</html>
