@@ -44,7 +44,27 @@ button:hover {
 </head>
 <body>
     <script>
-function createLadybird(){const e=document.createElement("div");e.classList.add("ladybird"),e.innerText="🐞",e.style.left=Math.random()*window.innerWidth+"px",document.body.appendChild(e),setTimeout((()=>{e.remove()}),1e3)}document.addEventListener("DOMContentLoaded",(function(){if("Mozilla/5.0 (Linux; x86_64) Ladybird/1.0"===navigator.userAgent)for(let e=0;e<10;e++)createLadybird()}));
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            if (navigator.userAgent === "Mozilla/5.0 (Linux; x86_64) Ladybird/1.0") {
+                for (let i = 0; i < 10; i++) {
+                    setTimeout(createLadybird, Math.random() * 500); // Staggered start
+                }
+            }
+        });
+
+        function createLadybird() {
+            const ladybird = document.createElement("div");
+            ladybird.classList.add("ladybird");
+            ladybird.innerText = "🐞";
+            ladybird.style.left = Math.random() * window.innerWidth + "px";
+            ladybird.style.top = "-50px"; // Ensures they start above the screen
+            document.body.appendChild(ladybird);
+
+            setTimeout(() => {
+                ladybird.remove();
+            }, 1000); // Remove after animation
+        }
     </script>
 
   
