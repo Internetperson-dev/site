@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="A fullscreen macOS-like web app.">
+<meta name="description" content="A group of websites">
 <title>Internetperson-dev Useful links</title>
 <link rel="icon" type="image/x-icon" href="favicon.ico">
 <style>
@@ -13,7 +13,7 @@ body {
   color: #fff;
   overflow-x: hidden; /* Allow vertical scrolling */
 }
-.app {
+.links {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -49,7 +49,7 @@ button:hover {
 function createLadybird(){const e=document.createElement("div");e.classList.add("ladybird"),e.innerText="🐞",e.style.left=Math.random()*window.innerWidth+"px",document.body.appendChild(e),setTimeout((()=>{e.remove()}),1e3)}document.addEventListener("DOMContentLoaded",(function(){if("Mozilla/5.0 (Linux; x86_64) Ladybird/1.0"===navigator.userAgent)for(let e=0;e<10;e++)setTimeout(createLadybird,500*Math.random())}));
     </script>
 
-<div class="app">
+<div class="links">
     <h1>Useful Links</h1>
     <button onclick="location.href='https://github.com/Internetperson-dev/artix-runit-install'">Linux Installer</button>
     <button onclick="location.href='https://github.com/Internetperson-dev/Linux-Desktop-Setup'">Linux Desktop Setup</button>
