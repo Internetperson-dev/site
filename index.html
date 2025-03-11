@@ -40,15 +40,36 @@ button {
 button:hover {
   background: rgba(255, 255, 255, 0.2);
 }
+
+
+
+  
+        .ladybird {
+            position: absolute;
+            font-size: 2rem;
+            top: 0; /* Start at the very top */
+            opacity: 1;
+            pointer-events: none; /* Prevent interaction */
+            animation: fall 1s linear forwards;
+        }
+        @keyframes fall {
+            from {
+                transform: translateY(-50px); /* Start slightly above */
+                opacity: 1;
+            }
+            to {
+                transform: translateY(100vh); /* Move to bottom of screen */
+                opacity: 0;
+            }
+        }  
 </style>
 </head>
 <body>
     <script>
-    <script>
         document.addEventListener("DOMContentLoaded", function () {
             if (navigator.userAgent === "Mozilla/5.0 (Linux; x86_64) Ladybird/1.0") {
                 for (let i = 0; i < 10; i++) {
-                    setTimeout(createLadybird, Math.random() * 500); // Staggered start
+                    setTimeout(createLadybird, Math.random() * 500); // Staggered drops
                 }
             }
         });
@@ -57,13 +78,12 @@ button:hover {
             const ladybird = document.createElement("div");
             ladybird.classList.add("ladybird");
             ladybird.innerText = "🐞";
-            ladybird.style.left = Math.random() * window.innerWidth + "px";
-            ladybird.style.top = "-50px"; // Ensures they start above the screen
+            ladybird.style.left = Math.random() * window.innerWidth + "px"; // Random X position
             document.body.appendChild(ladybird);
 
             setTimeout(() => {
                 ladybird.remove();
-            }, 1000); // Remove after animation
+            }, 1000); // Remove after animation ends
         }
     </script>
 
