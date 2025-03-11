@@ -41,53 +41,14 @@ button:hover {
   background: rgba(255, 255, 255, 0.2);
 }
 
-
-
-  
-        .ladybird {
-            position: absolute;
-            font-size: 2rem;
-            top: 0; /* Start at the very top */
-            opacity: 1;
-            pointer-events: none; /* Prevent interaction */
-            animation: fall 1s linear forwards;
-        }
-        @keyframes fall {
-            from {
-                transform: translateY(-50px); /* Start slightly above */
-                opacity: 1;
-            }
-            to {
-                transform: translateY(100vh); /* Move to bottom of screen */
-                opacity: 0;
-            }
-        }  
+.ladybird{position:absolute;font-size:2rem;top:0;opacity:1;pointer-events:none;animation:fall 1s linear forwards}@keyframes fall{from{transform:translateY(-50px);opacity:1}to{transform:translateY(100vh);opacity:0}}
 </style>
 </head>
 <body>
     <script>
-        document.addEventListener("DOMContentLoaded", function () {
-            if (navigator.userAgent === "Mozilla/5.0 (Linux; x86_64) Ladybird/1.0") {
-                for (let i = 0; i < 10; i++) {
-                    setTimeout(createLadybird, Math.random() * 500); // Staggered drops
-                }
-            }
-        });
-
-        function createLadybird() {
-            const ladybird = document.createElement("div");
-            ladybird.classList.add("ladybird");
-            ladybird.innerText = "🐞";
-            ladybird.style.left = Math.random() * window.innerWidth + "px"; // Random X position
-            document.body.appendChild(ladybird);
-
-            setTimeout(() => {
-                ladybird.remove();
-            }, 1000); // Remove after animation ends
-        }
+function createLadybird(){const e=document.createElement("div");e.classList.add("ladybird"),e.innerText="🐞",e.style.left=Math.random()*window.innerWidth+"px",document.body.appendChild(e),setTimeout((()=>{e.remove()}),1e3)}document.addEventListener("DOMContentLoaded",(function(){if("Mozilla/5.0 (Linux; x86_64) Ladybird/1.0"===navigator.userAgent)for(let e=0;e<10;e++)setTimeout(createLadybird,500*Math.random())}));
     </script>
 
-  
 <div class="app">
     <h1>Useful Links</h1>
     <button onclick="location.href='https://github.com/Internetperson-dev/artix-runit-install'">Linux Installer</button>
