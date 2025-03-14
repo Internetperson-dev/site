@@ -24,14 +24,57 @@ h1 {
   font-size: 2rem;
   margin-bottom: 20px;
 }
-button {
-body{background:#c7cad1}button{background:linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.13)),radial-gradient(90% 7% at 50% 8%,rgba(255,255,255,.47) 25%,rgba(255,255,255,0) 50%),#0053d0;border:0;border-radius:.375em;box-shadow:.2em .2em .5em rgba(0,0,0,.47),0 -.1em 0 .1em rgba(0,0,0,.27),0 .1em 0 .1em rgba(255,255,255,.27),-.2em 0 .2em #003f9d inset,0 .2em .2em rgba(255,255,255,.27) inset,.2em 0 .2em rgba(255,255,255,.27) inset,0 -.2em .2em #003f9d inset;color:#fff;cursor:pointer;font:24px/1.5 sans-serif;margin:1.5em auto;padding:.5em 1em;text-shadow:0 0 .2em rgba(255,255,255,.47);transition-property:box-shadow;-webkit-tap-highlight-color:transparent}button,button span{display:block;transition-duration:.1s;transition-timing-function:linear}button span:focus,button:focus{outline:0}button span{transition-property:transform;will-change:transform}button:active{box-shadow:0 0 0 rgba(0,0,0,.47),0 -.1em 0 .1em rgba(0,0,0,.27),0 .1em 0 .1em rgba(255,255,255,.27),-.2em 0 .2em #002a6a inset,0 .2em .2em rgba(0,0,0,.27) inset,.2em 0 .2em rgba(0,0,0,.27) inset,0 -.2em .2em #002a6a inset}button:active span{transform:scale(.95)}button:focus{color:#9dc4ff;text-shadow:0 0 .2em rgba(157,196,255,.47)}
+
+/* Button styles */
+button, a.button {
+  background: linear-gradient(rgba(0, 0, 0, 0), rgba(0, 0, 0, 0.13)), radial-gradient(90% 7% at 50% 8%, rgba(255, 255, 255, 0.47) 25%, rgba(255, 255, 255, 0) 50%), #0053d0;
+  border: 0;
+  border-radius: .375em;
+  box-shadow: .2em .2em .5em rgba(0, 0, 0, .47), 0 -.1em 0 .1em rgba(0, 0, 0, .27), 0 .1em 0 .1em rgba(255, 255, 255, .27), -.2em 0 .2em #003f9d inset, 0 .2em .2em rgba(255, 255, 255, .27) inset, .2em 0 .2em rgba(255, 255, 255, .27) inset, 0 -.2em .2em #003f9d inset;
+  color: #fff;
+  cursor: pointer;
+  font: 24px/1.5 sans-serif;
+  margin: 1.5em auto;
+  padding: .5em 1em;
+  text-shadow: 0 0 .2em rgba(255, 255, 255, .47);
+  transition-property: box-shadow;
+  -webkit-tap-highlight-color: transparent;
+  display: inline-block; /* To treat <a> as a block level button */
+  text-decoration: none; /* Remove default link underline */
+  text-align: center;
 }
-  
-button:hover {
+button:hover, a.button:hover {
   background: rgba(255, 255, 255, 0.2);
 }
-.ladybird{position:absolute;font-size:2rem;top:0;opacity:1;pointer-events:none;animation:fall 3s linear forwards}@keyframes fall{from{transform:translateY(-50px);opacity:1}to{transform:translateY(100vh);opacity:0}}
+button:active, a.button:active {
+  box-shadow: 0 0 0 rgba(0, 0, 0, .47), 0 -.1em 0 .1em rgba(0, 0, 0, .27), 0 .1em 0 .1em rgba(255, 255, 255, .27), -.2em 0 .2em #002a6a inset, 0 .2em .2em rgba(0, 0, 0, .27) inset, .2em 0 .2em rgba(0, 0, 0, .27) inset, 0 -.2em .2em #002a6a inset;
+}
+button:active span, a.button:active span {
+  transform: scale(.95);
+}
+button:focus, a.button:focus {
+  color: #9dc4ff;
+  text-shadow: 0 0 .2em rgba(157, 196, 255, .47);
+}
+
+.ladybird {
+  position: absolute;
+  font-size: 2rem;
+  top: 0;
+  opacity: 1;
+  pointer-events: none;
+  animation: fall 3s linear forwards;
+}
+@keyframes fall {
+  from {
+    transform: translateY(-50px);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(100vh);
+    opacity: 0;
+  }
+}
 </style>
 </head>
 <body>
@@ -40,21 +83,21 @@ function createLadybird(){const e=document.createElement("div");e.classList.add(
     </script>
 <div class="links">
     <h1>Useful Links</h1>
-    <button onclick="location.href='https://github.com/Internetperson-dev/artix-runit-install'">Linux Installer</button>
-    <button onclick="location.href='https://github.com/Internetperson-dev/Linux-Desktop-Setup'">Linux Desktop Setup</button>
-    <button onclick="location.href='https://wolfyxon.github.io/3ds-web-stuff/'">3DS Games</button>
-    <button onclick="location.href='http://froxot.de/'">3DS Games - 2</button>
-    <button onclick="location.href='https://www.elizium.nu/scripts/lemmings/'">Lemmings</button>
-    <button onclick="location.href='https://kazuki-4ys.github.io/web_apps/snes9x-2005-wasm/'">SNES Emu</button>
-    <button onclick="location.href='https://www.supersmashflash.com/play/ssf1/'">Super Smash Flash</button>
-    <button onclick="location.href='https://kbhgames.com/game/super-smash-flash-2'">Super Smash Flash 2</button>
-    <button onclick="location.href='https://internetperson-dev.github.io/site/platformer/title.html'">Test Game</button>
-    <button onclick="location.href='https://internetperson-dev.github.io/site/etc/fortnitepwa/index.html'">Fortnite PWA</button>
-    <button onclick="location.href='https://yell0wsuit.page/assets/games/angry-birds-chrome/index.html'">Angry Birds Chrome</button>
-    <button onclick="location.href='https://kinoposts.web.app/test/playlistmaker.html'">Music PWA Test</button>
-    <button onclick="location.href='https://calculator.apps.chrome/'">Google Caculator PWA</button>
-    <button onclick="location.href='https://internetperson-dev.github.io/site/etc/yt/yt-bad.html'">yt-bad</button>
-    <button onclick="location.href='https://internetperson-dev.github.io/site/etc/yt/yt-good.html'">yt-good</button>
+    <a href="https://github.com/Internetperson-dev/artix-runit-install" class="button">Linux Installer</a>
+    <a href="https://github.com/Internetperson-dev/Linux-Desktop-Setup" class="button">Linux Desktop Setup</a>
+    <a href="https://wolfyxon.github.io/3ds-web-stuff/" class="button">3DS Games</a>
+    <a href="http://froxot.de/" class="button">3DS Games - 2</a>
+    <a href="https://www.elizium.nu/scripts/lemmings/" class="button">Lemmings</a>
+    <a href="https://kazuki-4ys.github.io/web_apps/snes9x-2005-wasm/" class="button">SNES Emu</a>
+    <a href="https://www.supersmashflash.com/play/ssf1/" class="button">Super Smash Flash</a>
+    <a href="https://kbhgames.com/game/super-smash-flash-2" class="button">Super Smash Flash 2</a>
+    <a href="https://internetperson-dev.github.io/site/platformer/title.html" class="button">Test Game</a>
+    <a href="https://internetperson-dev.github.io/site/etc/fortnitepwa/index.html" class="button">Fortnite PWA</a>
+    <a href="https://yell0wsuit.page/assets/games/angry-birds-chrome/index.html" class="button">Angry Birds Chrome</a>
+    <a href="https://kinoposts.web.app/test/playlistmaker.html" class="button">Music PWA Test</a>
+    <a href="https://calculator.apps.chrome/" class="button">Google Caculator PWA</a>
+    <a href="https://internetperson-dev.github.io/site/etc/yt/yt-bad.html" class="button">yt-bad</a>
+    <a href="https://internetperson-dev.github.io/site/etc/yt/yt-good.html" class="button">yt-good</a>
     <footer>Created by Internetperson-dev</footer>
 </div>
 </body>
