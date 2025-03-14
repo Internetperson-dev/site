@@ -1,0 +1,17 @@
+{
+    "name": "Write Once Run Everywhere",
+    "short_name": "WOE",
+    "theme_color": "#ffcbe4",
+    "background_color": "#fa99ca",
+    "display": "standalone",
+    "scope": "/",
+    "start_url": "https://internetperson-dev.github.io/site/etc/writeonceruneverywhere.html",
+    "description": "Blog and Resume for Christine Dodrill",
+    "orientation": "any",
+    "icons": [
+        {
+            "src": "https://internetperson-dev.github.io/site/etc/writeonceruneverywhere.html",
+            "sizes": "1024x1024"
+        }
+    ]
+}
