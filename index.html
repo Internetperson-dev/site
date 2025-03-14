@@ -7,13 +7,47 @@
 <title>Internetperson-dev Useful links</title>
 <link rel="icon" type="image/x-icon" href="favicon.ico">
 <style>
-.ladybird,h1{font-size:2rem}body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;background:#1e1e1e;color:#fff;overflow-x:hidden}.links{display:flex;flex-direction:column;align-items:center;min-height:100vh;padding:20px}h1{margin-bottom:20px}button{background:linear-gradient(rgba(0,0,0,0),rgba(0,0,0,.13)),radial-gradient(90%7%at 50%8%,rgba(255,255,255,.47)25%,rgba(255,255,255,0)50%),#0053d0;border:0;border-radius:.375em;box-shadow:.2em.2em.5em rgba(0,0,0,.47),0-.1em 0 .1em rgba(0,0,0,.27),0 .1em 0 .1em rgba(255,255,255,.27),-.2em 0 .2em #003f9d inset,0 .2em.2em rgba(255,255,255,.27) inset,.2em 0 .2em rgba(255,255,255,.27) inset,0-.2em.2em #003f9d inset;color:#fff;cursor:pointer;font:24px/1.5 sans-serif;margin:1.5em auto;padding:.5em 1em;text-shadow:0 0 .2em rgba(255,255,255,.47);transition-property:box-shadow;-webkit-tap-highlight-color:transparent}button,button span{display:block;transition-duration:.1s;transition-timing-function:linear}button span:focus,button:focus{outline:0}button span{transition-property:transform;will-change:transform}button:active{box-shadow:0 0 0 rgba(0,0,0,.47),0-.1em 0 .1em rgba(0,0,0,.27),0 .1em 0 .1em rgba(255,255,255,.27),-.2em 0 .2em #002a6a inset,0 .2em.2em rgba(0,0,0,.27) inset,.2em 0 .2em rgba(0,0,0,.27) inset,0-.2em.2em #002a6a inset}button:active span{transform:scale(.95)}button:focus{color:#9dc4ff;text-shadow:0 0 .2em rgba(157,196,255,.47)}.ladybird{position:absolute;top:0;opacity:1;pointer-events:none;animation:3s linear forwards fall}@keyframes fall{from{transform:translateY(-50px);opacity:1}to{transform:translateY(100vh);opacity:0}}</style>
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: #1e1e1e;
+  color: #fff;
+  overflow-x: hidden; /* Allow vertical scrolling */
+}
+.links {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 100vh;
+  padding: 20px;
+}
+h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+button {
+  width: 300px;
+  padding: 12px;
+  margin: 8px 0;
+  font-size: 1rem;
+  border: none;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+  cursor: pointer;
+  transition: background 0.2s;
+  backdrop-filter: blur(10px);
+}
+button:hover {
+  background: rgba(255, 255, 255, 0.2);
+}
+.ladybird{position:absolute;font-size:2rem;top:0;opacity:1;pointer-events:none;animation:fall 3s linear forwards}@keyframes fall{from{transform:translateY(-50px);opacity:1}to{transform:translateY(100vh);opacity:0}}
+</style>
 </head>
 <body>
     <script>
 function createLadybird(){const e=document.createElement("div");e.classList.add("ladybird"),e.innerText="🐞",e.style.left=Math.random()*window.innerWidth+"px",document.body.appendChild(e),setTimeout((()=>{e.remove()}),1e3)}document.addEventListener("DOMContentLoaded",(function(){if("Mozilla/5.0 (Linux; x86_64) Ladybird/1.0"===navigator.userAgent)for(let e=0;e<10;e++)setTimeout(createLadybird,500*Math.random())}));
     </script>
-    <div class="links">
+<div class="links">
     <h1>Useful Links</h1>
     <button onclick="location.href='https://github.com/Internetperson-dev/artix-runit-install'">Linux Installer</button>
     <button onclick="location.href='https://github.com/Internetperson-dev/Linux-Desktop-Setup'">Linux Desktop Setup</button>
