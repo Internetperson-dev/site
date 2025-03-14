@@ -58,43 +58,5 @@
     <script>
         document.write('Hello World');
     </script>
-
-    <!-- Service Worker Script (included inline for now) -->
-    <script>
-        if ('serviceWorker' in navigator) {
-            const swScript = `
-                self.addEventListener('install', event => {
-                    event.waitUntil(
-                        caches.open('v1').then(cache => {
-                            return cache.addAll([
-                                '/',
-                                '/index.html'
-                            ]);
-                        })
-                    );
-                });
-
-                self.addEventListener('fetch', event => {
-                    event.respondWith(
-                        caches.match(event.request).then(response => {
-                            return response || fetch(event.request);
-                        })
-                    );
-                });
-            `;
-            
-            const swBlob = new Blob([swScript], { type: 'application/javascript' });
-            const swBlobUrl = URL.createObjectURL(swBlob);
-            
-            // Register the Service Worker from the Blob URL
-            navigator.serviceWorker.register(swBlobUrl)
-                .then(registration => {
-                    console.log('Service Worker registered successfully with blob URL:', registration);
-                })
-                .catch(error => {
-                    console.log('Service Worker registration failed with blob URL:', error);
-                });
-        }
-    </script>
 </body>
 </html>
