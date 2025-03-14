@@ -11,18 +11,23 @@ body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background: #1e1e1e;
   color: #fff;
-  overflow-x: hidden; /* Allow vertical scrolling */
+  overflow-x: hidden;
+  margin: 0;
+  padding: 0;
 }
+
 .links {
   display: flex;
   flex-direction: column;
   align-items: center;
   min-height: 100vh;
-  padding: 20px;
+  padding: 2rem;
+  box-sizing: border-box;
 }
+
 h1 {
   font-size: 2rem;
-  margin-bottom: 20px;
+  margin-bottom: 2rem;
 }
 
 /* Button styles */
@@ -33,28 +38,58 @@ button, a.button {
   box-shadow: .2em .2em .5em rgba(0, 0, 0, .47), 0 -.1em 0 .1em rgba(0, 0, 0, .27), 0 .1em 0 .1em rgba(255, 255, 255, .27), -.2em 0 .2em #003f9d inset, 0 .2em .2em rgba(255, 255, 255, .27) inset, .2em 0 .2em rgba(255, 255, 255, .27) inset, 0 -.2em .2em #003f9d inset;
   color: #fff;
   cursor: pointer;
-  font: 24px/1.5 sans-serif;
-  margin: 1.5em auto;
-  padding: .5em 1em;
+  font: 1.2rem/1.5 sans-serif;
+  margin: 1rem 0;
+  padding: .75rem 1.5rem;
   text-shadow: 0 0 .2em rgba(255, 255, 255, .47);
   transition-property: box-shadow;
   -webkit-tap-highlight-color: transparent;
-  display: inline-block; /* To treat <a> as a block level button */
-  text-decoration: none; /* Remove default link underline */
+  display: inline-block;
+  text-decoration: none;
   text-align: center;
+  width: 100%; /* Make buttons responsive to width */
+  max-width: 500px; /* Maximum width for buttons */
+  box-sizing: border-box;
 }
+
 button:hover, a.button:hover {
   background: rgba(255, 255, 255, 0.2);
 }
+
 button:active, a.button:active {
   box-shadow: 0 0 0 rgba(0, 0, 0, .47), 0 -.1em 0 .1em rgba(0, 0, 0, .27), 0 .1em 0 .1em rgba(255, 255, 255, .27), -.2em 0 .2em #002a6a inset, 0 .2em .2em rgba(0, 0, 0, .27) inset, .2em 0 .2em rgba(0, 0, 0, .27) inset, 0 -.2em .2em #002a6a inset;
 }
+
 button:active span, a.button:active span {
   transform: scale(.95);
 }
+
 button:focus, a.button:focus {
   color: #9dc4ff;
   text-shadow: 0 0 .2em rgba(157, 196, 255, .47);
+}
+
+/* Responsive design */
+@media screen and (max-width: 768px) {
+  h1 {
+    font-size: 1.5rem;
+  }
+
+  button, a.button {
+    font-size: 1rem;
+    padding: .5rem 1rem;
+  }
+}
+
+@media screen and (max-width: 480px) {
+  h1 {
+    font-size: 1.25rem;
+  }
+
+  button, a.button {
+    font-size: 1rem;
+    padding: .4rem .8rem;
+  }
 }
 
 .ladybird {
@@ -65,6 +100,7 @@ button:focus, a.button:focus {
   pointer-events: none;
   animation: fall 3s linear forwards;
 }
+
 @keyframes fall {
   from {
     transform: translateY(-50px);
