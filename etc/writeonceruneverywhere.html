@@ -4,60 +4,62 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hello World Program</title>
-    
-    <!-- Inline Manifest -->
-    <script>
-        const manifest = {
-            "name": "Hello World PWA",
-            "short_name": "HelloWorld",
-            "description": "A simple Hello World Progressive Web App",
-            "start_url": "/",
-            "display": "standalone",
-            "background_color": "#ffffff",
-            "theme_color": "#000000",
-            "icons": [
-                {
-                    "src": "https://example.com/icon.png",
-                    "sizes": "192x192",
-                    "type": "image/png"
-                },
-                {
-                    "src": "https://example.com/icon-512.png",
-                    "sizes": "512x512",
-                    "type": "image/png"
-                }
-            ]
-        };
-        
-        const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
-        const manifestUrl = URL.createObjectURL(manifestBlob);
-        document.querySelector("link[rel='manifest']").setAttribute('href', manifestUrl);
-    </script>
 
     <!-- Manifest Link -->
     <link rel="manifest" href="">
 
     <!-- Service Worker Registration -->
     <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/service-worker.js')
-                    .then(registration => {
-                        console.log('Service Worker registered with scope:', registration.scope);
-                    })
-                    .catch(error => {
-                        console.log('Service Worker registration failed:', error);
-                    });
-            });
-        }
+        document.addEventListener('DOMContentLoaded', function() {
+            // Dynamically create and assign the manifest file
+            const manifest = {
+                "name": "Hello World PWA",
+                "short_name": "HelloWorld",
+                "description": "A simple Hello World Progressive Web App",
+                "start_url": "/",
+                "display": "standalone",
+                "background_color": "#ffffff",
+                "theme_color": "#000000",
+                "icons": [
+                    {
+                        "src": "https://example.com/icon.png",
+                        "sizes": "192x192",
+                        "type": "image/png"
+                    },
+                    {
+                        "src": "https://example.com/icon-512.png",
+                        "sizes": "512x512",
+                        "type": "image/png"
+                    }
+                ]
+            };
+            
+            const manifestBlob = new Blob([JSON.stringify(manifest)], { type: 'application/json' });
+            const manifestUrl = URL.createObjectURL(manifestBlob);
+            document.querySelector("link[rel='manifest']").setAttribute('href', manifestUrl);
+
+            // Register Service Worker
+            if ('serviceWorker' in navigator) {
+                window.addEventListener('load', () => {
+                    navigator.serviceWorker.register('/service-worker.js')
+                        .then(registration => {
+                            console.log('Service Worker registered with scope:', registration.scope);
+                        })
+                        .catch(error => {
+                            console.log('Service Worker registration failed:', error);
+                        });
+                });
+            }
+        });
     </script>
+
 </head>
 <body>
     <script>
         document.write('Hello World');
     </script>
 
-    <!-- Inline Service Worker -->
+    <!-- Service Worker Script (included inline for now) -->
     <script>
         if ('serviceWorker' in navigator) {
             const swScript = `
@@ -66,8 +68,7 @@
                         caches.open('v1').then(cache => {
                             return cache.addAll([
                                 '/',
-                                '/index.html',
-                                '/service-worker.js'
+                                '/index.html'
                             ]);
                         })
                     );
@@ -84,8 +85,15 @@
             
             const swBlob = new Blob([swScript], { type: 'application/javascript' });
             const swBlobUrl = URL.createObjectURL(swBlob);
-
-            navigator.serviceWorker.register(swBlobUrl);
+            
+            // Register the Service Worker from the Blob URL
+            navigator.serviceWorker.register(swBlobUrl)
+                .then(registration => {
+                    console.log('Service Worker registered successfully with blob URL:', registration);
+                })
+                .catch(error => {
+                    console.log('Service Worker registration failed with blob URL:', error);
+                });
         }
     </script>
 </body>
