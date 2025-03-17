@@ -6,24 +6,25 @@
   <meta name="description" content="A group of websites">
   <title>Test Blog</title>
   <link rel="icon" type="image/png" href="/site/favicon.png">
-  <link href='https://fonts.bunny.net/css?family=Lexend Deca' rel='stylesheet'>
-  <style>   
-   img {
-    max-width: 100%;
-    height: auto
-   }
-   body {
-    font-family: 'Lexend Deca';font-size: 22px;
-    background-color: #212121;
-   }
-   p {
-    color: #FAFAFA;
-   }
-   h1 {
-     color: #FAFAFA;
-   }
-  </style>
-  <h1>Test</h1>
-  <p>This is a test.</p>
-  </body>
+  <link rel="preload" href="https://fonts.bunny.net/css?family=Lexend+Deca" as="style"> <!-- Prevents render blocking-->
+    <style>
+        img {
+            max-width: 100%;
+            height: auto;
+        }
+        body {
+            font-family: 'Lexend Deca', sans-serif;
+            font-size: 22px;
+            background-color: #212121;
+            margin: 0;
+        }
+        p, h1 {
+            color: #FAFAFA;
+        }
+    </style>
+</head>
+<body> <!-- Inside body tag-->
+    <h1>Test</h1>
+    <p>This is a test.</p>
+</body>
 </html>
