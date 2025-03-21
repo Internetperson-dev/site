@@ -17,13 +17,20 @@
             let resultsDiv = document.getElementById('results');
             resultsDiv.innerHTML = "Running tests...";
             setTimeout(() => {
-                let jsTime = testJavaScriptPerformance();
-                let domTime = testDOMManipulation();
-                let renderTime = testRenderingPerformance();
+                let jsTimes = [], domTimes = [], renderTimes = [];
+                for (let i = 0; i < 3; i++) {
+                    jsTimes.push(testJavaScriptPerformance());
+                    domTimes.push(testDOMManipulation());
+                    renderTimes.push(testRenderingPerformance());
+                }
                 
-                resultsDiv.innerHTML = `JavaScript Execution: ${jsTime}ms<br>
-                                        DOM Manipulation: ${domTime}ms<br>
-                                        Rendering Performance: ${renderTime}ms`;
+                let avgJsTime = average(jsTimes);
+                let avgDomTime = average(domTimes);
+                let avgRenderTime = average(renderTimes);
+                
+                resultsDiv.innerHTML = `JavaScript Execution (Avg): ${avgJsTime}ms<br>
+                                        DOM Manipulation (Avg): ${avgDomTime}ms<br>
+                                        Rendering Performance (Avg): ${avgRenderTime}ms`;
             }, 100);
         }
 
@@ -63,6 +70,10 @@
             }
             document.body.removeChild(div);
             return (performance.now() - start).toFixed(2);
+        }
+        
+        function average(times) {
+            return (times.reduce((a, b) => parseFloat(a) + parseFloat(b), 0) / times.length).toFixed(2);
         }
     </script>
 </body>
