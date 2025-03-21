@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Browser Benchmark</title>
+    <style>
+        body { font-family: Arial, sans-serif; text-align: center; }
+        #results { margin-top: 20px; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h1>Browser Benchmark</h1>
+    <button onclick="runBenchmark()">Start Benchmark</button>
+    <div id="results"></div>
+    
+    <script>
+        function runBenchmark() {
+            let resultsDiv = document.getElementById('results');
+            resultsDiv.innerHTML = "Running tests...";
+            setTimeout(() => {
+                let jsTime = testJavaScriptPerformance();
+                let domTime = testDOMManipulation();
+                let renderTime = testRenderingPerformance();
+                
+                resultsDiv.innerHTML = `JavaScript Execution: ${jsTime}ms<br>
+                                        DOM Manipulation: ${domTime}ms<br>
+                                        Rendering Performance: ${renderTime}ms`;
+            }, 100);
+        }
+
+        function testJavaScriptPerformance() {
+            let start = performance.now();
+            let sum = 0;
+            for (let i = 0; i < 1e7; i++) { sum += i; }
+            return (performance.now() - start).toFixed(2);
+        }
+
+        function testDOMManipulation() {
+            let container = document.createElement('div');
+            document.body.appendChild(container);
+            let start = performance.now();
+            for (let i = 0; i < 1000; i++) {
+                let div = document.createElement('div');
+                div.textContent = i;
+                container.appendChild(div);
+            }
+            while (container.firstChild) {
+                container.removeChild(container.firstChild);
+            }
+            document.body.removeChild(container);
+            return (performance.now() - start).toFixed(2);
+        }
+        
+        function testRenderingPerformance() {
+            let div = document.createElement('div');
+            div.style.width = '100px';
+            div.style.height = '100px';
+            div.style.backgroundColor = 'red';
+            div.style.position = 'absolute';
+            document.body.appendChild(div);
+            let start = performance.now();
+            for (let i = 0; i < 100; i++) {
+                div.style.transform = `translateX(${i}px)`;
+            }
+            document.body.removeChild(div);
+            return (performance.now() - start).toFixed(2);
+        }
+    </script>
+</body>
+</html>
