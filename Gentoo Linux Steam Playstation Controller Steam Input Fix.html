@@ -1,0 +1,40 @@
+Gentoo Linux Steam Playstation Controller Steam Input Fix
+
+Too lazy too do do HTML so here we are.
+
+
+Make sure all uDev rules are correct
+
+Add everything from here 
+
+https://codeberg.org/fabiscafe/game-devices-udev
+
+to
+
+/etc/udev/rules.d
+
+Than run sudo udevadm control --reload-rules && udevadm trigger 
+
+But you may also have to add more rules
+
+sudo echo -e "# Valve HID devices over bluetooth hidraw\nKERNEL==\"hidraw*\", KERNELS==\"*28DE:*\", MODE=\"0666\"" >> /etc/udev/rules.d/99-steam-controller-perms.rules
+sudo echo -e "# Dualshock 4 over bluetooth hidraw\nKERNEL==\"hidraw*\", KERNELS==\"*054C:05C4*\", MODE=\"0666\"" >> /etc/udev/rules.d/99-steam-controller-perms.rules
+sudo echo -e "# Dualshock 4 Slim over bluetooth hidraw\nKERNEL==\"hidraw*\", KERNELS==\"*054C:09CC*\", MODE=\"0666\"" >> /etc/udev/rules.d/99-steam-controller-perms.rules
+udevadm trigger
+
+
+And pray everything works
+
+sudo udevadm control --reload-rules && sudo udevadm trigger
+sudo /etc/init.d/udev restart
+
+
+Ensure you are in the input group
+
+ gpasswd -a USER input
+
+And some Gentoo package is installed
+
+sudo emerge game-device-udev-rules
+
+You may have to run steam with --no-sandbox and install proton-ge
