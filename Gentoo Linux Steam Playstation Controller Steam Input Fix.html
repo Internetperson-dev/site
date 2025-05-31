@@ -1,9 +1,33 @@
-Gentoo Linux Steam Playstation Controller Steam Input Fix
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Gentoo Linux Steam Playstation Controller Steam Input Fix">
+<title>Gentoo Linux Steam Playstation Controller Steam Input Fix
+</title>
+<link rel="icon" type="image/png" href="favicon.png">
 
-Too lazy too do do HTML so here we are.
+<style>
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: #1e1e1e;
+  color: #fff;
+  overflow-x: hidden; /* Allow vertical scrolling */
+}
+}
+h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+}
+</style>
 
 
-Make sure all uDev rules are correct
+<h1>Gentoo Linux Steam Playstation Controller Steam Input Fix  </h1>
+
+
+
+Make sure all udev rules are correct
 
 Add everything from here 
 
@@ -28,13 +52,12 @@ And pray everything works
 sudo udevadm control --reload-rules && sudo udevadm trigger
 sudo /etc/init.d/udev restart
 
-
 Ensure you are in the input group
 
- gpasswd -a USER input
+gpasswd -a USER input
 
 And some Gentoo package is installed
-
+ 
 sudo emerge game-device-udev-rules
 
 You may have to run steam with --no-sandbox and install proton-ge
