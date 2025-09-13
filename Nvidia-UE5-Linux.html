@@ -1,23 +1,64 @@
 Does the UE5 Nvidia branch actually work on Linux?
 
+
+
+
+
 So I built it easily by cloning the repo.
 
+
+
+
+
+
 ./Setup.sh
+
+
+
+
 ./GenerateProjectFiles.sh
+
+
+
+
+
 make
+
+
+
+
 
 Some parts of it build, about 100 things failed to built.
 
+
+
+
+
 Than I converted my project to supprot the Nvidia branch.
+
+
+
+
 
 ./Engine/Build/BatchFiles/Linux/Build.sh FPSTestEditor Linux Development \
   -Project="/mnt/nvme/home/ram/Documents/Code/Unreal Engine/FPSTest-RTX/FPSTest.uproject" \
   -TargetType=Editor -Progress
 
 
+
+
+
+
 And than every time I build my project a failure.
 
+
+
+
 The one time I got the project to build was by using the built tools from the UE5 binary provided by Epic Games.
+
+
+
+
 
 
   
