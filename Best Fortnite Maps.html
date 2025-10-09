@@ -4,47 +4,43 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Fortnite Island Previews</title>
-  <script>
-    async function createPreview(url) {
-      // Fortnite island API (returns map details)
-      const islandId = url.split("/").pop().split("?")[0];
-      const apiUrl = `https://fortnite-api.com/v1/creative/islands/${islandId}`;
+ <script>
+async function createPreview(url) {
+  const apiUrl = `https://api.microlink.io/?url=${encodeURIComponent(url)}`;
+  try {
+    const res = await fetch(apiUrl);
+    const data = await res.json();
+    const meta = data.data;
 
-      try {
-        const res = await fetch(apiUrl);
-        const data = await res.json();
-        const island = data.data;
+    const div = document.createElement("div");
+    div.className = "preview";
+    div.innerHTML = `
+      <a href="${url}" target="_blank">
+        <img src="${meta.image?.url}" alt="${meta.title}" />
+        <div class="info">
+          <h3>${meta.title}</h3>
+          <p>${meta.description}</p>
+          <p><strong>Source:</strong> fortnite.com</p>
+        </div>
+      </a>
+    `;
+    document.getElementById("container").appendChild(div);
+  } catch (e) {
+    console.error("Failed to fetch preview", e);
+  }
+}
 
-        const div = document.createElement("div");
-        div.className = "preview";
+window.onload = () => {
+  const links = [
+    "https://www.fortnite.com/@jakus/3623-3871-1041?lang=en-US",
+    "https://www.fortnite.com/@teamrevibed/9997-0482-5512?lang=en-US",
+    "https://www.fortnite.com/@pandvilspam/2229-0002-0277?lang=en-US",
+    "https://www.fortnite.com/@epic/ranked-ballistic?lang=en-US"
+  ];
+  links.forEach(createPreview);
+};
+</script>
 
-        div.innerHTML = `
-          <a href="${url}" target="_blank">
-            <img src="${island.image || island.images?.background}" alt="${island.title}" />
-            <div class="info">
-              <h3>${island.title}</h3>
-              <p>${island.description}</p>
-              <p><strong>Code:</strong> ${island.islandCode}</p>
-            </div>
-          </a>
-        `;
-
-        document.getElementById("container").appendChild(div);
-      } catch (e) {
-        console.error("Failed to fetch island data", e);
-      }
-    }
-
-    window.onload = () => {
-      const links = [
-        "https://www.fortnite.com/@jakus/3623-3871-1041?lang=en-US",
-        "https://www.fortnite.com/@teamrevibed/9997-0482-5512?lang=en-US",
-        "https://www.fortnite.com/@pandvilspam/2229-0002-0277?lang=en-US",
-        "https://www.fortnite.com/@epic/ranked-ballistic?lang=en-US"
-      ];
-      links.forEach(createPreview);
-    };
-  </script>
 
   <style>
     body {
