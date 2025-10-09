@@ -5,52 +5,6 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Best Fortnite Maps — Side Text</title>
 
-<script>
-(function (window) {
-    'use strict';
-
-    window.code = window.code || {};
-
-    window.code.lightweightYoutubePlayer = function () {
-        const youtubeVideos = [...document.querySelectorAll('[data-youtube]')];
-
-        function init() {
-            youtubeVideos.forEach(bindYoutubeVideoEvent);
-        }
-
-        function bindYoutubeVideoEvent(element) {
-            const button = element.querySelector('[data-youtube-button]');
-            if (!button) return;
-            button.addEventListener('click', createIframe);
-        }
-
-        function createIframe(event) {
-            const url = event.target.dataset.youtubeButton;
-            const placeholder = event.target.parentNode;
-
-            const iframeHTML = `
-                <div class="video__youtube">
-                    <iframe class="video__iframe" src="${url}?autoplay=1" frameborder="0" allowfullscreen></iframe>
-                </div>
-            `;
-
-            placeholder.style.display = 'none';
-            placeholder.insertAdjacentHTML('beforebegin', iframeHTML);
-            placeholder.remove();
-        }
-
-        return { init };
-    };
-})(window);
-
-// Initialize when DOM is ready
-document.addEventListener('DOMContentLoaded', () => {
-    const player = window.code.lightweightYoutubePlayer();
-    player.init();
-});
-</script>
-
-	
 <style>
   :root{
     --bg:#050509;
@@ -69,31 +23,28 @@ body {
   color: #e8e8f0;
 }
 
-  .wrap {
+.wrap {
     max-width:1100px;
     margin:0 auto;
-  }
+}
 
-  h1{
+h1{
     text-align:center;
     margin:0 0 1.5rem;
     color:#fff;
     text-shadow:0 0 10px rgba(143,162,255,0.18);
     font-size:2rem;
-  }
+}
 
-  /* keep existing site sidebar if you want — but main preview cards now have side text */
-  .layout {
+.layout {
     display:grid;
     grid-template-columns: 1fr 300px;
     gap:2rem;
-  }
+}
 
-  main {
-    min-height:100vh;
-  }
+main { min-height:100vh; }
 
-  aside {
+aside {
     background:linear-gradient(145deg,#181824,#10101a);
     border-radius:var(--radius);
     padding:1rem;
@@ -101,12 +52,11 @@ body {
     color:var(--muted);
     box-shadow:0 10px 30px rgba(0,0,0,0.45);
     font-size:0.95rem;
-  }
+}
 
-  /* ---- Preview card: left image, right text ---- */
-  .preview {
+.preview {
     display:grid;
-    grid-template-columns: 300px 1fr; /* <- fixed thumbnail, flexible text column */
+    grid-template-columns: 300px 1fr;
     gap:1rem;
     align-items:stretch;
     background: linear-gradient(145deg, var(--card-a), var(--card-b));
@@ -115,66 +65,52 @@ body {
     border:1px solid #292947;
     box-shadow:0 6px 18px rgba(0,0,0,0.45);
     margin-bottom:1.25rem;
-    min-height:150px; /* ensures a consistent height */
-  }
+    min-height:150px;
+}
 
-  .preview img {
+.preview img {
     width:100%;
     height:100%;
     object-fit:cover;
     display:block;
     background:linear-gradient(180deg,#0c0c14,#11111a);
-  }
+}
 
-  .info {
+.info {
     padding:1rem 1.25rem;
     display:flex;
     flex-direction:column;
     justify-content:center;
-  }
+}
 
-  .info h3 {
+.info h3 {
     margin:0 0 0.5rem 0;
     color:#fff;
     font-size:1.15rem;
     text-shadow:0 0 6px rgba(100,150,255,0.18);
-  }
+}
 
-  .info p {
-    margin:0;
-    color:var(--muted);
-    line-height:1.45;
-    font-size:0.96rem;
-  }
+.info p { margin:0; color:var(--muted); line-height:1.45; font-size:0.96rem; }
 
-  .meta-row {
+.meta-row {
     margin-top:0.75rem;
     display:flex;
     gap:0.75rem;
     align-items:center;
     color:#9fb2ff;
     font-size:0.85rem;
-  }
+}
 
-  .link {
+.link {
     margin-top:0.6rem;
     display:inline-block;
     font-size:0.9rem;
     color:#a8bfff;
     text-decoration:none;
     opacity:0.95;
-  }
+}
 
-  iframe {
-    width:100%;
-    border-radius:12px;
-    border:0;
-    margin-bottom:1.5rem;
-    box-shadow:0 10px 30px rgba(0,0,0,0.45);
-  }
-
-  /* fallback image style (in case the image doesn't load) */
-  .no-image {
+.no-image {
     display:flex;
     align-items:center;
     justify-content:center;
@@ -182,222 +118,125 @@ body {
     font-weight:600;
     font-size:1rem;
     background:linear-gradient(180deg,#0c0c14,#0e0e18);
-  }
+}
 
-  @media (max-width:980px){
+@media (max-width:980px){
     .layout{ grid-template-columns: 1fr; }
     .preview { grid-template-columns: 1fr; }
     .preview img { height:220px; }
     aside { order:-1; }
-  }
-
-.video {
-    position: relative;
-    width: 50vw;
 }
 
-.video__iframe {
-    position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-}
-
-.video__placeholder {
-	width: 100%;
-    position: absolute;
-}
-
-.video__youtube {
-    padding-bottom: 56.23%;
-    width: 100%;
-    height: 0;
-    overflow: hidden;
-	position: relative;
-    object-fit: cover;
-    background-color: black;
-}
-
-.video__button {
-    background: none;
-	border: 0;
-	cursor: pointer;
-	height: 100%;
-	left: 0;
-	position: absolute;
-	text-indent: -9999px;
-	top: 0;
-	transition: transform 300ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
-	width: 100%;
-}
-
-.video__button:before {
-    width:100%;
-    height:100%;
-    content: '';
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-
-    background: url(https://raw.githubusercontent.com/Internetperson-dev/site/refs/heads/main/etc/yt/output.avif) no-repeat center center;
-    background-size: 10%; 
-}
-
-.video__button:hover:before {
-    background: url(https://raw.githubusercontent.com/Internetperson-dev/site/refs/heads/main/etc/yt/output.avif) no-repeat center center;
-    background-size: 10%; 
-}
-
-  
+/* --- Lightweight YouTube embed styles --- */
+.video { position: relative; width: 100%; max-width: 600px; margin-bottom:1.5rem; }
+.video__youtube { padding-bottom: 56.23%; width: 100%; height:0; overflow:hidden; position: relative; background-color:black; }
+.video__placeholder { width:100%; position:absolute; top:0; left:0; height:100%; object-fit:cover; }
+.video__button { background:none; border:0; cursor:pointer; height:100%; left:0; position:absolute; text-indent:-9999px; top:0; width:100%; }
+.video__button:before { width:100%; height:100%; content:''; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background:url(https://raw.githubusercontent.com/Internetperson-dev/site/refs/heads/main/etc/yt/output.avif) no-repeat center center; background-size:10%; }
+.video__button:hover:before { background:url(https://raw.githubusercontent.com/Internetperson-dev/site/refs/heads/main/etc/yt/output.avif) no-repeat center center; background-size:10%; }
+.video__iframe { position:absolute; top:0; left:0; width:100%; height:100%; }
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <h1>Best Fortnite Maps</h1>
-    <div class="layout">
-      <main>
-        <!-- YouTube -->
-        <iframe height="480"
-          src="https://www.youtube.com/embed/Pr9LcxHFE_k"
-          title="I Made My Own Fortnite Battle Royale"
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-          referrerpolicy="strict-origin-when-cross-origin" allowfullscreen>
-        </iframe>
-
-        <!-- container for cards -->
-        <div id="container"></div>
-      </main>
-         <aside>
-  <h3 style="color:#9bb8ff; margin-top:0;">Featured Sections</h3>
-  <ul style="padding-left:1rem; margin-top:0.5rem;">
-    <li>
-      <button 
-        onclick="window.open('https://www.fortnite.com/download?lang=en-US', '_blank')" 
-        style="padding: 0.5rem 1rem; background-color:#9bb8ff; color:white; border:none; border-radius:5px; cursor:pointer;">
-        Play Fortnite
-      </button>
-    </li>
-  </ul>
-</aside>
-
-        <p style="margin-top:1rem; color:var(--muted);">⚡ Pro tip: Reload once to cache all previews for faster performance next time!</p>
-      </aside>
+<div class="wrap">
+<h1>Best Fortnite Maps</h1>
+<div class="layout">
+<main>
+    <!-- Lightweight YouTube Embed -->
+    <div class="video">
+        <div class="video__youtube" data-youtube>
+            <img src="https://raw.githubusercontent.com/Internetperson-dev/site/refs/heads/main/etc/yt/thum.avif" class="video__placeholder" />
+            <button class="video__button" data-youtube-button="https://www.youtube.com/embed/Pr9LcxHFE_k">Play</button>
+        </div>
     </div>
-  </div>
+
+    <!-- container for cards -->
+    <div id="container"></div>
+</main>
+
+<aside>
+<h3 style="color:#9bb8ff; margin-top:0;">Featured Sections</h3>
+<ul style="padding-left:1rem; margin-top:0.5rem;">
+    <li>
+        <button 
+            onclick="window.open('https://www.fortnite.com/download?lang=en-US', '_blank')" 
+            style="padding: 0.5rem 1rem; background-color:#9bb8ff; color:white; border:none; border-radius:5px; cursor:pointer;">
+            Play Fortnite
+        </button>
+    </li>
+</ul>
+
+<p style="margin-top:1rem; color:var(--muted);">⚡ Pro tip: Reload once to cache all previews for faster performance next time!</p>
+</aside>
+</div>
+</div>
 
 <script>
-  // small inline SVG fallback (shown if there is no image from the preview)
-  const FALLBACK_SVG = 'data:image/svg+xml;utf8,' + encodeURIComponent(
-    `<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800">
-      <defs>
-        <linearGradient id="g" x1="0" x2="1">
-          <stop offset="0" stop-color="#0c0c14"/><stop offset="1" stop-color="#11111a"/>
-        </linearGradient>
-      </defs>
-      <rect width="100%" height="100%" fill="url(#g)"/>
-      <g fill="#bdbde6" font-family="sans-serif" font-size="40" text-anchor="middle">
-        <text x="50%" y="48%">No preview image</text>
-        <text x="50%" y="60%" font-size="24" opacity="0.85">Click the card to open the map</text>
-      </g>
-    </svg>`
-  );
-
-  // Maps data: your original titles + descriptions
-  const maps = [
-    {
-      url: "https://www.fortnite.com/@jakus/3623-3871-1041?lang=en-US",
-      title: "Battle Royale: HIGH TIDE | Snapshots",
-      desc: "A full fan-made Battle Royale game mode. Sadly doesn't get a lot of players."
-    },
-    {
-      url: "https://www.fortnite.com/@teamrevibed/9997-0482-5512?lang=en-US",
-      title: "Chapter 3: Revibed",
-      desc: "A solid recreation of Chapter 3 Vibin'."
-    },
-    {
-      url: "https://www.fortnite.com/@pandvilspam/2229-0002-0277?lang=en-US",
-      title: "Rewind Royale",
-      desc: "A version of Chapter 1 Fortnite that is more accurate."
-    },
-    {
-      url: "https://www.fortnite.com/@epic/ranked-ballistic?lang=en-US",
-      title: "Ranked Ballistic (By Epic Games)",
-      desc: "A kinda fun Counter-Strike–like map by Epic Games."
-    }
-  ];
-
-  // create preview using microlink, but show your own title/desc on the right
-  async function createPreview(map) {
-    const cacheKey = 'preview_' + map.url;
-    const cached = localStorage.getItem(cacheKey);
-    let meta = null;
-
-    if (cached) {
-      try { meta = JSON.parse(cached); } catch(e){ meta = null; }
-    }
-
-    if (!meta) {
-      try {
-        const res = await fetch('https://api.microlink.io/?url=' + encodeURIComponent(map.url));
-        const json = await res.json();
-        meta = json.data || null;
-        if (meta) {
-          localStorage.setItem(cacheKey, JSON.stringify(meta));
+/* --- Lightweight YouTube Player --- */
+(function (window) {
+    'use strict';
+    window.code = window.code || {};
+    window.code.lightweightYoutubePlayer = function() {
+        const videos = [...document.querySelectorAll('[data-youtube]')];
+        function init() { videos.forEach(bindEvent); }
+        function bindEvent(el) {
+            const btn = el.querySelector('[data-youtube-button]');
+            if(!btn) return;
+            btn.addEventListener('click', createIframe);
         }
-      } catch (err) {
-        // network error or CORS issue — fallback to null meta (we'll still show your title/desc)
-        console.warn('preview fetch failed for', map.url, err);
-        meta = null;
-      }
-    }
+        function createIframe(event) {
+            const url = event.target.dataset.youtubeButton;
+            const placeholder = event.target.parentNode;
+            const iframeHTML = `<div class="video__youtube"><iframe class="video__iframe" src="${url}?autoplay=1" frameborder="0" allowfullscreen></iframe></div>`;
+            placeholder.style.display = 'none';
+            placeholder.insertAdjacentHTML('beforebegin', iframeHTML);
+            placeholder.remove();
+        }
+        return { init };
+    };
+})(window);
+document.addEventListener('DOMContentLoaded', () => {
+    window.code.lightweightYoutubePlayer().init();
+});
 
-    renderPreview(map, meta);
+/* --- Fortnite Maps Previews --- */
+const FALLBACK_SVG = 'data:image/svg+xml;utf8,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800"><defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#0c0c14"/><stop offset="1" stop-color="#11111a"/></linearGradient></defs><rect width="100%" height="100%" fill="url(#g)"/><g fill="#bdbde6" font-family="sans-serif" font-size="40" text-anchor="middle"><text x="50%" y="48%">No preview image</text><text x="50%" y="60%" font-size="24" opacity="0.85">Click the card to open the map</text></g></svg>`);
+
+const maps = [
+  { url:"https://www.fortnite.com/@jakus/3623-3871-1041?lang=en-US", title:"Battle Royale: HIGH TIDE | Snapshots", desc:"A full fan-made Battle Royale game mode. Sadly doesn't get a lot of players." },
+  { url:"https://www.fortnite.com/@teamrevibed/9997-0482-5512?lang=en-US", title:"Chapter 3: Revibed", desc:"A solid recreation of Chapter 3 Vibin'." },
+  { url:"https://www.fortnite.com/@pandvilspam/2229-0002-0277?lang=en-US", title:"Rewind Royale", desc:"A version of Chapter 1 Fortnite that is more accurate." },
+  { url:"https://www.fortnite.com/@epic/ranked-ballistic?lang=en-US", title:"Ranked Ballistic (By Epic Games)", desc:"A kinda fun Counter-Strike–like map by Epic Games." }
+];
+
+async function createPreview(map){
+  const cacheKey='preview_'+map.url;
+  let meta=null;
+  const cached=localStorage.getItem(cacheKey);
+  if(cached){ try{ meta=JSON.parse(cached); }catch(e){meta=null;} }
+  if(!meta){
+    try{
+      const res=await fetch('https://api.microlink.io/?url='+encodeURIComponent(map.url));
+      const json=await res.json();
+      meta=json.data||null;
+      if(meta) localStorage.setItem(cacheKey,JSON.stringify(meta));
+    }catch(err){ console.warn('preview fetch failed for',map.url,err); meta=null; }
   }
+  renderPreview(map,meta);
+}
 
-  function renderPreview(map, meta) {
-    const container = document.getElementById('container');
+function renderPreview(map,meta){
+  const container=document.getElementById('container');
+  const card=document.createElement('article'); card.className='preview';
+  const imgUrl=(meta&&meta.image&&meta.image.url)?meta.image.url:FALLBACK_SVG;
+  card.innerHTML=`<a href="${map.url}" target="_blank" rel="noopener noreferrer" style="display:block; color:inherit;">
+    <div class="thumb-wrap"><img src="${imgUrl}" alt="${map.title}" onerror="this.onerror=null; this.src='${FALLBACK_SVG}';" /></div>
+    <div class="info"><h3>${map.title}</h3><p>${map.desc}</p><div class="meta-row"><span>View on Fortnite</span></div></div>
+  </a>`;
+  container.appendChild(card);
+}
 
-    const card = document.createElement('article');
-    card.className = 'preview';
-
-    // pick image URL from meta if available
-    const imgUrl = (meta && meta.image && meta.image.url) ? meta.image.url : FALLBACK_SVG;
-
-    // build inner HTML - title & description come from your original text (map.title, map.desc)
-    card.innerHTML = `
-      <a href="${map.url}" target="_blank" rel="noopener noreferrer" style="display:block; color:inherit;">
-        <div class="thumb-wrap">
-          <img src="${imgUrl}" alt="${escapeHtml(map.title)}" onerror="this.onerror=null; this.src='${FALLBACK_SVG}';" />
-        </div>
-        <div class="info">
-          <h3>${escapeHtml(map.title)}</h3>
-          <p>${escapeHtml(map.desc)}</p>
-          <div class="meta-row">
-            <span>View on Fortnite</span>
-          </div>
-        </div>
-      </a>
-    `;
-
-    container.appendChild(card);
-  }
-
-  // utility to escape user text for safety
-  function escapeHtml(str='') {
-    return String(str)
-      .replaceAll('&','&amp;')
-      .replaceAll('<','&lt;')
-      .replaceAll('>','&gt;')
-      .replaceAll('"','&quot;')
-      .replaceAll("'",'&#39;');
-  }
-
-  // init
-  (function init(){
-    maps.forEach(createPreview);
-  })();
+maps.forEach(createPreview);
 </script>
 </body>
 </html>
