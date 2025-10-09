@@ -138,10 +138,10 @@ aside {
     </li>
 </ul>
 
-<p style="margin-top:1rem; color:var(--muted);">⚡ Pro tip: Reload once to cache all previews for faster performance next time!</p>
+<!-- <p style="margin-top:1rem; color:var(--muted);">⚡ Pro tip: Reload once to cache all previews for faster performance next time!</p>
 </aside>
 </div>
-</div>
+</div> -->
 
 <script>
 /* --- Lightweight YouTube Player --- */
@@ -186,7 +186,7 @@ const container = document.getElementById('container');
 maps.forEach(map => {
     const card = document.createElement('article');
     card.className = 'preview';
-    card.innerHTML = `<a href="${map.url}" target="_blank" rel="noopener noreferrer" style="display:block; color:inherit;">
+    card.innerHTML = `<a href="${map.url}" target="_blank" rel="noopener noreferrer" style="display:block; color:inherit; text-decoration:none;">
         <div class="thumb-wrap"><div class="no-image"></div><img class="real" style="display:none;" /></div>
         <div class="info"><h3>${map.title}</h3><p>${map.desc}</p><div class="meta-row"><span>View on Fortnite</span></div></div>
     </a>`;
