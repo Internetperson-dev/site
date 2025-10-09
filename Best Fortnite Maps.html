@@ -3,98 +3,155 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Fortnite Island Previews</title>
-<script>
-async function createPreview(url) {
-  const cacheKey = `preview_${url}`;
-  const cached = localStorage.getItem(cacheKey);
-
-  if (cached) {
-    renderPreview(JSON.parse(cached));
-    return;
-  }
-
-  const apiUrl = `https://api.microlink.io/?url=${encodeURIComponent(url)}`;
-  try {
-    const res = await fetch(apiUrl);
-    const data = await res.json();
-    const meta = data.data;
-
-    // Cache the result
-    localStorage.setItem(cacheKey, JSON.stringify(meta));
-
-    renderPreview(meta);
-  } catch (e) {
-    console.error("Failed to fetch preview", e);
-  }
-}
-
-function renderPreview(meta) {
-  const div = document.createElement("div");
-  div.className = "preview";
-  div.innerHTML = `
-    <a href="${meta.url}" target="_blank">
-      <img src="${meta.image?.url}" alt="${meta.title}" />
-      <div class="info">
-        <h3>${meta.title}</h3>
-        <p>${meta.description}</p>
-      </div>
-    </a>
-  `;
-  document.getElementById("container").appendChild(div);
-}
-
-window.onload = () => {
-  const links = [
-    "https://www.fortnite.com/@jakus/3623-3871-1041?lang=en-US",
-    "https://www.fortnite.com/@teamrevibed/9997-0482-5512?lang=en-US",
-    "https://www.fortnite.com/@pandvilspam/2229-0002-0277?lang=en-US",
-    "https://www.fortnite.com/@epic/ranked-ballistic?lang=en-US"
-  ];
-  links.forEach(createPreview);
-};
-</script>
+  <title>Best Fortnite Maps</title>
 
   <style>
+    /* --- BASE --- */
     body {
-      font-family: sans-serif;
-      background: #0e0e10;
-      color: white;
+      font-family: "Poppins", system-ui, sans-serif;
+      background: radial-gradient(circle at top, #0a0a14 0%, #050509 100%);
+      color: #e8e8f0;
+      margin: 0;
       padding: 2rem;
+      min-height: 100vh;
     }
+
+    h1 {
+      text-align: center;
+      font-size: 2.2rem;
+      color: #ffffff;
+      text-shadow: 0 0 12px rgba(138, 180, 255, 0.6);
+      margin-bottom: 2rem;
+    }
+
+    /* --- PREVIEW CARDS --- */
     .preview {
       display: flex;
+      flex-direction: row;
+      align-items: stretch;
       gap: 1rem;
-      background: #1a1a1d;
-      border-radius: 12px;
+      background: linear-gradient(145deg, #13131f, #1a1a29);
+      border: 1px solid #292947;
+      border-radius: 16px;
       overflow: hidden;
       margin-bottom: 1.5rem;
-      box-shadow: 0 0 10px rgba(0,0,0,0.4);
-      transition: transform 0.2s ease;
+      box-shadow: 0 0 20px rgba(0,0,0,0.4);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
     }
+
     .preview:hover {
       transform: scale(1.02);
+      box-shadow: 0 0 30px rgba(105, 150, 255, 0.4);
     }
+
     .preview img {
       width: 300px;
-      height: auto;
+      height: 100%;
       object-fit: cover;
+      flex-shrink: 0;
     }
+
     .info {
-      padding: 1rem;
+      padding: 1rem 1.2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
     }
+
     .info h3 {
       margin: 0 0 0.5rem;
-      font-size: 1.3rem;
+      color: #ffffff;
+      font-size: 1.4rem;
+      text-shadow: 0 0 6px rgba(85, 155, 255, 0.6);
     }
+
     .info p {
       margin: 0.25rem 0;
-      color: #ccc;
+      color: #bcbce0;
+      line-height: 1.4;
+    }
+
+    a {
+      text-decoration: none;
+      color: inherit;
+    }
+
+    /* --- LAYOUT --- */
+    #container {
+      max-width: 900px;
+      margin: 0 auto;
+    }
+
+    /* --- RESPONSIVE --- */
+    @media (max-width: 700px) {
+      .preview {
+        flex-direction: column;
+      }
+      .preview img {
+        width: 100%;
+        height: 200px;
+      }
+    }
+
+    /* --- OPTIONAL SPINNER --- */
+    .loading {
+      text-align: center;
+      color: #8fa2ff;
+      margin-top: 1rem;
     }
   </style>
+
+  <script>
+    async function createPreview(url) {
+      const cacheKey = `preview_${url}`;
+      const cached = localStorage.getItem(cacheKey);
+      if (cached) {
+        renderPreview(JSON.parse(cached));
+        return;
+      }
+
+      const apiUrl = `https://api.microlink.io/?url=${encodeURIComponent(url)}`;
+      try {
+        const res = await fetch(apiUrl);
+        const data = await res.json();
+        const meta = data.data;
+        localStorage.setItem(cacheKey, JSON.stringify(meta));
+        renderPreview(meta);
+      } catch (e) {
+        console.error("Failed to fetch preview", e);
+      }
+    }
+
+    function renderPreview(meta) {
+      const div = document.createElement("div");
+      div.className = "preview";
+      div.innerHTML = `
+        <a href="${meta.url}" target="_blank">
+          <img src="${meta.image?.url || ''}" alt="${meta.title}" />
+          <div class="info">
+            <h3>${meta.title}</h3>
+            <p>${meta.description || "No description available."}</p>
+          </div>
+        </a>
+      `;
+      document.getElementById("container").appendChild(div);
+    }
+
+    window.onload = () => {
+      const links = [
+        "https://www.fortnite.com/@jakus/3623-3871-1041?lang=en-US",
+        "https://www.fortnite.com/@teamrevibed/9997-0482-5512?lang=en-US",
+        "https://www.fortnite.com/@pandvilspam/2229-0002-0277?lang=en-US",
+        "https://www.fortnite.com/@epic/ranked-ballistic?lang=en-US"
+      ];
+      links.forEach(createPreview);
+    };
+  </script>
 </head>
+
 <body>
-  <h1>Fortnite Island Previews</h1>
+  <h1>Best Fortnite Maps</h1>
   <div id="container"></div>
+  <div class="loading" id="loading">Loading previews...</div>
 </body>
 </html>
