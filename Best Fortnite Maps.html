@@ -5,63 +5,50 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Best Fortnite Maps — Side Text</title>
 
-
 <script>
 (function (window) {
-
     'use strict';
 
     window.code = window.code || {};
 
     window.code.lightweightYoutubePlayer = function () {
-
-        var dataYoutubeVideos = '[data-youtube]';
-
-        var youtubeVideos = [...document.querySelectorAll(dataYoutubeVideos)];
+        const youtubeVideos = [...document.querySelectorAll('[data-youtube]')];
 
         function init() {
-            youtubeVideos.forEach(function(element) {
-                bindYoutubeVideoEvent(element);
-            });
+            youtubeVideos.forEach(bindYoutubeVideoEvent);
         }
 
         function bindYoutubeVideoEvent(element) {
-            var button = element.querySelector('[data-youtube-button]');
-
+            const button = element.querySelector('[data-youtube-button]');
+            if (!button) return;
             button.addEventListener('click', createIframe);
         }
 
         function createIframe(event) {
-            var url = event.target.dataset.youtubeButton;
-            var youtubePlaceholder = event.target.parentNode;
+            const url = event.target.dataset.youtubeButton;
+            const placeholder = event.target.parentNode;
 
-            var htmlString = '<div class="video__youtube"> <iframe class="video__iframe" src="' + url + '?autoplay=1" frameborder="0" allowfullscreen></iframe></div>';
+            const iframeHTML = `
+                <div class="video__youtube">
+                    <iframe class="video__iframe" src="${url}?autoplay=1" frameborder="0" allowfullscreen></iframe>
+                </div>
+            `;
 
-            youtubePlaceholder.style.display = 'none';
-            youtubePlaceholder.insertAdjacentHTML('beforebegin', htmlString);
-            youtubePlaceholder.parentNode.removeChild(youtubePlaceholder);
+            placeholder.style.display = 'none';
+            placeholder.insertAdjacentHTML('beforebegin', iframeHTML);
+            placeholder.remove();
         }
 
-        return {
-           init: init
-        }
+        return { init };
     };
+})(window);
 
-})(window)
-
-ready();
-
-function ready() {
-    var lightweightYoutubePlayer = new code.lightweightYoutubePlayer()
-
-    if (document.readyState != 'loading') {
-        page.init()
-    } else {
-        document.addEventListener('DOMContentLoaded', lightweightYoutubePlayer.init);
-    }
-} 
-</script> 
-
+// Initialize when DOM is ready
+document.addEventListener('DOMContentLoaded', () => {
+    const player = window.code.lightweightYoutubePlayer();
+    player.init();
+});
+</script>
 
 	
 <style>
