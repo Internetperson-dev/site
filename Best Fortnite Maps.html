@@ -6,7 +6,7 @@
   <title>Best Fortnite Maps</title>
 
   <style>
-    /* --- BASE --- */
+    /* --- BASE STYLES --- */
     body {
       font-family: "Poppins", system-ui, sans-serif;
       background: radial-gradient(circle at top, #0a0a14 0%, #050509 100%);
@@ -22,6 +22,40 @@
       color: #ffffff;
       text-shadow: 0 0 12px rgba(138, 180, 255, 0.6);
       margin-bottom: 2rem;
+    }
+
+    /* --- GRID LAYOUT --- */
+    .layout {
+      display: grid;
+      grid-template-columns: 2fr 1fr;
+      gap: 2rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    /* --- SIDEBAR --- */
+    aside {
+      background: linear-gradient(145deg, #181824, #10101a);
+      border: 1px solid #2c2c44;
+      border-radius: 16px;
+      padding: 1.5rem;
+      color: #d0d0f0;
+      box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+    }
+
+    aside h2, aside h3 {
+      color: #9bb8ff;
+      text-shadow: 0 0 8px rgba(100, 150, 255, 0.6);
+      margin-top: 0;
+    }
+
+    aside ul {
+      padding-left: 1.2rem;
+    }
+
+    aside li {
+      margin-bottom: 0.4rem;
+      color: #bcbce5;
     }
 
     /* --- PREVIEW CARDS --- */
@@ -76,14 +110,18 @@
       color: inherit;
     }
 
-    /* --- LAYOUT --- */
-    #container {
-      max-width: 900px;
-      margin: 0 auto;
+    iframe {
+      width: 100%;
+      border-radius: 12px;
+      box-shadow: 0 0 20px rgba(0,0,0,0.4);
+      margin-bottom: 2rem;
     }
 
     /* --- RESPONSIVE --- */
-    @media (max-width: 700px) {
+    @media (max-width: 900px) {
+      .layout {
+        grid-template-columns: 1fr;
+      }
       .preview {
         flex-direction: column;
       }
@@ -91,9 +129,11 @@
         width: 100%;
         height: 200px;
       }
+      aside {
+        order: -1;
+      }
     }
 
-    /* --- OPTIONAL SPINNER --- */
     .loading {
       text-align: center;
       color: #8fa2ff;
@@ -102,11 +142,12 @@
   </style>
 
   <script>
-    async function createPreview(url) {
+    async function createPreview(url, title, desc) {
       const cacheKey = `preview_${url}`;
       const cached = localStorage.getItem(cacheKey);
+
       if (cached) {
-        renderPreview(JSON.parse(cached));
+        renderPreview(JSON.parse(cached), title, desc);
         return;
       }
 
@@ -116,21 +157,21 @@
         const data = await res.json();
         const meta = data.data;
         localStorage.setItem(cacheKey, JSON.stringify(meta));
-        renderPreview(meta);
+        renderPreview(meta, title, desc);
       } catch (e) {
         console.error("Failed to fetch preview", e);
       }
     }
 
-    function renderPreview(meta) {
+    function renderPreview(meta, title, desc) {
       const div = document.createElement("div");
       div.className = "preview";
       div.innerHTML = `
         <a href="${meta.url}" target="_blank">
           <img src="${meta.image?.url || ''}" alt="${meta.title}" />
           <div class="info">
-            <h3>${meta.title}</h3>
-            <p>${meta.description || "No description available."}</p>
+            <h3>${title || meta.title}</h3>
+            <p>${desc || meta.description || "No description available."}</p>
           </div>
         </a>
       `;
@@ -138,20 +179,77 @@
     }
 
     window.onload = () => {
-      const links = [
-        "https://www.fortnite.com/@jakus/3623-3871-1041?lang=en-US",
-        "https://www.fortnite.com/@teamrevibed/9997-0482-5512?lang=en-US",
-        "https://www.fortnite.com/@pandvilspam/2229-0002-0277?lang=en-US",
-        "https://www.fortnite.com/@epic/ranked-ballistic?lang=en-US"
+      const maps = [
+        {
+          url: "https://www.fortnite.com/@jakus/3623-3871-1041?lang=en-US",
+          title: "Battle Royale: HIGH TIDE | Snapshots",
+          desc: "A full fan-made Battle Royale game mode. Sadly doesn’t get a lot of players."
+        },
+        {
+          url: "https://www.fortnite.com/@teamrevibed/9997-0482-5512?lang=en-US",
+          title: "Chapter 3: Revibed",
+          desc: "A solid recreation of Chapter 3 Vibin'."
+        },
+        {
+          url: "https://www.fortnite.com/@pandvilspam/2229-0002-0277?lang=en-US",
+          title: "Rewind Royale",
+          desc: "A version of Chapter 1 Fortnite that is more accurate."
+        },
+        {
+          url: "https://www.fortnite.com/@epic/ranked-ballistic?lang=en-US",
+          title: "Ranked Ballistic (By Epic Games)",
+          desc: "A kinda fun Counter-Strike–like map by Epic Games."
+        }
       ];
-      links.forEach(createPreview);
+      maps.forEach(m => createPreview(m.url, m.title, m.desc));
     };
   </script>
 </head>
 
 <body>
-  <h1>Best Fortnite Maps</h1>
-  <div id="container"></div>
-  <div class="loading" id="loading">Loading previews...</div>
+  <div class="layout">
+    <main>
+      <h1>Best Fortnite Maps</h1>
+
+      <!-- YouTube Embed -->
+      <iframe 
+        width="1378" 
+        height="775" 
+        src="https://www.youtube.com/embed/Pr9LcxHFE_k" 
+        title="I Made My Own Fortnite Battle Royale" 
+        frameborder="0" 
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+        referrerpolicy="strict-origin-when-cross-origin" 
+        allowfullscreen>
+      </iframe>
+
+      <!-- Fortnite Map Previews will load here -->
+      <div id="container"></div>
+
+      <div class="loading" id="loading">Loading previews...</div>
+    </main>
+
+    <aside>
+      <h2>About This Page</h2>
+      <p>
+        Welcome! This page highlights some of the best **Fortnite Creative** and **Battle Royale** experiences — a mix of community-made maps and official modes.
+      </p>
+      <p>
+        Each map link dynamically loads live images and details for an experience similar to Discord-style previews.
+      </p>
+
+      <h3>Featured Sections</h3>
+      <ul>
+        <li>Battle Royale: HIGH TIDE — Fan-made full Battle Royale</li>
+        <li>Chapter 3: Revibed — Classic Fortnite nostalgia</li>
+        <li>Rewind Royale — Accurate Chapter 1 recreation</li>
+        <li>Ranked Ballistic — Epic’s tactical shooter mode</li>
+      </ul>
+
+      <p style="margin-top: 1rem;">
+        ⚡ Pro tip: Reload once to cache all previews for faster performance next time!
+      </p>
+    </aside>
+  </div>
 </body>
 </html>
