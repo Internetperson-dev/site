@@ -1,14 +1,87 @@
-<a href="https://www.fortnite.com/@jakus/3623-3871-1041?lang=en-US">Battle Royale: HIGH TIDE | Snapshots</a> 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Fortnite Island Previews</title>
+ <script>
+async function createPreview(url) {
+  const apiUrl = `https://api.microlink.io/?url=${encodeURIComponent(url)}`;
+  try {
+    const res = await fetch(apiUrl);
+    const data = await res.json();
+    const meta = data.data;
 
-A full fan-made Battle Royale game mode. Sadly doesn't get a lot of players.
+    const div = document.createElement("div");
+    div.className = "preview";
+    div.innerHTML = `
+      <a href="${url}" target="_blank">
+        <img src="${meta.image?.url}" alt="${meta.title}" />
+        <div class="info">
+          <h3>${meta.title}</h3>
+          <p>${meta.description}</p>
+          <p><strong>Source:</strong> fortnite.com</p>
+        </div>
+      </a>
+    `;
+    document.getElementById("container").appendChild(div);
+  } catch (e) {
+    console.error("Failed to fetch preview", e);
+  }
+}
 
-<iframe width="1378" height="775" src="https://www.youtube.com/embed/Pr9LcxHFE_k" title="I Made My Own Fortnite Battle Royale" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe> 
+window.onload = () => {
+  const links = [
+    "https://www.fortnite.com/@jakus/3623-3871-1041?lang=en-US",
+    "https://www.fortnite.com/@teamrevibed/9997-0482-5512?lang=en-US",
+    "https://www.fortnite.com/@pandvilspam/2229-0002-0277?lang=en-US",
+    "https://www.fortnite.com/@epic/ranked-ballistic?lang=en-US"
+  ];
+  links.forEach(createPreview);
+};
+</script>
 
-Chapter 3: Revibed <a href="https://www.fortnite.com/@teamrevibed/9997-0482-5512?lang=en-US">Chapter 3: Revibed</a> 
 
-A solid recreation of Chapter 3 Vibin' <a href="https://www.fortnite.com/@pandvilspam/2229-0002-0277?lang=en-US">Rewind Royale</a> 
-
-
-A version of Chapter 1 Fortnite that is more accurate. <a href="https://www.fortnite.com/@epic/ranked-ballistic?lang=en-US">Ranked Ballistic *(By Epic Games)*</a> 
-
-A Kinda fun Counter-Strike like map.
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #0e0e10;
+      color: white;
+      padding: 2rem;
+    }
+    .preview {
+      display: flex;
+      gap: 1rem;
+      background: #1a1a1d;
+      border-radius: 12px;
+      overflow: hidden;
+      margin-bottom: 1.5rem;
+      box-shadow: 0 0 10px rgba(0,0,0,0.4);
+      transition: transform 0.2s ease;
+    }
+    .preview:hover {
+      transform: scale(1.02);
+    }
+    .preview img {
+      width: 300px;
+      height: auto;
+      object-fit: cover;
+    }
+    .info {
+      padding: 1rem;
+    }
+    .info h3 {
+      margin: 0 0 0.5rem;
+      font-size: 1.3rem;
+    }
+    .info p {
+      margin: 0.25rem 0;
+      color: #ccc;
+    }
+  </style>
+</head>
+<body>
+  <h1>Fortnite Island Previews</h1>
+  <div id="container"></div>
+</body>
+</html>
