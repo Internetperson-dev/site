@@ -4,30 +4,44 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Fortnite Island Previews</title>
- <script>
+<script>
 async function createPreview(url) {
+  const cacheKey = `preview_${url}`;
+  const cached = localStorage.getItem(cacheKey);
+
+  if (cached) {
+    renderPreview(JSON.parse(cached));
+    return;
+  }
+
   const apiUrl = `https://api.microlink.io/?url=${encodeURIComponent(url)}`;
   try {
     const res = await fetch(apiUrl);
     const data = await res.json();
     const meta = data.data;
 
-    const div = document.createElement("div");
-    div.className = "preview";
-    div.innerHTML = `
-      <a href="${url}" target="_blank">
-        <img src="${meta.image?.url}" alt="${meta.title}" />
-        <div class="info">
-          <h3>${meta.title}</h3>
-          <p>${meta.description}</p>
-          <p><strong>Source:</strong> fortnite.com</p>
-        </div>
-      </a>
-    `;
-    document.getElementById("container").appendChild(div);
+    // Cache the result
+    localStorage.setItem(cacheKey, JSON.stringify(meta));
+
+    renderPreview(meta);
   } catch (e) {
     console.error("Failed to fetch preview", e);
   }
+}
+
+function renderPreview(meta) {
+  const div = document.createElement("div");
+  div.className = "preview";
+  div.innerHTML = `
+    <a href="${meta.url}" target="_blank">
+      <img src="${meta.image?.url}" alt="${meta.title}" />
+      <div class="info">
+        <h3>${meta.title}</h3>
+        <p>${meta.description}</p>
+      </div>
+    </a>
+  `;
+  document.getElementById("container").appendChild(div);
 }
 
 window.onload = () => {
@@ -40,7 +54,6 @@ window.onload = () => {
   links.forEach(createPreview);
 };
 </script>
-
 
   <style>
     body {
