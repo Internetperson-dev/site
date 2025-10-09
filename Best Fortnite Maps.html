@@ -144,6 +144,67 @@ body {
     .preview img { height:220px; }
     aside { order:-1; }
   }
+
+.video {
+    position: relative;
+    width: 50vw;
+}
+
+.video__iframe {
+    position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+
+.video__placeholder {
+	width: 100%;
+    position: absolute;
+}
+
+.video__youtube {
+    padding-bottom: 56.23%;
+    width: 100%;
+    height: 0;
+    overflow: hidden;
+	position: relative;
+    object-fit: cover;
+    background-color: black;
+}
+
+.video__button {
+    background: none;
+	border: 0;
+	cursor: pointer;
+	height: 100%;
+	left: 0;
+	position: absolute;
+	text-indent: -9999px;
+	top: 0;
+	transition: transform 300ms cubic-bezier(0.175, 0.885, 0.32, 1.275);
+	width: 100%;
+}
+
+.video__button:before {
+    width:100%;
+    height:100%;
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+
+    background: url(https://raw.githubusercontent.com/Internetperson-dev/site/refs/heads/main/etc/yt/output.avif) no-repeat center center;
+    background-size: 10%; 
+}
+
+.video__button:hover:before {
+    background: url(https://raw.githubusercontent.com/Internetperson-dev/site/refs/heads/main/etc/yt/output.avif) no-repeat center center;
+    background-size: 10%; 
+}
+
+  
 </style>
 </head>
 <body>
@@ -292,5 +353,61 @@ body {
     maps.forEach(createPreview);
   })();
 </script>
+
+<script>
+(function (window) {
+
+    'use strict';
+
+    window.code = window.code || {};
+
+    window.code.lightweightYoutubePlayer = function () {
+
+        var dataYoutubeVideos = '[data-youtube]';
+
+        var youtubeVideos = [...document.querySelectorAll(dataYoutubeVideos)];
+
+        function init() {
+            youtubeVideos.forEach(function(element) {
+                bindYoutubeVideoEvent(element);
+            });
+        }
+
+        function bindYoutubeVideoEvent(element) {
+            var button = element.querySelector('[data-youtube-button]');
+
+            button.addEventListener('click', createIframe);
+        }
+
+        function createIframe(event) {
+            var url = event.target.dataset.youtubeButton;
+            var youtubePlaceholder = event.target.parentNode;
+
+            var htmlString = '<div class="video__youtube"> <iframe class="video__iframe" src="' + url + '?autoplay=1" frameborder="0" allowfullscreen></iframe></div>';
+
+            youtubePlaceholder.style.display = 'none';
+            youtubePlaceholder.insertAdjacentHTML('beforebegin', htmlString);
+            youtubePlaceholder.parentNode.removeChild(youtubePlaceholder);
+        }
+
+        return {
+           init: init
+        }
+    };
+
+})(window)
+
+ready();
+
+function ready() {
+    var lightweightYoutubePlayer = new code.lightweightYoutubePlayer()
+
+    if (document.readyState != 'loading') {
+        page.init()
+    } else {
+        document.addEventListener('DOMContentLoaded', lightweightYoutubePlayer.init);
+    }
+} 
+</script> 
 </body>
 </html>
