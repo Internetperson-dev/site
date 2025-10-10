@@ -142,6 +142,7 @@ a { text-decoration: none; color: inherit; }
 </div>
 </div>
 
+<!-- ✅ All JavaScript combined properly -->
 <script>
 /* --- Lightweight YouTube Player --- */
 (function (window) {
@@ -180,7 +181,6 @@ const maps = [
   { url:"https://www.fortnite.com/@epic/ranked-ballistic?lang=en-US", title:"Ranked Ballistic (By Epic Games)", desc:"A kinda fun Counter-Strike–like map by Epic Games." }
 ];
 
-// Render skeleton immediately
 const container = document.getElementById('container');
 maps.forEach(map => {
     const card = document.createElement('article');
@@ -216,31 +216,29 @@ function setImage(imgEl,map,meta){
     tmp.onload = ()=>{ imgEl.src=url; imgEl.style.display='block'; imgEl.previousElementSibling.style.display='none'; };
 }
 
-<script>
-// === Service Worker registration ===
+/* --- PWA push setup --- */
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/sw.js');
 }
 
-// === Request permission and subscribe ===
 async function subscribePush() {
   const permission = await Notification.requestPermission();
   if (permission !== 'granted') return alert('Notifications disabled.');
 
   const reg = await navigator.serviceWorker.ready;
-  const key = 'BElonv36FILLINYOURVAPIDPUBKEY'; // Put your real VAPID public key
+  const key = 'BElonv36FILLINYOURVAPIDPUBKEY';
   const sub = await reg.pushManager.subscribe({
     userVisibleOnly: true,
     applicationServerKey: Uint8Array.from(atob(key.replace(/_/g,'/').replace(/-/g,'+')), c=>c.charCodeAt(0))
   });
 
-  // Save to localStorage or prompt user to copy it
   localStorage.setItem('pushSub', JSON.stringify(sub));
   console.log('Copy this subscription JSON to GitHub Secrets:', sub);
 }
 </script>
-<button onclick="subscribePush()">Enable update notifications</button>
 
+<!-- ✅ Button outside script tag -->
+<button onclick="subscribePush()" style="margin:2rem auto;display:block;padding:0.75rem 1.25rem;border:none;border-radius:8px;background:#8fa2ff;color:#fff;cursor:pointer;">Enable update notifications</button>
 
 </body>
 </html>
