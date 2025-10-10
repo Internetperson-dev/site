@@ -4,15 +4,25 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Explore the best Fortnite creative maps, handpicked for fun, XP grinding, and competition. Updated frequently.">
+<meta name="theme-color" content="#0d0d0d">
 <title>Best Fortnite Maps</title>
 
-<!-- Preconnect to critical domains -->
-<link rel="preconnect" href="https://cdn-0001.qstv.on.epicgames.com">
-<link rel="preconnect" href="https://cdn2.unrealengine.com">
-<link rel="preconnect" href="https://raw.githubusercontent.com">
-<link rel="preconnect" href="https://api.microlink.io">
+<!-- Preconnect & Preload to boost LCP -->
+<link rel="preconnect" href="https://cdn-0001.qstv.on.epicgames.com" crossorigin>
+<link rel="preconnect" href="https://cdn2.unrealengine.com" crossorigin>
+<link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin>
+<link rel="preconnect" href="https://www.youtube.com" crossorigin>
+<link rel="preconnect" href="https://api.microlink.io" crossorigin>
+
+<!-- Preload critical LCP image -->
+<link rel="preload" as="image" href="https://cdn-0001.qstv.on.epicgames.com/qWVoxoLXmdDlLdYFbn/image/landscape_comp.jpeg" fetchpriority="high" type="image/jpeg">
 
 <style>
+  /* Base styles */
+  * {
+    box-sizing: border-box;
+  }
+
   body {
     margin: 0;
     font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
@@ -24,39 +34,43 @@
   h1 {
     text-align: center;
     font-size: 2rem;
-    margin: 2rem 0;
+    margin: 2rem 0 1rem;
+    font-weight: 700;
   }
 
+  /* YouTube embed container */
   .video {
     position: relative;
-    width: 80%;
+    width: 90%;
     max-width: 640px;
     margin: 2rem auto;
     border-radius: 12px;
     overflow: hidden;
+    background: #000;
+    aspect-ratio: 16 / 9;
   }
 
   .video__youtube {
     position: relative;
     width: 100%;
-    padding-bottom: 56.25%;
-    background: #000;
+    height: 100%;
   }
 
   .video__iframe {
     position: absolute;
-    top: 0;
-    left: 0;
+    inset: 0;
     width: 100%;
     height: 100%;
+    border: 0;
   }
 
   .video__placeholder {
-    width: 100%;
-    height: auto;
     position: absolute;
     inset: 0;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
+    border: 0;
   }
 
   .video__button {
@@ -86,6 +100,7 @@
     transform: translate(-50%, -50%) scale(1.1);
   }
 
+  /* Map Gallery */
   .gallery {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
@@ -99,11 +114,13 @@
     background: #1a1a1a;
     border-radius: 12px;
     overflow: hidden;
-    transition: transform 0.3s ease;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    will-change: transform;
   }
 
   .map:hover {
-    transform: scale(1.02);
+    transform: translateY(-4px);
+    box-shadow: 0 4px 16px rgba(255, 255, 255, 0.1);
   }
 
   .map img {
@@ -116,6 +133,12 @@
   .map h2 {
     margin: 0.75rem;
     font-size: 1rem;
+    line-height: 1.4;
+  }
+
+  /* Reduce layout shift by reserving space */
+  img[loading="lazy"] {
+    min-height: 220px;
   }
 </style>
 </head>
@@ -129,11 +152,11 @@
     <img src="https://raw.githubusercontent.com/Internetperson-dev/site/refs/heads/main/etc/yt/thum.avif"
          class="video__placeholder"
          alt="Fortnite Gameplay Preview"
-         width="640"
-         height="360"
-         fetchpriority="high">
+         width="640" height="360"
+         decoding="async" fetchpriority="high">
     <button class="video__button"
-            data-youtube-button="https://www.youtube.com/embed/duPJqfKiA78">
+            data-youtube-button="https://www.youtube.com/embed/duPJqfKiA78"
+            aria-label="Play Fortnite gameplay video">
       Play Video
     </button>
   </div>
@@ -178,7 +201,8 @@
     function createIframe(event, container) {
       const url = event.target.dataset.youtubeButton;
       const iframe = `<iframe class="video__iframe" src="${url}?autoplay=1" title="YouTube video player"
-      frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+        frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>`;
       container.innerHTML = iframe;
     }
     return { init };
