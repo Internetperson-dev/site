@@ -6,36 +6,6 @@
 <title>Best Fortnite Maps — Side Text</title>
 <link rel="icon" type="image/png" href="favicon.png">
 
-<script>
-  (function(p,u,s,h,x){
-    p.pushpad = p.pushpad || function(){(p.pushpad.q=p.pushpad.q||[]).push(arguments)};
-    h=u.getElementsByTagName('head')[0];
-    x=u.createElement('script');x.async=1;x.src=s;h.appendChild(x);
-  })(window,document,'https://pushpad.xyz/pushpad.js');
-
-  // 🔹 Initialize Pushpad with your project ID
-  pushpad('init', 9046);
-
-  // 🔹 Show a simple subscribe button
-  document.addEventListener('DOMContentLoaded', function () {
-    const btn = document.createElement('button');
-    btn.textContent = 'Enable Notifications';
-    btn.style.cssText = 'padding:10px 16px; background:#8fa2ff; color:#fff; border:none; border-radius:8px; cursor:pointer; display:block; margin:1rem auto;';
-    btn.onclick = function () {
-      pushpad('subscribe', function (isSubscribed) {
-        if (isSubscribed) alert('✅ Subscribed!');
-        else alert('❌ Permission denied or blocked.');
-      });
-    };
-    document.body.appendChild(btn);
-  });
-</script>
-
-<script>
-  pushpad('widget');
-</script>
-
-
 <style>
 :root{
   --bg:#050509;
@@ -145,7 +115,6 @@ a { text-decoration: none; color: inherit; }
 <h1>Best Fortnite Maps</h1>
 <div class="layout">
 <main>
-    <!-- Lightweight YouTube Embed -->
     <div class="video">
         <div class="video__youtube" data-youtube>
             <img src="https://raw.githubusercontent.com/Internetperson-dev/site/refs/heads/main/fortnite.avif" class="video__placeholder" />
@@ -153,7 +122,6 @@ a { text-decoration: none; color: inherit; }
         </div>
     </div>
 
-    <!-- container for cards -->
     <div id="container"></div>
 </main>
 
@@ -161,9 +129,8 @@ a { text-decoration: none; color: inherit; }
 <h3 style="color:#9bb8ff; margin-top:0;">Featured Sections</h3>
 <ul style="padding-left:1rem; margin-top:0.5rem;">
     <li>
-        <button 
-            onclick="window.open('https://www.fortnite.com/download?lang=en-US', '_blank')" 
-            style="padding: 0.5rem 1rem; background-color:#9bb8ff; color:white; border:none; border-radius:5px; cursor:pointer;">
+        <button onclick="window.open('https://www.fortnite.com/download?lang=en-US', '_blank')" 
+        style="padding: 0.5rem 1rem; background-color:#9bb8ff; color:white; border:none; border-radius:5px; cursor:pointer;">
             Play Fortnite
         </button>
     </li>
@@ -172,107 +139,48 @@ a { text-decoration: none; color: inherit; }
 </div>
 </div>
 
-<!-- ✅ All JavaScript combined properly -->
+<!-- Scripts -->
 <script>
-/* --- Lightweight YouTube Player --- */
-(function (window) {
-    'use strict';
-    window.code = window.code || {};
-    window.code.lightweightYoutubePlayer = function() {
-        const videos = [...document.querySelectorAll('[data-youtube]')];
-        function init() { videos.forEach(bindEvent); }
-        function bindEvent(el) {
-            const btn = el.querySelector('[data-youtube-button]');
-            if(!btn) return;
-            btn.addEventListener('click', createIframe);
-        }
-        function createIframe(event) {
-            const url = event.target.dataset.youtubeButton;
-            const placeholder = event.target.parentNode;
-            const iframeHTML = `<div class="video__youtube"><iframe class="video__iframe" src="${url}?autoplay=1" frameborder="0" allowfullscreen></iframe></div>`;
-            placeholder.style.display = 'none';
-            placeholder.insertAdjacentHTML('beforebegin', iframeHTML);
+/* --- YouTube Player --- */
+(function(w){
+    const videos=[...document.querySelectorAll('[data-youtube]')];
+    videos.forEach(el=>{
+        const btn=el.querySelector('[data-youtube-button]');
+        if(!btn) return;
+        btn.addEventListener('click', e=>{
+            const url=e.target.dataset.youtubeButton;
+            const placeholder=e.target.parentNode;
+            const iframeHTML=`<div class="video__youtube"><iframe class="video__iframe" src="${url}?autoplay=1" frameborder="0" allowfullscreen></iframe></div>`;
+            placeholder.style.display='none';
+            placeholder.insertAdjacentHTML('beforebegin',iframeHTML);
             placeholder.remove();
-        }
-        return { init };
-    };
+        });
+    });
 })(window);
-document.addEventListener('DOMContentLoaded', () => {
-    window.code.lightweightYoutubePlayer().init();
-});
 
-/* --- Fortnite Maps Previews --- */
-const FALLBACK_SVG = 'data:image/svg+xml;utf8,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800"><defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#0c0c14"/><stop offset="1" stop-color="#11111a"/></linearGradient></defs><rect width="100%" height="100%" fill="url(#g)"/><g fill="#bdbde6" font-family="sans-serif" font-size="40" text-anchor="middle"><text x="50%" y="48%">No preview image</text><text x="50%" y="60%" font-size="24" opacity="0.85">Click the card to open the map</text></g></svg>`);
+/* --- Fortnite Maps --- */
+const FALLBACK_SVG='data:image/svg+xml;utf8,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800"><defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#0c0c14"/><stop offset="1" stop-color="#11111a"/></linearGradient></defs><rect width="100%" height="100%" fill="url(#g)"/><g fill="#bdbde6" font-family="sans-serif" font-size="40" text-anchor="middle"><text x="50%" y="48%">No preview image</text><text x="50%" y="60%" font-size="24" opacity="0.85">Click the card to open the map</text></g></svg>');
 
-const maps = [
+const maps=[
   { url:"https://www.fortnite.com/@jakus/3623-3871-1041?lang=en-US", title:"Battle Royale: HIGH TIDE | Snapshots", desc:"A full fan-made Battle Royale game mode. Sadly doesn't get a lot of players." },
   { url:"https://www.fortnite.com/@teamrevibed/9997-0482-5512?lang=en-US", title:"Chapter 3: Revibed", desc:"A solid recreation of Chapter 3 Vibin'." },
   { url:"https://www.fortnite.com/@pandvilspam/2229-0002-0277?lang=en-US", title:"Rewind Royale", desc:"A version of Chapter 1 Fortnite that is more accurate." },
   { url:"https://www.fortnite.com/@epic/ranked-ballistic?lang=en-US", title:"Ranked Ballistic (By Epic Games)", desc:"A kinda fun Counter-Strike–like map by Epic Games." }
 ];
 
-const container = document.getElementById('container');
-maps.forEach(map => {
-    const card = document.createElement('article');
-    card.className = 'preview';
-    card.innerHTML = `<a href="${map.url}" target="_blank" rel="noopener noreferrer" style="display:block; color:inherit; text-decoration:none;">
+const container=document.getElementById('container');
+maps.forEach(map=>{
+    const card=document.createElement('article');
+    card.className='preview';
+    card.innerHTML=`<a href="${map.url}" target="_blank" rel="noopener noreferrer" style="display:block; color:inherit; text-decoration:none;">
         <div class="thumb-wrap"><div class="no-image"></div><img class="real" style="display:none;" /></div>
         <div class="info"><h3>${map.title}</h3><p>${map.desc}</p><div class="meta-row"><span>View on Fortnite</span></div></div>
     </a>`;
     container.appendChild(card);
 });
 
-// Client-side preloading and replacement
 maps.forEach((map,i)=>{
-    const imgEl = container.querySelectorAll('.real')[i];
-    const cacheKey = 'preview_' + map.url;
-    let meta = null;
-    const cached = localStorage.getItem(cacheKey);
-    if(cached){ try{ meta=JSON.parse(cached); }catch(e){meta=null;} }
-
-    if(!meta){
-        fetch('https://api.microlink.io/?url='+encodeURIComponent(map.url))
-        .then(res=>res.json())
-        .then(json=>{ meta=json.data||null; if(meta)localStorage.setItem(cacheKey,JSON.stringify(meta)); })
-        .catch(err=>{ console.warn('preview fetch failed',map.url,err); meta=null; })
-        .finally(()=>{ setTimeout(()=>setImage(imgEl,map,meta),0); });
-    } else { setImage(imgEl,map,meta); }
-});
-
-function setImage(imgEl,map,meta){
-    const url = (meta && meta.image && meta.image.url)?meta.image.url:FALLBACK_SVG;
-    const tmp = new Image();
-    tmp.src = url;
-    tmp.onload = ()=>{ imgEl.src=url; imgEl.style.display='block'; imgEl.previousElementSibling.style.display='none'; };
-}
-  
-<script>
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('/site/sw.js')  
-    .then(() => console.log('✅ Service Worker registered successfully.'))
-    .catch(err => console.error('❌ Service Worker registration failed:', err));
-}
-</script>
-
-
-async function subscribePush() {
-  const permission = await Notification.requestPermission();
-  if (permission !== 'granted') return alert('Notifications disabled.');
-
-  const reg = await navigator.serviceWorker.ready;
-  const key = 'BElonv36FILLINYOURVAPIDPUBKEY';
-  const sub = await reg.pushManager.subscribe({
-    userVisibleOnly: true,
-    applicationServerKey: Uint8Array.from(atob(key.replace(/_/g,'/').replace(/-/g,'+')), c=>c.charCodeAt(0))
-  });
-
-  localStorage.setItem('pushSub', JSON.stringify(sub));
-  console.log('Copy this subscription JSON to GitHub Secrets:', sub);
-}
-</script>
-
-<!-- ✅ Button outside script tag -->
-<button onclick="subscribePush()" style="margin:2rem auto;display:block;padding:0.75rem 1.25rem;border:none;border-radius:8px;background:#8fa2ff;color:#fff;cursor:pointer;">Enable update notifications</button>
-
-</body>
-</html>
+    const imgEl=container.querySelectorAll('.real')[i];
+    const cacheKey='preview_'+map.url;
+    let meta=null;
+    const
