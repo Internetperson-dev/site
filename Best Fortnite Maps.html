@@ -6,6 +6,12 @@
 <title>Best Fortnite Maps — Side Text</title>
 <link rel="icon" type="image/png" href="favicon.png">
 
+<!-- 🔗 Preconnect to external origins for faster LCP -->
+<link rel="preconnect" href="https://cdn-0001.qstv.on.epicgames.com" crossorigin>
+<link rel="preconnect" href="https://cdn2.unrealengine.com" crossorigin>
+<link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin>
+<link rel="preconnect" href="https://api.microlink.io" crossorigin>
+
 <style>
 :root{
   --bg:#050509;
@@ -68,7 +74,8 @@ aside {
 
 .preview img {
   width:100%;
-  height:100%;
+  height:auto;
+  aspect-ratio:16/9;
   object-fit:cover;
   display:block;
   background:linear-gradient(180deg,#0c0c14,#11111a);
@@ -110,64 +117,74 @@ a { text-decoration: none; color: inherit; }
 .video__iframe { position:absolute; top:0; left:0; width:100%; height:100%; }
 </style>
 </head>
+
 <body>
 <div class="wrap">
-<h1>Best Fortnite Maps</h1>
-<div class="layout">
-<main>
-    <!-- Lightweight YouTube Embed -->
-    <div class="video">
+  <h1>Best Fortnite Maps</h1>
+  <div class="layout">
+    <main>
+      <!-- 🔹 Lightweight YouTube Embed -->
+      <div class="video">
         <div class="video__youtube" data-youtube>
-            <img src="https://raw.githubusercontent.com/Internetperson-dev/site/refs/heads/main/fortnite.avif" class="video__placeholder" />
-            <button class="video__button" data-youtube-button="https://www.youtube.com/embed/Pr9LcxHFE_k">Play</button>
+          <img 
+            src="https://raw.githubusercontent.com/Internetperson-dev/site/refs/heads/main/fortnite.avif"
+            class="video__placeholder"
+            width="600"
+            height="338"
+            loading="lazy"
+            fetchpriority="high"
+            alt="Fortnite Showcase Thumbnail"
+          />
+          <button class="video__button" data-youtube-button="https://www.youtube.com/embed/Pr9LcxHFE_k">Play</button>
         </div>
-    </div>
+      </div>
 
-    <!-- container for cards -->
-    <div id="container"></div>
-</main>
+      <!-- 🔹 Container for Fortnite map cards -->
+      <div id="container"></div>
+    </main>
 
-<aside>
-<h3 style="color:#9bb8ff; margin-top:0;">Featured Sections</h3>
-<ul style="padding-left:1rem; margin-top:0.5rem;">
-    <li>
-        <button 
+    <!-- 🔹 Sidebar -->
+    <aside>
+      <h3 style="color:#9bb8ff; margin-top:0;">Featured Sections</h3>
+      <ul style="padding-left:1rem; margin-top:0.5rem;">
+        <li>
+          <button 
             onclick="window.open('https://www.fortnite.com/download?lang=en-US', '_blank')" 
             style="padding: 0.5rem 1rem; background-color:#9bb8ff; color:white; border:none; border-radius:5px; cursor:pointer;">
             Play Fortnite
-        </button>
-    </li>
-</ul>
-</aside>
-</div>
+          </button>
+        </li>
+      </ul>
+    </aside>
+  </div>
 </div>
 
 <script>
 /* --- Lightweight YouTube Player --- */
 (function (window) {
-    'use strict';
-    window.code = window.code || {};
-    window.code.lightweightYoutubePlayer = function() {
-        const videos = [...document.querySelectorAll('[data-youtube]')];
-        function init() { videos.forEach(bindEvent); }
-        function bindEvent(el) {
-            const btn = el.querySelector('[data-youtube-button]');
-            if(!btn) return;
-            btn.addEventListener('click', createIframe);
-        }
-        function createIframe(event) {
-            const url = event.target.dataset.youtubeButton;
-            const placeholder = event.target.parentNode;
-            const iframeHTML = `<div class="video__youtube"><iframe class="video__iframe" src="${url}?autoplay=1" frameborder="0" allowfullscreen></iframe></div>`;
-            placeholder.style.display = 'none';
-            placeholder.insertAdjacentHTML('beforebegin', iframeHTML);
-            placeholder.remove();
-        }
-        return { init };
-    };
+  'use strict';
+  window.code = window.code || {};
+  window.code.lightweightYoutubePlayer = function() {
+    const videos = [...document.querySelectorAll('[data-youtube]')];
+    function init() { videos.forEach(bindEvent); }
+    function bindEvent(el) {
+      const btn = el.querySelector('[data-youtube-button]');
+      if(!btn) return;
+      btn.addEventListener('click', createIframe);
+    }
+    function createIframe(event) {
+      const url = event.target.dataset.youtubeButton;
+      const placeholder = event.target.parentNode;
+      const iframeHTML = `<div class="video__youtube"><iframe class="video__iframe" src="${url}?autoplay=1" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
+      placeholder.style.display = 'none';
+      placeholder.insertAdjacentHTML('beforebegin', iframeHTML);
+      placeholder.remove();
+    }
+    return { init };
+  };
 })(window);
 document.addEventListener('DOMContentLoaded', () => {
-    window.code.lightweightYoutubePlayer().init();
+  window.code.lightweightYoutubePlayer().init();
 });
 
 /* --- Fortnite Maps Previews --- */
@@ -180,43 +197,53 @@ const maps = [
   { url:"https://www.fortnite.com/@epic/ranked-ballistic?lang=en-US", title:"Ranked Ballistic (By Epic Games)", desc:"A kinda fun Counter-Strike–like map by Epic Games." }
 ];
 
-// Render skeleton immediately
 const container = document.getElementById('container');
 maps.forEach(map => {
-    const card = document.createElement('article');
-    card.className = 'preview';
-    card.innerHTML = `<a href="${map.url}" target="_blank" rel="noopener noreferrer" style="display:block; color:inherit; text-decoration:none;">
-        <div class="thumb-wrap"><div class="no-image"></div><img class="real" style="display:none;" /></div>
-        <div class="info"><h3>${map.title}</h3><p>${map.desc}</p><div class="meta-row"><span>View on Fortnite</span></div></div>
+  const card = document.createElement('article');
+  card.className = 'preview';
+  card.innerHTML = `
+    <a href="${map.url}" target="_blank" rel="noopener noreferrer">
+      <div class="thumb-wrap">
+        <div class="no-image">Loading preview...</div>
+        <img class="real" loading="lazy" decoding="async" width="391" height="220" alt="${map.title}" style="display:none; aspect-ratio:16/9;" />
+      </div>
+      <div class="info">
+        <h3>${map.title}</h3>
+        <p>${map.desc}</p>
+        <div class="meta-row"><span>View on Fortnite</span></div>
+      </div>
     </a>`;
-    container.appendChild(card);
+  container.appendChild(card);
 });
 
-// Client-side preloading and replacement
 maps.forEach((map,i)=>{
-    const imgEl = container.querySelectorAll('.real')[i];
-    const cacheKey = 'preview_' + map.url;
-    let meta = null;
-    const cached = localStorage.getItem(cacheKey);
-    if(cached){ try{ meta=JSON.parse(cached); }catch(e){meta=null;} }
+  const imgEl = container.querySelectorAll('.real')[i];
+  const cacheKey = 'preview_' + map.url;
+  let meta = null;
+  const cached = localStorage.getItem(cacheKey);
+  if(cached){ try{ meta=JSON.parse(cached); }catch(e){meta=null;} }
 
-    if(!meta){
-        fetch('https://api.microlink.io/?url='+encodeURIComponent(map.url))
-        .then(res=>res.json())
-        .then(json=>{ meta=json.data||null; if(meta)localStorage.setItem(cacheKey,JSON.stringify(meta)); })
-        .catch(err=>{ console.warn('preview fetch failed',map.url,err); meta=null; })
-        .finally(()=>{ setTimeout(()=>setImage(imgEl,map,meta),0); });
-    } else { setImage(imgEl,map,meta); }
+  if(!meta){
+    fetch('https://api.microlink.io/?url='+encodeURIComponent(map.url))
+    .then(res=>res.json())
+    .then(json=>{ meta=json.data||null; if(meta)localStorage.setItem(cacheKey,JSON.stringify(meta)); })
+    .catch(()=>meta=null)
+    .finally(()=>{ setTimeout(()=>setImage(imgEl,map,meta),0); });
+  } else { setImage(imgEl,map,meta); }
 });
 
 function setImage(imgEl,map,meta){
-    const url = (meta && meta.image && meta.image.url)?meta.image.url:FALLBACK_SVG;
-    const tmp = new Image();
-    tmp.src = url;
-    tmp.onload = ()=>{ imgEl.src=url; imgEl.style.display='block'; imgEl.previousElementSibling.style.display='none'; };
+  const url = (meta && meta.image && meta.image.url)?meta.image.url:FALLBACK_SVG;
+  const tmp = new Image();
+  tmp.src = url;
+  tmp.onload = ()=>{
+    imgEl.src=url;
+    imgEl.style.display='block';
+    imgEl.previousElementSibling.style.display='none';
+  };
 }
 
-/* --- Unregister any existing service workers --- */
+/* --- 🧹 Unregister any existing service workers --- */
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.getRegistrations().then(regs => {
     regs.forEach(reg => reg.unregister());
