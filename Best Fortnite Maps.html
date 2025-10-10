@@ -245,11 +245,15 @@ function setImage(imgEl,map,meta){
     tmp.src = url;
     tmp.onload = ()=>{ imgEl.src=url; imgEl.style.display='block'; imgEl.previousElementSibling.style.display='none'; };
 }
-
-/* --- PWA push setup --- */
+  
+<script>
 if ('serviceWorker' in navigator) {
-navigator.serviceWorker.register('/site/sw.js');
+  navigator.serviceWorker.register('./sw.js')
+    .then(() => console.log('✅ Service Worker registered successfully.'))
+    .catch(err => console.error('❌ Service Worker registration failed:', err));
 }
+</script>
+
 
 async function subscribePush() {
   const permission = await Notification.requestPermission();
