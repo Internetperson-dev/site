@@ -217,37 +217,30 @@ function setImage(imgEl,map,meta){
 }
 
 <script>
-const PUBLIC_VAPID_KEY = 'YOUR_PUBLIC_VAPID_KEY_HERE'; // replace later
-
-async function registerServiceWorker() {
-  if ('serviceWorker' in navigator) {
-    const reg = await navigator.serviceWorker.register('/sw.js');
-    console.log('SW registered:', reg);
-    await askPermission(reg);
-  }
+// === Service Worker registration ===
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.register('/sw.js');
 }
 
-async function askPermission(reg) {
+// === Request permission and subscribe ===
+async function subscribePush() {
   const permission = await Notification.requestPermission();
-  if (permission !== 'granted') return console.log('Notifications blocked');
+  if (permission !== 'granted') return alert('Notifications disabled.');
 
+  const reg = await navigator.serviceWorker.ready;
+  const key = 'BElonv36FILLINYOURVAPIDPUBKEY'; // Put your real VAPID public key
   const sub = await reg.pushManager.subscribe({
     userVisibleOnly: true,
-    applicationServerKey: urlBase64ToUint8Array(PUBLIC_VAPID_KEY)
+    applicationServerKey: Uint8Array.from(atob(key.replace(/_/g,'/').replace(/-/g,'+')), c=>c.charCodeAt(0))
   });
-  console.log('Push subscription:', JSON.stringify(sub));
-  }
 
-function urlBase64ToUint8Array(base64String) {
-  const padding = '='.repeat((4 - base64String.length % 4) % 4);
-  const base64 = (base64String + padding).replace(/\-/g, '+').replace(/_/g, '/');
-  const rawData = atob(base64);
-  return Uint8Array.from([...rawData].map(char => char.charCodeAt(0)));
+  // Save to localStorage or prompt user to copy it
+  localStorage.setItem('pushSub', JSON.stringify(sub));
+  console.log('Copy this subscription JSON to GitHub Secrets:', sub);
 }
-
-registerServiceWorker();
 </script>
+<button onclick="subscribePush()">Enable update notifications</button>
 
-</script>
+
 </body>
 </html>
