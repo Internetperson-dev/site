@@ -1,255 +1,195 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>Best Fortnite Maps — Side Text</title>
-<link rel="icon" type="image/png" href="favicon.png">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Explore the best Fortnite creative maps, handpicked for fun, XP grinding, and competition. Updated frequently.">
+<title>Best Fortnite Maps</title>
 
-<!-- 🔗 Preconnect to external origins for faster LCP -->
-<link rel="preconnect" href="https://cdn-0001.qstv.on.epicgames.com" crossorigin>
-<link rel="preconnect" href="https://cdn2.unrealengine.com" crossorigin>
-<link rel="preconnect" href="https://raw.githubusercontent.com" crossorigin>
-<link rel="preconnect" href="https://api.microlink.io" crossorigin>
+<!-- Preconnect to critical domains -->
+<link rel="preconnect" href="https://cdn-0001.qstv.on.epicgames.com">
+<link rel="preconnect" href="https://cdn2.unrealengine.com">
+<link rel="preconnect" href="https://raw.githubusercontent.com">
+<link rel="preconnect" href="https://api.microlink.io">
 
 <style>
-:root{
-  --bg:#050509;
-  --card-a:#13131f;
-  --card-b:#1a1a29;
-  --muted:#bcbce0;
-  --accent:#8fa2ff;
-  --radius:14px;
-}
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+    background: #0d0d0d;
+    color: #fff;
+    overflow-x: hidden;
+  }
 
-body {
-  margin: 0;
-  padding: 2rem;
-  font-family: "Poppins", system-ui, sans-serif;
-  background: radial-gradient(circle at top left, #0a0a14 0%, var(--bg) 100%);
-  color: #e8e8f0;
-}
+  h1 {
+    text-align: center;
+    font-size: 2rem;
+    margin: 2rem 0;
+  }
 
-.wrap { max-width:1100px; margin:0 auto; }
+  .video {
+    position: relative;
+    width: 80%;
+    max-width: 640px;
+    margin: 2rem auto;
+    border-radius: 12px;
+    overflow: hidden;
+  }
 
-h1{
-  text-align:center;
-  margin:0 0 1.5rem;
-  color:#fff;
-  text-shadow:0 0 10px rgba(143,162,255,0.18);
-  font-size:2rem;
-}
+  .video__youtube {
+    position: relative;
+    width: 100%;
+    padding-bottom: 56.25%;
+    background: #000;
+  }
 
-.layout {
-  display:grid;
-  grid-template-columns: 1fr 300px;
-  gap:2rem;
-}
+  .video__iframe {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+  }
 
-main { min-height:100vh; }
+  .video__placeholder {
+    width: 100%;
+    height: auto;
+    position: absolute;
+    inset: 0;
+    object-fit: cover;
+  }
 
-aside {
-  background:linear-gradient(145deg,#181824,#10101a);
-  border-radius:var(--radius);
-  padding:1rem;
-  border:1px solid #2c2c44;
-  color:var(--muted);
-  box-shadow:0 10px 30px rgba(0,0,0,0.45);
-  font-size:0.95rem;
-}
+  .video__button {
+    position: absolute;
+    inset: 0;
+    background: none;
+    border: none;
+    cursor: pointer;
+    text-indent: -9999px;
+  }
 
-.preview {
-  display:grid;
-  grid-template-columns: 300px 1fr;
-  gap:1rem;
-  align-items:stretch;
-  background: linear-gradient(145deg, var(--card-a), var(--card-b));
-  border-radius: var(--radius);
-  overflow:hidden;
-  border:1px solid #292947;
-  box-shadow:0 6px 18px rgba(0,0,0,0.45);
-  margin-bottom:1.25rem;
-  min-height:150px;
-}
+  .video__button::before {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 72px;
+    height: 72px;
+    background: url(https://raw.githubusercontent.com/Internetperson-dev/site/refs/heads/main/etc/yt/output.avif)
+      no-repeat center center;
+    background-size: contain;
+    transform: translate(-50%, -50%);
+    transition: transform 0.25s ease;
+  }
 
-.preview img {
-  width:100%;
-  height:auto;
-  aspect-ratio:16/9;
-  object-fit:cover;
-  display:block;
-  background:linear-gradient(180deg,#0c0c14,#11111a);
-}
+  .video__button:hover::before {
+    transform: translate(-50%, -50%) scale(1.1);
+  }
 
-.info { padding:1rem 1.25rem; display:flex; flex-direction:column; justify-content:center; }
-.info h3 { margin:0 0 0.5rem 0; color:#fff; font-size:1.15rem; text-shadow:0 0 6px rgba(100,150,255,0.18); }
-.info p { margin:0; color:var(--muted); line-height:1.45; font-size:0.96rem; }
+  .gallery {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+    padding: 1.5rem;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
 
-.meta-row { margin-top:0.75rem; display:flex; gap:0.75rem; align-items:center; color:#9fb2ff; font-size:0.85rem; }
+  .map {
+    background: #1a1a1a;
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
+  }
 
-a { text-decoration: none; color: inherit; }
+  .map:hover {
+    transform: scale(1.02);
+  }
 
-.no-image {
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:var(--muted);
-  font-weight:600;
-  font-size:1rem;
-  background:linear-gradient(180deg,#0c0c14,#0e0e18);
-}
+  .map img {
+    display: block;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+  }
 
-/* --- Responsive --- */
-@media (max-width:980px){
-  .layout{ grid-template-columns: 1fr; }
-  .preview { grid-template-columns: 1fr; }
-  .preview img { height:220px; }
-  aside { order:-1; }
-}
-
-/* --- Lightweight YouTube embed styles --- */
-.video { position: relative; width: 100%; max-width: 600px; margin-bottom:1.5rem; }
-.video__youtube { padding-bottom: 56.23%; width: 100%; height:0; overflow:hidden; position: relative; background-color:black; }
-.video__placeholder { width:100%; position:absolute; top:0; left:0; height:100%; object-fit:cover; }
-.video__button { background:none; border:0; cursor:pointer; height:100%; left:0; position:absolute; text-indent:-9999px; top:0; width:100%; }
-.video__button:before { width:100%; height:100%; content:''; position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); background:url(https://github.com/Internetperson-dev/site/raw/refs/heads/main/etc/yt/yt.avif) no-repeat center center; background-size:10%; }
-.video__button:hover:before { background:url(https://github.com/Internetperson-dev/site/raw/refs/heads/main/etc/yt/yt.avif) no-repeat center center; background-size:10%; }
-.video__iframe { position:absolute; top:0; left:0; width:100%; height:100%; }
+  .map h2 {
+    margin: 0.75rem;
+    font-size: 1rem;
+  }
 </style>
 </head>
-
 <body>
-<div class="wrap">
-  <h1>Best Fortnite Maps</h1>
-  <div class="layout">
-    <main>
-      <!-- 🔹 Lightweight YouTube Embed -->
-      <div class="video">
-        <div class="video__youtube" data-youtube>
-          <img 
-            src="https://raw.githubusercontent.com/Internetperson-dev/site/refs/heads/main/fortnite.avif"
-            class="video__placeholder"
-            width="600"
-            height="338"
-            loading="lazy"
-            fetchpriority="high"
-            alt="Fortnite Showcase Thumbnail"
-          />
-          <button class="video__button" data-youtube-button="https://www.youtube.com/embed/Pr9LcxHFE_k">Play</button>
-        </div>
-      </div>
 
-      <!-- 🔹 Container for Fortnite map cards -->
-      <div id="container"></div>
-    </main>
+<h1>Best Fortnite Creative Maps</h1>
 
-    <!-- 🔹 Sidebar -->
-    <aside>
-      <h3 style="color:#9bb8ff; margin-top:0;">Featured Sections</h3>
-      <ul style="padding-left:1rem; margin-top:0.5rem;">
-        <li>
-          <button 
-            onclick="window.open('https://www.fortnite.com/download?lang=en-US', '_blank')" 
-            style="padding: 0.5rem 1rem; background-color:#9bb8ff; color:white; border:none; border-radius:5px; cursor:pointer;">
-            Play Fortnite
-          </button>
-        </li>
-      </ul>
-    </aside>
+<!-- Lazy YouTube Embed -->
+<div class="video">
+  <div class="video__youtube" data-youtube>
+    <img src="https://raw.githubusercontent.com/Internetperson-dev/site/refs/heads/main/etc/yt/thum.avif"
+         class="video__placeholder"
+         alt="Fortnite Gameplay Preview"
+         width="640"
+         height="360"
+         fetchpriority="high">
+    <button class="video__button"
+            data-youtube-button="https://www.youtube.com/embed/duPJqfKiA78">
+      Play Video
+    </button>
   </div>
 </div>
 
+<!-- Fortnite Map Gallery -->
+<section class="gallery" id="maps">
+  <div class="map">
+    <img src="https://cdn-0001.qstv.on.epicgames.com/qWVoxoLXmdDlLdYFbn/image/landscape_comp.jpeg"
+         width="391" height="220" alt="Battle Royale: HIGH TIDE | Snapshots"
+         decoding="async" loading="eager" fetchpriority="high">
+    <h2>Battle Royale: HIGH TIDE</h2>
+  </div>
+
+  <div class="map">
+    <img src="https://cdn-0001.qstv.on.epicgames.com/xyz/image/landscape_comp.jpeg"
+         width="391" height="220" alt="Red vs Blue | Classic"
+         decoding="async" loading="lazy">
+    <h2>Red vs Blue Classic</h2>
+  </div>
+
+  <div class="map">
+    <img src="https://cdn2.unrealengine.com/fortnite-creative-parkour.jpg"
+         width="391" height="220" alt="Parkour Challenge Map"
+         decoding="async" loading="lazy">
+    <h2>Parkour Challenge</h2>
+  </div>
+</section>
+
 <script>
-/* --- Lightweight YouTube Player --- */
 (function (window) {
   'use strict';
   window.code = window.code || {};
-  window.code.lightweightYoutubePlayer = function() {
-    const videos = [...document.querySelectorAll('[data-youtube]')];
-    function init() { videos.forEach(bindEvent); }
-    function bindEvent(el) {
-      const btn = el.querySelector('[data-youtube-button]');
-      if(!btn) return;
-      btn.addEventListener('click', createIframe);
+  window.code.lightweightYoutubePlayer = function () {
+    const videos = document.querySelectorAll('[data-youtube]');
+    function init() {
+      videos.forEach(el => {
+        const btn = el.querySelector('[data-youtube-button]');
+        btn.addEventListener('click', e => createIframe(e, el));
+      });
     }
-    function createIframe(event) {
+    function createIframe(event, container) {
       const url = event.target.dataset.youtubeButton;
-      const placeholder = event.target.parentNode;
-      const iframeHTML = `<div class="video__youtube"><iframe class="video__iframe" src="${url}?autoplay=1" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe></div>`;
-      placeholder.style.display = 'none';
-      placeholder.insertAdjacentHTML('beforebegin', iframeHTML);
-      placeholder.remove();
+      const iframe = `<iframe class="video__iframe" src="${url}?autoplay=1" title="YouTube video player"
+      frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
+      container.innerHTML = iframe;
     }
     return { init };
   };
 })(window);
+
 document.addEventListener('DOMContentLoaded', () => {
-  window.code.lightweightYoutubePlayer().init();
+  const player = new window.code.lightweightYoutubePlayer();
+  player.init();
 });
-
-/* --- Fortnite Maps Previews --- */
-const FALLBACK_SVG = 'data:image/svg+xml;utf8,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800"><defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#0c0c14"/><stop offset="1" stop-color="#11111a"/></linearGradient></defs><rect width="100%" height="100%" fill="url(#g)"/><g fill="#bdbde6" font-family="sans-serif" font-size="40" text-anchor="middle"><text x="50%" y="48%">No preview image</text><text x="50%" y="60%" font-size="24" opacity="0.85">Click the card to open the map</text></g></svg>`);
-
-const maps = [
-  { url:"https://www.fortnite.com/@jakus/3623-3871-1041?lang=en-US", title:"Battle Royale: HIGH TIDE | Snapshots", desc:"A full fan-made Battle Royale game mode. Sadly doesn't get a lot of players." },
-  { url:"https://www.fortnite.com/@teamrevibed/9997-0482-5512?lang=en-US", title:"Chapter 3: Revibed", desc:"A solid recreation of Chapter 3 Vibin'." },
-  { url:"https://www.fortnite.com/@pandvilspam/2229-0002-0277?lang=en-US", title:"Rewind Royale", desc:"A version of Chapter 1 Fortnite that is more accurate." },
-  { url:"https://www.fortnite.com/@epic/ranked-ballistic?lang=en-US", title:"Ranked Ballistic (By Epic Games)", desc:"A kinda fun Counter-Strike–like map by Epic Games." }
-];
-
-const container = document.getElementById('container');
-maps.forEach(map => {
-  const card = document.createElement('article');
-  card.className = 'preview';
-  card.innerHTML = `
-    <a href="${map.url}" target="_blank" rel="noopener noreferrer">
-      <div class="thumb-wrap">
-        <div class="no-image">Loading preview...</div>
-        <img class="real" loading="lazy" decoding="async" width="391" height="220" alt="${map.title}" style="display:none; aspect-ratio:16/9;" />
-      </div>
-      <div class="info">
-        <h3>${map.title}</h3>
-        <p>${map.desc}</p>
-        <div class="meta-row"><span>View on Fortnite</span></div>
-      </div>
-    </a>`;
-  container.appendChild(card);
-});
-
-maps.forEach((map,i)=>{
-  const imgEl = container.querySelectorAll('.real')[i];
-  const cacheKey = 'preview_' + map.url;
-  let meta = null;
-  const cached = localStorage.getItem(cacheKey);
-  if(cached){ try{ meta=JSON.parse(cached); }catch(e){meta=null;} }
-
-  if(!meta){
-    fetch('https://api.microlink.io/?url='+encodeURIComponent(map.url))
-    .then(res=>res.json())
-    .then(json=>{ meta=json.data||null; if(meta)localStorage.setItem(cacheKey,JSON.stringify(meta)); })
-    .catch(()=>meta=null)
-    .finally(()=>{ setTimeout(()=>setImage(imgEl,map,meta),0); });
-  } else { setImage(imgEl,map,meta); }
-});
-
-function setImage(imgEl,map,meta){
-  const url = (meta && meta.image && meta.image.url)?meta.image.url:FALLBACK_SVG;
-  const tmp = new Image();
-  tmp.src = url;
-  tmp.onload = ()=>{
-    imgEl.src=url;
-    imgEl.style.display='block';
-    imgEl.previousElementSibling.style.display='none';
-  };
-}
-
-/* --- 🧹 Unregister any existing service workers --- */
-if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.getRegistrations().then(regs => {
-    regs.forEach(reg => reg.unregister());
-    console.log('✅ All service workers unregistered');
-  });
-}
 </script>
+
 </body>
 </html>
