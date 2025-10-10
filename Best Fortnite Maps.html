@@ -6,6 +6,36 @@
 <title>Best Fortnite Maps — Side Text</title>
 <link rel="icon" type="image/png" href="favicon.png">
 
+<script>
+  (function(p,u,s,h,x){
+    p.pushpad = p.pushpad || function(){(p.pushpad.q=p.pushpad.q||[]).push(arguments)};
+    h=u.getElementsByTagName('head')[0];
+    x=u.createElement('script');x.async=1;x.src=s;h.appendChild(x);
+  })(window,document,'https://pushpad.xyz/pushpad.js');
+
+  // 🔹 Initialize Pushpad with your project ID
+  pushpad('init', 9046);
+
+  // 🔹 Show a simple subscribe button
+  document.addEventListener('DOMContentLoaded', function () {
+    const btn = document.createElement('button');
+    btn.textContent = 'Enable Notifications';
+    btn.style.cssText = 'padding:10px 16px; background:#8fa2ff; color:#fff; border:none; border-radius:8px; cursor:pointer; display:block; margin:1rem auto;';
+    btn.onclick = function () {
+      pushpad('subscribe', function (isSubscribed) {
+        if (isSubscribed) alert('✅ Subscribed!');
+        else alert('❌ Permission denied or blocked.');
+      });
+    };
+    document.body.appendChild(btn);
+  });
+</script>
+
+<script>
+  pushpad('widget');
+</script>
+
+
 <style>
 :root{
   --bg:#050509;
