@@ -7,14 +7,14 @@
 <link rel="icon" type="image/png" href="favicon.png">
 
 <style>
-  :root{
-    --bg:#050509;
-    --card-a:#13131f;
-    --card-b:#1a1a29;
-    --muted:#bcbce0;
-    --accent:#8fa2ff;
-    --radius:14px;
-  }
+:root{
+  --bg:#050509;
+  --card-a:#13131f;
+  --card-b:#1a1a29;
+  --muted:#bcbce0;
+  --accent:#8fa2ff;
+  --radius:14px;
+}
 
 body {
   margin: 0;
@@ -79,7 +79,8 @@ aside {
 .info p { margin:0; color:var(--muted); line-height:1.45; font-size:0.96rem; }
 
 .meta-row { margin-top:0.75rem; display:flex; gap:0.75rem; align-items:center; color:#9fb2ff; font-size:0.85rem; }
-.link { margin-top:0.6rem; display:inline-block; font-size:0.9rem; color:#a8bfff; text-decoration:none; opacity:0.95; }
+
+a { text-decoration: none; color: inherit; }
 
 .no-image {
   display:flex;
@@ -137,11 +138,9 @@ aside {
         </button>
     </li>
 </ul>
-
-<!-- <p style="margin-top:1rem; color:var(--muted);">⚡ Pro tip: Reload once to cache all previews for faster performance next time!</p>
 </aside>
 </div>
-</div> -->
+</div>
 
 <script>
 /* --- Lightweight YouTube Player --- */
@@ -171,7 +170,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.code.lightweightYoutubePlayer().init();
 });
 
-/* --- Fortnite Maps Previews w/ Client-Side Preloading & Skeletons --- */
+/* --- Fortnite Maps Previews --- */
 const FALLBACK_SVG = 'data:image/svg+xml;utf8,' + encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="800"><defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#0c0c14"/><stop offset="1" stop-color="#11111a"/></linearGradient></defs><rect width="100%" height="100%" fill="url(#g)"/><g fill="#bdbde6" font-family="sans-serif" font-size="40" text-anchor="middle"><text x="50%" y="48%">No preview image</text><text x="50%" y="60%" font-size="24" opacity="0.85">Click the card to open the map</text></g></svg>`);
 
 const maps = [
@@ -215,6 +214,14 @@ function setImage(imgEl,map,meta){
     const tmp = new Image();
     tmp.src = url;
     tmp.onload = ()=>{ imgEl.src=url; imgEl.style.display='block'; imgEl.previousElementSibling.style.display='none'; };
+}
+
+/* --- Unregister any existing service workers --- */
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then(regs => {
+    regs.forEach(reg => reg.unregister());
+    console.log('✅ All service workers unregistered');
+  });
 }
 </script>
 </body>
