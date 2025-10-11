@@ -216,14 +216,10 @@ function setImage(imgEl,map,meta){
     tmp.onload = ()=>{ imgEl.src=url; imgEl.style.display='block'; imgEl.previousElementSibling.style.display='none'; };
 }
 
-  
-<script>
 /* --- PWA push setup --- */
 if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register('/site/service-worker.js');
 }
-</script>
-
-  
+</script>  
 </body>
 </html>
