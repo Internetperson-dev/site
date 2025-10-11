@@ -248,7 +248,7 @@ function setImage(imgEl,map,meta){
 
 /* --- PWA push setup --- */
 if ('serviceWorker' in navigator) {
-  navigator.serviceWorker.register('https://raw.githubusercontent.com/Internetperson-dev/site/refs/heads/main/sw.js');
+  navigator.serviceWorker.register('/sites/service-worker.js');
 }
 
 async function subscribePush() {
