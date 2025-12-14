@@ -9,62 +9,63 @@
 
 <style>
 
-/* Liquid Glass Cursor */
-  
-  body {
-    cursor: none;
-  }
-
-html,body{height:100%;min-height:500vh;margin:0;font-family:system-ui,sans-serif;overflow-x:hidden}
-.bg{position:absolute;inset:0;z-index:-1}
-.bg img{width:100%;display:block}
-
-.glass{
-  position:fixed;inset:50% auto auto 50%;transform:translate(-50%,-50%);
-  width:20rem;height:20rem;border-radius:50%;
-  background:rgba(255,255,255,.08);border:2px solid transparent;
-  box-shadow:0 0 0 2px rgba(255,255,255,.6),0 16px 32px rgba(0,0,0,.12);
-  backdrop-filter:url(#frosted);-webkit-backdrop-filter:url(#frosted);
-  display:grid;place-items:center;cursor:pointer;outline:0;
-}
-
-.glass::before,
-.glass::after{
-  content:"";position:absolute;width:40%;height:10px;background:#fff;border-radius:10px;
-}
-.glass::after{transform:rotate(90deg)}
-
-.glass::before,
-.glass::after{
-  content:"";
-  position:absolute;
-  width:40%;
-  height:10px;
-  background:#fff;
-  border-radius:10px;
-}
-
-.glass::after{
-  transform:rotate(90deg);
-}
-
-  
-
-
-
-
-
-
-
-
-  
-body {
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+/* =========================
+   SYSTEM / GLOBAL
+   ========================= */
+html, body {
+  height: 100%;
+  min-height: 500vh;
+  margin: 0;
+  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+               Roboto, Helvetica, Arial, sans-serif;
+  overflow-x: hidden;
+  cursor: none;
   background: radial-gradient(circle at top left, #1f1f1f, #121212);
   color: #fff;
-  overflow-x: hidden;
 }
 
+/* =========================
+   GLASS CURSOR
+   ========================= */
+.glass-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 5rem;
+  height: 5rem;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 9999;
+
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid transparent;
+  box-shadow:
+    0 0 0 2px rgba(255, 255, 255, 0.6),
+    0 16px 32px rgba(0, 0, 0, 0.12);
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+/* plus sign */
+.glass-cursor::before,
+.glass-cursor::after {
+  content: "";
+  position: absolute;
+  width: 40%;
+  height: 10px;
+  background: #fff;
+  border-radius: 10px;
+}
+
+.glass-cursor::after {
+  transform: rotate(90deg);
+}
+
+/* =========================
+   LINKS / UI
+   ========================= */
 .links {
   display: flex;
   flex-direction: column;
@@ -80,23 +81,29 @@ h1 {
   text-shadow: 0 4px 15px rgba(255,255,255,0.2);
 }
 
-.collapsible {
-  cursor: pointer;
+/* glass UI buttons */
+.glass {
   padding: 14px;
   width: 320px;
   border: none;
   border-radius: 18px;
-  text-align: center;
   font-size: 1rem;
-  margin: 8px 0;
+  text-align: center;
+  cursor: pointer;
   transition: 0.25s ease;
+
+  background: rgba(255, 255, 255, 0.12);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #fff;
 }
 
-.collapsible:hover {
+.glass:hover {
   background: rgba(255, 255, 255, 0.2);
   transform: translateY(-2px);
 }
 
+/* collapsible content */
 .content {
   display: none;
   flex-direction: column;
@@ -120,7 +127,9 @@ h1 {
   transform: translateY(-2px);
 }
 
-/* LADYBIRD ANIMATION */
+/* =========================
+   LADYBIRD ANIMATION
+   ========================= */
 .ladybird {
   position: absolute;
   font-size: 2rem;
@@ -132,43 +141,21 @@ h1 {
 
 @keyframes fall {
   from { transform: translateY(-50px); opacity: 1; }
-  to { transform: translateY(100vh); opacity: 0; }
+  to   { transform: translateY(100vh); opacity: 0; }
 }
+
 </style>
 </head>
+
 <body>
-<script>
-function createLadybird(){
-  const e=document.createElement("div");
-  e.classList.add("ladybird");
-  e.innerText="🐞";
-  e.style.left=Math.random()*window.innerWidth+"px";
-  document.body.appendChild(e);
-  setTimeout(()=>{e.remove()},1000)
-}
 
-document.addEventListener("DOMContentLoaded",function(){
-  if(navigator.userAgent.includes("Ladybird")){
-    for(let e=0;e<10;e++) setTimeout(createLadybird,500*Math.random());
-  }
-});
-</script>
+<!-- Glass Cursor -->
+<div class="glass-cursor"></div>
 
-  <script>
-  const cursor = document.querySelector('.glass');
-
-  document.addEventListener('mousemove', e => {
-    cursor.style.left = e.clientX + 'px';
-    cursor.style.top  = e.clientY + 'px';
-  });
-</script>
-
-
-<div class="glass"></div>
-
-  
 <div class="links">
-  <button class="collapsible glass">/etc</button>
+  <h1>Useful Links</h1>
+
+  <button class="glass collapsible">/etc</button>
 
   <div class="content">
     <button class="glass" onclick="location.href='https://wolfyxon.github.io/3ds-web-stuff/'">3DS Games</button>
@@ -184,14 +171,38 @@ document.addEventListener("DOMContentLoaded",function(){
     <button class="glass" onclick="location.href='https://internetperson-dev.github.io/site/etc/yt/yt-bad.html'">yt-bad</button>
     <button class="glass" onclick="location.href='https://internetperson-dev.github.io/site/etc/yt/yt-good.html'">yt-good</button>
   </div>
-
 </div>
 
 <script>
+/* cursor follow */
+const cursor = document.querySelector('.glass-cursor');
+
+document.addEventListener('mousemove', e => {
+  cursor.style.left = e.clientX + 'px';
+  cursor.style.top  = e.clientY + 'px';
+});
+
+/* collapsible */
 document.querySelector(".collapsible").addEventListener("click", function() {
   const content = this.nextElementSibling;
   content.style.display = content.style.display === "flex" ? "none" : "flex";
 });
+
+/* ladybird */
+function createLadybird() {
+  const e = document.createElement("div");
+  e.className = "ladybird";
+  e.innerText = "🐞";
+  e.style.left = Math.random() * window.innerWidth + "px";
+  document.body.appendChild(e);
+  setTimeout(() => e.remove(), 1000);
+}
+
+if (navigator.userAgent.includes("Ladybird")) {
+  for (let i = 0; i < 10; i++) {
+    setTimeout(createLadybird, 500 * Math.random());
+  }
+}
 </script>
 
 </body>
