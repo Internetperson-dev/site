@@ -46,9 +46,7 @@ html, body {
 
   backdrop-filter: blur(10px);
   -webkit-backdrop-filter: blur(10px);
-  user-select: none;
-  -webkit-user-select: none;
-  -ms-user-select: none;
+
 }
 
 .glass-cursor::after {
@@ -117,6 +115,13 @@ h1 {
 .content button:hover {
   background: rgba(255,255,255,0.15);
   transform: translateY(-2px);
+}
+
+
+button { 
+   user-select: none;
+  -webkit-user-select: none;
+  -ms-user-select: none;
 }
 
 /* =========================
