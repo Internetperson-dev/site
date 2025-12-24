@@ -5,12 +5,10 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>Fortnite Maps — Libadwaita Style</title>
 <link rel="icon" type="image/png" href="favicon.png">
-<!-- Inter is the closest web font to Cantarell/GNOME's default -->
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
 
 <style>
 :root {
-  /* GNOME/Libadwaita Dark Palette adapted to your colors */
   --bg-color: #050509;
   --window-bg: #10101a;
   --card-bg: #1a1a29;
@@ -26,14 +24,13 @@
 
 body {
   margin: 0;
-  padding: 0;
   font-family: "Inter", system-ui, sans-serif;
   background-color: var(--bg-color);
   color: var(--text-main);
   -webkit-font-smoothing: antialiased;
 }
 
-/* Libadwaita HeaderBar */
+/* HeaderBar */
 .header-bar {
   height: 56px;
   background: var(--header-bg);
@@ -44,6 +41,7 @@ body {
   position: sticky;
   top: 0;
   z-index: 100;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.2);
 }
 
 .header-bar h1 {
@@ -53,14 +51,14 @@ body {
   color: var(--text-main);
 }
 
-/* The "Clamp" - GNOME layouts usually have a max-width centered container */
+/* Centered page content */
 .clamp {
   max-width: 860px;
   margin: 0 auto;
   padding: 32px 16px;
 }
 
-/* Adwaita Video Player Look */
+/* Video container */
 .video-container {
   background: #000;
   border-radius: var(--radius);
@@ -68,9 +66,47 @@ body {
   border: 1px solid var(--border);
   margin-bottom: 32px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+  position: relative;
 }
 
-/* Adwaita Boxed List Pattern */
+.video-container img {
+  width: 100%;
+  height: auto;
+  display: block;
+  object-fit: cover;
+  opacity: 0.6;
+}
+
+.video-container button {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 15px 30px;
+  border-radius: 50px;
+  font-weight: 600;
+  cursor: pointer;
+  background: var(--accent);
+  border: none;
+  color: #000;
+  transition: filter 0.2s;
+}
+
+.video-container button:hover {
+  filter: brightness(1.1);
+}
+
+/* Section titles */
+.section-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  margin: 24px 0 8px 0;
+  letter-spacing: 0.5px;
+}
+
+/* Boxed list */
 .boxed-list {
   background: var(--window-bg);
   border-radius: var(--radius);
@@ -79,6 +115,7 @@ body {
   margin-bottom: 24px;
 }
 
+/* List rows */
 .list-row {
   display: grid;
   grid-template-columns: 140px 1fr;
@@ -96,6 +133,7 @@ body {
   height: 100px;
   object-fit: cover;
   background: var(--card-bg);
+  border-radius: var(--radius) 0 0 var(--radius);
 }
 
 .row-content {
@@ -117,7 +155,7 @@ body {
   line-height: 1.4;
 }
 
-/* Libadwaita Buttons */
+/* Buttons */
 .adw-button {
   background: var(--card-bg);
   border: 1px solid var(--border);
@@ -134,29 +172,19 @@ body {
 }
 
 .adw-button:hover { background: var(--card-hover); }
+
 .adw-button.suggested-action {
   background: var(--accent);
   color: #000;
   border: none;
 }
 
-.adw-button.suggested-action:hover {
-  filter: brightness(1.1);
-}
+.adw-button.suggested-action:hover { filter: brightness(1.1); }
 
-/* Utility classes */
-.section-title {
-  font-size: 13px;
-  font-weight: 700;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  margin: 0 0 8px 12px;
-  letter-spacing: 0.5px;
-}
-
+/* Responsive */
 @media (max-width: 600px) {
   .list-row { grid-template-columns: 1fr; }
-  .row-image { width: 100%; height: 180px; }
+  .row-image { width: 100%; height: 180px; border-radius: var(--radius) var(--radius) 0 0; }
 }
 </style>
 </head>
@@ -167,22 +195,14 @@ body {
 </header>
 
 <div class="clamp">
-  
+
   <div class="video-container" id="video-root">
-    <div style="position:relative; padding-bottom:56.25%; height:0; overflow:hidden;">
-        <img src="https://raw.githubusercontent.com/Internetperson-dev/site/refs/heads/main/fortnite.avif" 
-             style="position:absolute; top:0; left:0; width:100%; height:100%; object-fit:cover; opacity:0.6;">
-        <button onclick="playVideo()" class="adw-button suggested-action" 
-                style="position:absolute; top:50%; left:50%; transform:translate(-50%,-50%); padding: 15px 30px; border-radius: 50px;">
-          Play Preview
-        </button>
-    </div>
+    <img src="https://raw.githubusercontent.com/Internetperson-dev/site/refs/heads/main/fortnite.avif" alt="Fortnite Preview">
+    <button onclick="playVideo()">Play Preview</button>
   </div>
 
   <div class="section-title">Discovery</div>
-  <div class="boxed-list" id="map-list">
-    <!-- Items injected here -->
-  </div>
+  <div class="boxed-list" id="map-list"></div>
 
   <div class="section-title">Resources</div>
   <div class="boxed-list" style="padding: 12px;">
@@ -204,11 +224,9 @@ const maps = [
 
 function playVideo() {
     const root = document.getElementById('video-root');
-    root.innerHTML = `<div style="position:relative; padding-bottom:56.25%; height:0;">
-        <iframe src="https://www.youtube.com/embed/Pr9LcxHFE_k?autoplay=1" 
-                style="position:absolute; top:0; left:0; width:100%; height:100%;" 
-                frameborder="0" allow="autoplay; encrypted-media" allowfullscreen></iframe>
-    </div>`;
+    root.innerHTML = `<iframe src="https://www.youtube.com/embed/Pr9LcxHFE_k?autoplay=1" 
+                        style="width:100%; height:100%; border:0; aspect-ratio:16/9;" 
+                        allow="autoplay; encrypted-media" allowfullscreen></iframe>`;
 }
 
 const container = document.getElementById('map-list');
@@ -218,7 +236,6 @@ maps.forEach(map => {
   row.className = 'list-row';
   row.href = map.url;
   row.target = '_blank';
-  
   row.innerHTML = `
     <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=" class="row-image" data-url="${map.url}">
     <div class="row-content">
@@ -228,7 +245,6 @@ maps.forEach(map => {
   `;
   container.appendChild(row);
 
-  // Simple preview loader
   const imgEl = row.querySelector('.row-image');
   const cacheKey = 'lib_prev_' + map.url;
   const cached = localStorage.getItem(cacheKey);
