@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Liquid Glass Tailwind UI</title>
+
+  <!-- Tailwind CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          backdropBlur: {
+            glass: '30px',
+          },
+          boxShadow: {
+            glass: `
+              0 10px 40px rgba(0,0,0,0.35),
+              inset 0 1px 0 rgba(255,255,255,0.6)
+            `,
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Core Glass Base */
+    .glass {
+      position: relative;
+      overflow: hidden;
+      border-radius: 1.25rem;
+      backdrop-filter: blur(30px) saturate(180%);
+      -webkit-backdrop-filter: blur(30px) saturate(180%);
+      box-shadow:
+        0 10px 40px rgba(0,0,0,0.35),
+        inset 0 1px 0 rgba(255,255,255,0.6);
+      transition: all 0.3s ease;
+    }
+
+    /* Light + Dark */
+    .glass-light {
+      background: rgba(255,255,255,0.55);
+      border: 1px solid rgba(255,255,255,0.4);
+    }
+
+    .dark .glass-light {
+      background: rgba(30,30,30,0.55);
+      border: 1px solid rgba(255,255,255,0.08);
+    }
+
+    /* Inner liquid highlight */
+    .glass::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      background: linear-gradient(
+        145deg,
+        rgba(255,255,255,0.6),
+        rgba(255,255,255,0.05)
+      );
+      opacity: 0.4;
+      pointer-events: none;
+    }
+
+    /* Animated light reflection */
+    .glass::after {
+      content: "";
+      position: absolute;
+      width: 200%;
+      height: 200%;
+      top: -50%;
+      left: -50%;
+      background: radial-gradient(circle at center,
+        rgba(255,255,255,0.25),
+        transparent 60%);
+      animation: rotateLight 10s linear infinite;
+      pointer-events: none;
+      opacity: 0.3;
+    }
+
+    @keyframes rotateLight {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+
+<body class="min-h-screen bg-gradient-to-br from-indigo-500 via-purple-600 to-pink-500 dark:from-black dark:via-neutral-900 dark:to-black flex items-center justify-center">
+
+  <!-- Navbar -->
+  <nav class="glass glass-light fixed top-6 left-1/2 -translate-x-1/2 px-8 py-3 flex gap-6 items-center text-sm font-medium text-black dark:text-white">
+    <span class="font-semibold">Liquid UI</span>
+    <a class="opacity-70 hover:opacity-100 cursor-pointer">Home</a>
+    <a class="opacity-70 hover:opacity-100 cursor-pointer">Components</a>
+    <a class="opacity-70 hover:opacity-100 cursor-pointer">About</a>
+  </nav>
+
+  <!-- Main Card -->
+  <div class="glass glass-light w-[360px] p-8 text-black dark:text-white">
+    <h1 class="text-2xl font-semibold mb-4">
+      Liquid Glass UI
+    </h1>
+
+    <p class="opacity-80 mb-6">
+      Tailwind-based glass components with light and dark support.
+    </p>
+
+    <div class="flex gap-4">
+      <button onclick="openModal()" 
+        class="glass glass-light px-5 py-2 active:scale-95 hover:bg-white/40 dark:hover:bg-white/10">
+        Open Modal
+      </button>
+
+      <button onclick="toggleTheme()" 
+        class="glass glass-light px-5 py-2 active:scale-95 hover:bg-white/40 dark:hover:bg-white/10">
+        Toggle Theme
+      </button>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div id="modal" class="hidden fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center">
+    <div class="glass glass-light w-[320px] p-6 text-black dark:text-white">
+      <h2 class="text-xl font-semibold mb-4">Glass Modal</h2>
+      <p class="opacity-80 mb-6">
+        This modal uses the same reusable glass primitive.
+      </p>
+      <button onclick="closeModal()" 
+        class="glass glass-light px-4 py-2 active:scale-95">
+        Close
+      </button>
+    </div>
+  </div>
+
+  <script>
+    function toggleTheme() {
+      document.documentElement.classList.toggle('dark');
+    }
+
+    function openModal() {
+      document.getElementById('modal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('modal').classList.add('hidden');
+    }
+  </script>
+
+</body>
+</html>
