@@ -27,6 +27,34 @@
     }
   </script>
 
+<style>
+  /* =========================
+   GLASS CURSOR
+   ========================= */
+.glass-cursor {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  pointer-events: none;
+  z-index: 9999;
+
+  background: rgba(255, 255, 255, 0.08);
+  border: 2px solid transparent;
+  box-shadow:
+    0 0 0 2px rgba(255, 255, 255, 0.6),
+    0 16px 32px rgba(0, 0, 0, 0.12);
+
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+</style>
+
+
   <style>
     /* Core Glass Base */
     .glass {
@@ -123,6 +151,9 @@
     </div>
   </div>
 
+<!-- Glass Cursor -->
+<div class="glass-cursor"></div>
+  
   <!-- Modal -->
   <div id="modal" class="hidden fixed inset-0 bg-black/40 backdrop-blur-md flex items-center justify-center">
     <div class="glass glass-light w-[320px] p-6 text-black dark:text-white">
