@@ -97,9 +97,10 @@ jobs:
       
           git commit -m "Update Flutter web builds"
       
-          # ✅ FORCE AUTH PROPERLY USING GIT CREDENTIAL STORE
-          git config --global credential.helper store
+          # 🔥 CRITICAL: remove GitHub Actions default auth
+          git config --global --unset-all http.https://github.com/.extraheader || true
       
-          echo "https://x-access-token:${{ secrets.GH_PAT }}@github.com" > ~/.git-credentials
+          # 🔥 inject PAT properly
+          git remote set-url origin https://github.com/sdegenaar/liquid_glass_widgets.git
       
-          git push https://github.com/sdegenaar/liquid_glass_widgets.git main
+          git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/sdegenaar/liquid_glass_widgets.git main
