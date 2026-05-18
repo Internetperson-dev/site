@@ -68,14 +68,14 @@ jobs:
             --base-href /apple_messages/ \
             --output ../../build/apple_messages
 
-      - name: Build Apple News
-        run: |
-          cd liquid_glass_widgets/example
-          flutter build web \
-            -t lib/apple_news/apple_news_demo.dart \
-            --release \
-            --base-href /apple_news/ \
-            --output ../../build/apple_news
+#      - name: Build Apple News
+#        run: |
+#          cd liquid_glass_widgets/example
+#          flutter build web \
+#            -t lib/apple_news/apple_news_demo.dart \
+#            --release \
+#            --base-href /apple_news/ \
+#            --output ../../build/apple_news
 
       - name: Build Apple Podcasts
         run: |
