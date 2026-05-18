@@ -14,6 +14,18 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    strategy:
+      matrix:
+        app:
+          - name: apple_music
+            entry: lib/apple_music/apple_music_demo.dart
+          - name: apple_podcasts
+            entry: lib/apple_podcasts/apple_podcasts_demo.dart
+          - name: apple_messages
+            entry: lib/apple_messages/apple_messages_demo.dart
+          - name: apple_news
+            entry: lib/apple_news/apple_news_demo.dart
+
     steps:
       # ---------------- CHECKOUT SITE ----------------
       - name: Checkout site repo
@@ -36,7 +48,7 @@ jobs:
         with:
           flutter-version: '3.41.9'
           cache: true
-    
+
       # ---------------- PUB CACHE ----------------
       - name: Cache pub dependencies
         uses: actions/cache@v4
@@ -65,63 +77,33 @@ jobs:
           flutter pub get
 
       # ---------------- BUILD APP 1: APPLE MUSIC ----------------
-      - name: Build Apple Music
-        run: |
-          cd flutter_src/example
-      
-          flutter build web \
-            -t lib/apple_music/apple_music_demo.dart \
-            --release \
-            --base-href /liquid_glass_widgets/apple_music/
-      
-          rm -rf ../../site/liquid_glass_widgets/apple_music
-          mkdir -p ../../site/liquid_glass_widgets/apple_music
-          cp -r build/web/* ../../site/liquid_glass_widgets/apple_music/
-      
       # ---------------- BUILD APP 2: APPLE PODCASTS ----------------
-      - name: Build Apple Podcasts
+      # ---------------- BUILD APP 3: APPLE MESSAGES ----------------
+      # - Broken on Flutter 3.44.0, works on 3.41.9
+      # ---------------- BUILD APP 4: APPLE NEWS ----------------
+      # - Broken on Flutter 3.44.0, works on 3.41.9
+      - name: Build Apps (Matrix)
         run: |
           cd flutter_src/example
-      
+
+          APP_NAME=${{ matrix.app.name }}
+          ENTRY_FILE=${{ matrix.app.entry }}
+
+          BASE_PATH="/site/liquid_glass_widgets"
+
+          echo "Building $APP_NAME"
+
           flutter build web \
-            -t lib/apple_podcasts/apple_podcasts_demo.dart \
+            -t "$ENTRY_FILE" \
             --release \
-            --base-href /liquid_glass_widgets/apple_podcasts/
-      
-          rm -rf ../../site/liquid_glass_widgets/apple_podcasts
-          mkdir -p ../../site/liquid_glass_widgets/apple_podcasts
-          cp -r build/web/* ../../site/liquid_glass_widgets/apple_podcasts/
+            --base-href "$BASE_PATH/$APP_NAME/"
 
-        # ---------------- BUILD APP 3: APPLE MESSAGES ----------------
-      - name: Build Apple Messages # - Broken on Flutter 3.44.0, works on 3.41.9
-        run: |
-          cd flutter_src/example
-      
-          flutter build web \
-            -t lib/apple_messages/apple_messages_demo.dart \
-            --release \
-            --base-href /liquid_glass_widgets/apple_messages/
-      
-          rm -rf ../../site/liquid_glass_widgets/apple_messages
-          mkdir -p ../../site/liquid_glass_widgets/apple_messages
-          cp -r build/web/* ../../site/liquid_glass_widgets/apple_messages/
+          DEST="../../site/liquid_glass_widgets/$APP_NAME"
 
+          rm -rf "$DEST"
+          mkdir -p "$DEST"
+          cp -r build/web/* "$DEST/"
 
-        # ---------------- BUILD APP 4: APPLE NEWS ----------------
-      - name: Build Apple News # - Broken on Flutter 3.44.0, works on 3.41.9
-        run: |
-          cd flutter_src/example
-      
-          flutter build web \
-            -t lib/apple_news/apple_news_demo.dart \
-            --release \
-            --base-href /liquid_glass_widgets/apple_news/
-      
-          rm -rf ../../site/liquid_glass_widgets/apple_news
-          mkdir -p ../../site/liquid_glass_widgets/apple_news
-          cp -r build/web/* ../../site/liquid_glass_widgets/apple_news/
-
-    
       # ---------------- COMMIT + PUSH ----------------
       - name: Commit and push changes
         run: |
