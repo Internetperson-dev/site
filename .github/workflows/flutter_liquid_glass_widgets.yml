@@ -97,10 +97,17 @@ jobs:
       
           git commit -m "Update Flutter web builds"
       
-          # 🔥 CRITICAL: remove GitHub Actions default auth
-          git config --global --unset-all http.https://github.com/.extraheader || true
+          # ----------------- 🔥 CRITICAL FIX -----------------
+          export GIT_ASKPASS=$(mktemp)
       
-          # 🔥 inject PAT properly
-          git remote set-url origin https://github.com/sdegenaar/liquid_glass_widgets.git
-      
-          git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/sdegenaar/liquid_glass_widgets.git main
+          cat << 'EOF' > "$GIT_ASKPASS"
+          #!/bin/sh
+          echo "${{ secrets.GH_PAT }}"
+          EOF
+          
+              chmod +x "$GIT_ASKPASS"
+          
+              export GIT_ASKPASS="$GIT_ASKPASS"
+              export GIT_USERNAME="x-access-token"
+          
+              git push https://github.com/sdegenaar/liquid_glass_widgets.git main
