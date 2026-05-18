@@ -70,6 +70,11 @@ jobs:
           cd flutter_src/example
           flutter pub get
 
+      - name: Ensure web platform is enabled for project
+        run: |
+          cd flutter_src/example
+          flutter create . --platforms web
+
       - name: Build app (web + wasm separated)
         run: |
           cd flutter_src/example
