@@ -49,20 +49,14 @@ jobs:
           cd liquid_glass_widgets/example
           flutter pub get
 
-      - name: Prepare build folder
-        run: |
-          rm -rf build
-          mkdir -p build
-
       # ---------------- BUILD DEMOS ----------------
-
       - name: Build Apple Music
         run: |
           cd liquid_glass_widgets/example
           flutter build web \
             -t lib/apple_music/apple_music_demo.dart \
             --release \
-            --base-href /site/apple_music/ \
+            --base-href /apple_music/ \
             --output ../../build/apple_music
 
       - name: Build Apple Messages
@@ -71,7 +65,7 @@ jobs:
           flutter build web \
             -t lib/apple_messages/apple_messages_demo.dart \
             --release \
-            --base-href /site/apple_messages/ \
+            --base-href /apple_messages/ \
             --output ../../build/apple_messages
 
       - name: Build Apple News
@@ -80,7 +74,7 @@ jobs:
           flutter build web \
             -t lib/apple_news/apple_news_demo.dart \
             --release \
-            --base-href /site/apple_news/ \
+            --base-href /apple_news/ \
             --output ../../build/apple_news
 
       - name: Build Apple Podcasts
@@ -89,13 +83,21 @@ jobs:
           flutter build web \
             -t lib/apple_podcasts/apple_podcasts_demo.dart \
             --release \
-            --base-href /site/apple_podcasts/ \
+            --base-href /apple_podcasts/ \
             --output ../../build/apple_podcasts
 
-      # ---------------- PACKAGE ----------------
-      - name: Create Pages folder
+      # ---------------- MERGE SITE + BUILDS ----------------
+      - name: Create merged public folder
         run: |
           mkdir -p public
+
+          # 1. Copy existing website
+          cp -r site/. public/
+
+          # 2. Remove old demo folders if they exist
+          rm -rf public/apple_music public/apple_messages public/apple_news public/apple_podcasts
+
+          # 3. Overlay new Flutter builds
           cp -r build/* public/
 
       # ---------------- UPLOAD ARTIFACT ----------------
