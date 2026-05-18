@@ -38,11 +38,11 @@ jobs:
           channel: stable
           cache: true
 
-      - name: Enable Flutter web globally
+      - name: Enable Flutter web
         run: flutter config --enable-web
 
       # ---------------- ENSURE WEB SUPPORT ----------------
-      - name: Ensure web support exists in example project
+      - name: Ensure web support exists
         run: |
           cd flutter_src/example
           if [ ! -d "web" ]; then
@@ -55,15 +55,14 @@ jobs:
           cd flutter_src/example
           flutter pub get
 
-      # ---------------- BUILD DEMOS ----------------
-
+      # ---------------- BUILD ----------------
       - name: Build Apple Music
         run: |
           cd flutter_src/example
           flutter build web \
             -t lib/apple_music/apple_music_demo.dart \
             --release \
-            --base-href /site/apple_music/ \
+            --base-href /liquid_glass_widgets/apple_music/ \
             --output build/apple_music
 
       - name: Build Apple Podcasts
@@ -72,28 +71,27 @@ jobs:
           flutter build web \
             -t lib/apple_podcasts/apple_podcasts_demo.dart \
             --release \
-            --base-href /site/apple_podcasts/ \
+            --base-href /liquid_glass_widgets/apple_podcasts/ \
             --output build/apple_podcasts
 
-      # ---------------- CREATE PUBLIC SITE ----------------
+      # ---------------- COPY INTO REPO ROOT ----------------
+      - name: Inject builds into repo folder
+        run: |
+          rm -rf site/liquid_glass_widgets
+          mkdir -p site/liquid_glass_widgets
 
+          cp -r flutter_src/example/build/apple_music site/liquid_glass_widgets/
+          cp -r flutter_src/example/build/apple_podcasts site/liquid_glass_widgets/
+
+      # ---------------- PREPARE PUBLIC SITE ----------------
       - name: Create public folder
         run: |
           rm -rf public
           mkdir -p public
 
-          # copy static site
           cp -r site/* public/
 
-          # remove old builds if they exist
-          rm -rf public/apple_music public/apple_podcasts
-
-          # copy flutter builds
-          cp -r flutter_src/example/build/apple_music public/
-          cp -r flutter_src/example/build/apple_podcasts public/
-
       # ---------------- DEPLOY ----------------
-
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
