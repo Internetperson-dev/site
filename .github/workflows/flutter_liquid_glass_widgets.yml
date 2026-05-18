@@ -12,6 +12,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    defaults:
+      run:
+        working-directory: example
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -20,65 +24,78 @@ jobs:
         uses: subosito/flutter-action@v2
         with:
           channel: stable
+          cache: true
 
       - name: Enable web
         run: flutter config --enable-web
 
-      - name: Get dependencies (root)
+      - name: Get dependencies
         run: flutter pub get
 
-      - name: Get dependencies (example app)
-        working-directory: example
-        run: flutter pub get
+      # ---------- BUILD OUTPUT ROOT ----------
+      - name: Prepare build folder
+        run: mkdir -p ../build
 
+      # ---------- APPLE MUSIC ----------
       - name: Build Apple Music
         run: |
           flutter build web \
-            -t example/lib/apple_music/apple_music_demo.dart \
+            -t lib/apple_music/apple_music_demo.dart \
             --release \
+            --web-renderer canvaskit \
             --base-href /liquid_glass_widgets/apple_music/ \
-            --output build/apple_music
+            --output ../build/apple_music
 
+      # ---------- APPLE MESSAGES ----------
       - name: Build Apple Messages
         run: |
           flutter build web \
-            -t example/lib/apple_messages/apple_messages_demo.dart \
+            -t lib/apple_messages/apple_messages_demo.dart \
             --release \
+            --web-renderer canvaskit \
             --base-href /liquid_glass_widgets/apple_messages/ \
-            --output build/apple_messages
+            --output ../build/apple_messages
 
+      # ---------- APPLE NEWS ----------
       - name: Build Apple News
         run: |
           flutter build web \
-            -t example/lib/apple_news/apple_news_demo.dart \
+            -t lib/apple_news/apple_news_demo.dart \
             --release \
+            --web-renderer canvaskit \
             --base-href /liquid_glass_widgets/apple_news/ \
-            --output build/apple_news
+            --output ../build/apple_news
 
+      # ---------- APPLE PODCASTS ----------
       - name: Build Apple Podcasts
         run: |
           flutter build web \
-            -t example/lib/apple_podcasts/apple_podcasts_demo.dart \
+            -t lib/apple_podcasts/apple_podcasts_demo.dart \
             --release \
+            --web-renderer canvaskit \
             --base-href /liquid_glass_widgets/apple_podcasts/ \
-            --output build/apple_podcasts
+            --output ../build/apple_podcasts
 
-      - name: Build Showcase App
+      # ---------- SHOWCASE ----------
+      - name: Build Showcase
         run: |
           flutter build web \
-            -t example/showcase/lib/main.dart \
+            -t showcase/lib/main.dart \
             --release \
+            --web-renderer canvaskit \
             --base-href /liquid_glass_widgets/showcase/ \
-            --output build/showcase
+            --output ../build/showcase
 
-      - name: Prepare GitHub Pages folder
+      # ---------- PACKAGE FOR GITHUB PAGES ----------
+      - name: Prepare docs folder
         run: |
-          mkdir -p docs
-          cp -r build/* docs/
+          rm -rf ../docs
+          mkdir -p ../docs
+          cp -r ../build/* ../docs/
 
-      - name: Add index redirect page
+      - name: Add index page
         run: |
-          cat <<EOF > docs/index.html
+          cat <<EOF > ../docs/index.html
           <html>
             <head>
               <meta http-equiv="refresh" content="0; url=./showcase/" />
@@ -89,6 +106,7 @@ jobs:
           </html>
           EOF
 
+      # ---------- DEPLOY ----------
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
