@@ -1,4 +1,4 @@
-name: Build Liquid Glass Demos & Deploy
+name: Build & Deploy Liquid Glass Demos
 
 on:
   push:
@@ -6,20 +6,22 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: write
+  contents: read
+  pages: write
+  id-token: write
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      # ---------------- SITE REPO ----------------
+      # ---------------- CHECKOUT SITE ----------------
       - name: Checkout site repo
         uses: actions/checkout@v4
         with:
           path: site
 
-      # ---------------- SOURCE REPO ----------------
+      # ---------------- CHECKOUT SOURCE ----------------
       - name: Checkout liquid_glass_widgets
         uses: actions/checkout@v4
         with:
@@ -36,8 +38,8 @@ jobs:
       - name: Enable web
         run: flutter config --enable-web
 
-      # ---------------- PREP PROJECT ----------------
-      - name: Ensure web support exists
+      # ---------------- PREP ----------------
+      - name: Ensure web support
         run: |
           cd liquid_glass_widgets/example
           flutter create . --platforms=web
@@ -47,14 +49,12 @@ jobs:
           cd liquid_glass_widgets/example
           flutter pub get
 
-      # ---------------- OUTPUT ----------------
-      - name: Prepare output folders
+      - name: Prepare build folder
         run: |
           rm -rf build
           mkdir -p build
-          mkdir -p site/docs
 
-      # ---------------- BUILD ----------------
+      # ---------------- BUILD DEMOS ----------------
 
       - name: Build Apple Music
         run: |
@@ -92,15 +92,24 @@ jobs:
             --base-href /site/apple_podcasts/ \
             --output ../../build/apple_podcasts
 
-      # ---------------- DEPLOY PACKAGE ----------------
-
-      - name: Copy build to site
+      - name: Build Showcase
         run: |
-          cp -r build/* site/docs/
+          cd liquid_glass_widgets/example
+          flutter build web \
+            -t lib/showcase/main.dart \
+            --release \
+            --base-href /site/showcase/ \
+            --output ../../build/showcase
 
-      - name: Add landing page
+      # ---------------- PREP PAGES ----------------
+      - name: Create Pages folder
         run: |
-          cat <<EOF > site/docs/index.html
+          mkdir -p public
+          cp -r build/* public/
+
+      - name: Add index redirect
+        run: |
+          cat <<EOF > public/index.html
           <html>
             <head>
               <meta http-equiv="refresh" content="0; url=./showcase/" />
@@ -111,9 +120,16 @@ jobs:
           </html>
           EOF
 
-      # ---------------- DEPLOY ----------------
-      - name: Deploy to GitHub Pages
-        uses: peaceiris/actions-gh-pages@v4
+      # ---------------- UPLOAD ARTIFACT ----------------
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: site/docs
+          path: public
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
