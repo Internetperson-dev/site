@@ -38,8 +38,16 @@ jobs:
           channel: stable
           cache: true
 
-      - name: Enable web
+      - name: Enable Flutter web globally
         run: flutter config --enable-web
+
+      # ---------------- ENSURE WEB SUPPORT ----------------
+      - name: Ensure web support exists in example project
+        run: |
+          cd flutter_src/example
+          if [ ! -d "web" ]; then
+            flutter create . --platforms=web
+          fi
 
       # ---------------- DEPENDENCIES ----------------
       - name: Get dependencies
