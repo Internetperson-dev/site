@@ -1,0 +1,96 @@
+name: Build & Deploy Flutter Web Demos
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup Flutter
+        uses: subosito/flutter-action@v2
+        with:
+          channel: stable
+
+      - name: Enable web
+        run: flutter config --enable-web
+
+      - name: Get dependencies (root)
+        run: flutter pub get
+
+      - name: Get dependencies (example app)
+        working-directory: example
+        run: flutter pub get
+
+      - name: Build Apple Music
+        run: |
+          flutter build web \
+            -t example/lib/apple_music/apple_music_demo.dart \
+            --release \
+            --base-href /liquid_glass_widgets/apple_music/ \
+            --output build/apple_music
+
+      - name: Build Apple Messages
+        run: |
+          flutter build web \
+            -t example/lib/apple_messages/apple_messages_demo.dart \
+            --release \
+            --base-href /liquid_glass_widgets/apple_messages/ \
+            --output build/apple_messages
+
+      - name: Build Apple News
+        run: |
+          flutter build web \
+            -t example/lib/apple_news/apple_news_demo.dart \
+            --release \
+            --base-href /liquid_glass_widgets/apple_news/ \
+            --output build/apple_news
+
+      - name: Build Apple Podcasts
+        run: |
+          flutter build web \
+            -t example/lib/apple_podcasts/apple_podcasts_demo.dart \
+            --release \
+            --base-href /liquid_glass_widgets/apple_podcasts/ \
+            --output build/apple_podcasts
+
+      - name: Build Showcase App
+        run: |
+          flutter build web \
+            -t example/showcase/lib/main.dart \
+            --release \
+            --base-href /liquid_glass_widgets/showcase/ \
+            --output build/showcase
+
+      - name: Prepare GitHub Pages folder
+        run: |
+          mkdir -p docs
+          cp -r build/* docs/
+
+      - name: Add index redirect page
+        run: |
+          cat <<EOF > docs/index.html
+          <html>
+            <head>
+              <meta http-equiv="refresh" content="0; url=./showcase/" />
+            </head>
+            <body>
+              Redirecting to showcase...
+            </body>
+          </html>
+          EOF
+
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./docs
