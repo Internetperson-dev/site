@@ -20,15 +20,34 @@ jobs:
 
     strategy:
       matrix:
-        app:
+        include:
           - name: apple_music
             entry: lib/apple_music/apple_music_demo.dart
+            variant: web
+          - name: apple_music
+            entry: lib/apple_music/apple_music_demo.dart
+            variant: wasm
+
           - name: apple_podcasts
             entry: lib/apple_podcasts/apple_podcasts_demo.dart
+            variant: web
+          - name: apple_podcasts
+            entry: lib/apple_podcasts/apple_podcasts_demo.dart
+            variant: wasm
+
           - name: apple_messages
             entry: lib/apple_messages/apple_messages_demo.dart
+            variant: web
+          - name: apple_messages
+            entry: lib/apple_messages/apple_messages_demo.dart
+            variant: wasm
+
           - name: apple_news
             entry: lib/apple_news/apple_news_demo.dart
+            variant: web
+          - name: apple_news
+            entry: lib/apple_news/apple_news_demo.dart
+            variant: wasm
 
     steps:
       - name: Checkout Flutter source
@@ -51,44 +70,44 @@ jobs:
           cd flutter_src/example
           flutter pub get
 
-      # ---------------- BUILD BOTH VERSIONS ----------------
-      - name: Build app (web + wasm)
+      - name: Build app (web + wasm separated)
         run: |
           cd flutter_src/example
 
-          APP_NAME=${{ matrix.app.name }}
-          ENTRY_FILE=${{ matrix.app.entry }}
+          APP_NAME=${{ matrix.name }}
+          ENTRY_FILE=${{ matrix.entry }}
+          VARIANT=${{ matrix.variant }}
 
           BASE="/liquid_glass_widgets"
 
-          echo "Building $APP_NAME"
+          echo "Building $APP_NAME ($VARIANT)"
 
-          # WEB
-          flutter build web \
-            -t "$ENTRY_FILE" \
-            --release \
-            --base-href "$BASE/$APP_NAME/"
+          if [ "$VARIANT" = "web" ]; then
+            flutter build web \
+              -t "$ENTRY_FILE" \
+              --release \
+              --base-href "$BASE/$APP_NAME/"
 
-          mkdir -p ../../site/$APP_NAME
-          rm -rf ../../site/$APP_NAME
-          cp -r build/web ../../site/$APP_NAME
+            OUT_DIR="../../site/${APP_NAME}"
 
-          # WASM
-          flutter build web \
-            -t "$ENTRY_FILE" \
-            --release \
-            --wasm \
-            --base-href "$BASE/${APP_NAME}_wasm/"
+          else
+            flutter build web \
+              -t "$ENTRY_FILE" \
+              --release \
+              --wasm \
+              --base-href "$BASE/${APP_NAME}_wasm/"
 
-          mkdir -p ../../site/${APP_NAME}_wasm
-          rm -rf ../../site/${APP_NAME}_wasm
-          cp -r build/web ../../site/${APP_NAME}_wasm
+            OUT_DIR="../../site/${APP_NAME}_wasm"
+          fi
 
-      # ---------------- UPLOAD ARTIFACT PER MATRIX ----------------
+          rm -rf "$OUT_DIR"
+          mkdir -p "$OUT_DIR"
+          cp -r build/web/* "$OUT_DIR"
+
       - name: Upload build artifact
         uses: actions/upload-artifact@v4
         with:
-          name: site-${{ matrix.app.name }}
+          name: site-${{ matrix.name }}-${{ matrix.variant }}
           path: site
 
   deploy:
@@ -99,19 +118,16 @@ jobs:
       name: github-pages
 
     steps:
-      # ---------------- DOWNLOAD ALL ARTIFACTS ----------------
       - name: Download all builds
         uses: actions/download-artifact@v4
         with:
           path: site
 
-      # flatten structure
       - name: Merge artifacts
         run: |
           mkdir -p public
           cp -r site/*/* public/
 
-      # ---------------- DEPLOY ONCE ----------------
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
