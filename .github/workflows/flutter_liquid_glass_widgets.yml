@@ -26,11 +26,9 @@ jobs:
         run: flutter config --enable-web
 
       - name: Get dependencies
-        run: |
-          cd example
-          flutter pub get
+        run: flutter pub get
 
-      - name: Prepare build folders
+      - name: Prepare output dirs
         run: |
           mkdir -p build
           mkdir -p docs
@@ -38,64 +36,58 @@ jobs:
       # ---------------- APPLE MUSIC ----------------
       - name: Build Apple Music
         run: |
-          cd example
           flutter build web \
             -t lib/apple_music/apple_music_demo.dart \
             --release \
             --web-renderer canvaskit \
             --base-href /liquid_glass_widgets/apple_music/ \
-            --output ../build/apple_music
+            --output build/apple_music
 
       # ---------------- APPLE MESSAGES ----------------
       - name: Build Apple Messages
         run: |
-          cd example
           flutter build web \
             -t lib/apple_messages/apple_messages_demo.dart \
             --release \
             --web-renderer canvaskit \
             --base-href /liquid_glass_widgets/apple_messages/ \
-            --output ../build/apple_messages
+            --output build/apple_messages
 
       # ---------------- APPLE NEWS ----------------
       - name: Build Apple News
         run: |
-          cd example
           flutter build web \
             -t lib/apple_news/apple_news_demo.dart \
             --release \
             --web-renderer canvaskit \
             --base-href /liquid_glass_widgets/apple_news/ \
-            --output ../build/apple_news
+            --output build/apple_news
 
       # ---------------- APPLE PODCASTS ----------------
       - name: Build Apple Podcasts
         run: |
-          cd example
           flutter build web \
             -t lib/apple_podcasts/apple_podcasts_demo.dart \
             --release \
             --web-renderer canvaskit \
             --base-href /liquid_glass_widgets/apple_podcasts/ \
-            --output ../build/apple_podcasts
+            --output build/apple_podcasts
 
-      # ---------------- SHOWCASE ----------------
+      # ---------------- SHOWCASE (ROOT main.dart) ----------------
       - name: Build Showcase
         run: |
-          cd example
           flutter build web \
-            -t showcase/lib/main.dart \
+            -t lib/main.dart \
             --release \
             --web-renderer canvaskit \
             --base-href /liquid_glass_widgets/showcase/ \
-            --output ../build/showcase
+            --output build/showcase
 
       # ---------------- PACKAGE ----------------
       - name: Copy to docs
-        run: |
-          cp -r build/* docs/
+        run: cp -r build/* docs/
 
-      - name: Create landing redirect
+      - name: Add landing page
         run: |
           cat <<EOF > docs/index.html
           <html>
