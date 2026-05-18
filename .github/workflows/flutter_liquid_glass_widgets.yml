@@ -84,20 +84,20 @@ jobs:
           cp -r flutter_src/example/build/apple_podcasts flutter_src/liquid_glass_widgets/
 
       # ---------------- COMMIT & PUSH (USING PAT) ----------------
-    - name: Commit and push builds
-      run: |
-        cd flutter_src
-    
-        git config user.name "github-actions[bot]"
-        git config user.email "github-actions[bot]@users.noreply.github.com"
-    
-        git add liquid_glass_widgets
-    
-        git diff --cached --quiet && echo "No changes" && exit 0
-    
-        git commit -m "Update Flutter web builds"
-    
-        # 🔥 FORCE PAT AUTH HERE (this is the missing piece)
-        git remote set-url origin https://x-access-token:${{ secrets.GH_PAT }}@github.com/sdegenaar/liquid_glass_widgets.git
-    
-        git push origin main
+      - name: Commit and push builds
+        run: |
+          cd flutter_src
+      
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+      
+          git add liquid_glass_widgets
+      
+          git diff --cached --quiet && echo "No changes" && exit 0
+      
+          git commit -m "Update Flutter web builds"
+      
+          # 🔥 FORCE PAT AUTH HERE (this is the missing piece)
+          git remote set-url origin https://x-access-token:${{ secrets.GH_PAT }}@github.com/sdegenaar/liquid_glass_widgets.git
+      
+          git push origin main
