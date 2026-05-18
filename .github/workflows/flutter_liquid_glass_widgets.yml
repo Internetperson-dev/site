@@ -1,4 +1,4 @@
-name: Build Liquid Glass Demos & Deploy
+name: Build & Deploy Liquid Glass Demos
 
 on:
   push:
@@ -13,20 +13,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # ---------------- CHECKOUT SITE ----------------
-      - name: Checkout site repo
+      # ---------------- CHECKOUT ----------------
+      - name: Checkout repo
         uses: actions/checkout@v4
-        with:
-          path: site
 
-      # ---------------- CHECKOUT SOURCE ----------------
-      - name: Checkout liquid_glass_widgets
-        uses: actions/checkout@v4
-        with:
-          repository: sdegenaar/liquid_glass_widgets
-          path: liquid_glass_widgets
-
-      # ---------------- SETUP FLUTTER ----------------
+      # ---------------- FLUTTER ----------------
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -36,7 +27,12 @@ jobs:
       - name: Enable web
         run: flutter config --enable-web
 
-      # ---------------- GET DEPENDENCIES ----------------
+      # ---------------- PREP PROJECT ----------------
+      - name: Ensure Flutter web support exists
+        run: |
+          cd liquid_glass_widgets/example
+          flutter create . --platforms=web
+
       - name: Get dependencies
         run: |
           cd liquid_glass_widgets/example
@@ -45,8 +41,8 @@ jobs:
       # ---------------- BUILD OUTPUT ----------------
       - name: Prepare output folders
         run: |
-          mkdir -p site/docs
-          mkdir -p build
+          rm -rf build docs
+          mkdir -p build docs
 
       # ---------------- BUILD DEMOS ----------------
 
@@ -90,20 +86,19 @@ jobs:
         run: |
           cd liquid_glass_widgets/example
           flutter build web \
-            -t showcase/lib/main.dart \
+            -t lib/showcase/main.dart \
             --release \
             --base-href /site/showcase/ \
             --output ../../build/showcase
 
-      # ---------------- DEPLOY PACKAGE ----------------
+      # ---------------- PACKAGE ----------------
 
-      - name: Copy builds into site
-        run: |
-          cp -r build/* site/docs/
+      - name: Copy builds to docs
+        run: cp -r build/* docs/
 
       - name: Add landing page
         run: |
-          cat <<EOF > site/docs/index.html
+          cat <<EOF > docs/index.html
           <html>
             <head>
               <meta http-equiv="refresh" content="0; url=./showcase/" />
@@ -115,8 +110,9 @@ jobs:
           EOF
 
       # ---------------- DEPLOY ----------------
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: site/docs
+          publish_dir: ./docs
