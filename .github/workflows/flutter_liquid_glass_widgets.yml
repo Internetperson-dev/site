@@ -46,13 +46,7 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-pub-
 
-      # ---------------- FLUTTER BUILD CACHE ----------------
-      - name: Cache Flutter build
-        uses: actions/cache@v4
-        with:
-          path: flutter_src/example/build
-          key: ${{ runner.os }}-flutter-build-${{ github.sha }}
-
+      # ---------------- ENABLE WEB ----------------
       - name: Enable Flutter web
         run: flutter config --enable-web
 
@@ -70,39 +64,38 @@ jobs:
           cd flutter_src/example
           flutter pub get
 
-      # ---------------- BUILD ----------------
+      # ---------------- BUILD APP 1: APPLE MUSIC ----------------
       - name: Build Apple Music
         run: |
           cd flutter_src/example
+
           flutter build web \
             -t lib/apple_music/apple_music_demo.dart \
             --release \
-            --base-href /liquid_glass_widgets/apple_music/ \
-            --output build/apple_music
+            --base-href /site/liquid_glass_widgets/apple_music/
 
+          rm -rf ../../site/liquid_glass_widgets/apple_music
+          mkdir -p ../../site/liquid_glass_widgets/apple_music
+          cp -r build/web/* ../../site/liquid_glass_widgets/apple_music/
+
+      # ---------------- BUILD APP 2: APPLE PODCASTS ----------------
       - name: Build Apple Podcasts
         run: |
           cd flutter_src/example
+
           flutter build web \
             -t lib/apple_podcasts/apple_podcasts_demo.dart \
             --release \
-            --base-href /liquid_glass_widgets/apple_podcasts/ \
-            --output build/apple_podcasts
+            --base-href /site/liquid_glass_widgets/apple_podcasts/
 
-      # ---------------- COPY INTO SITE REPO ----------------
-      - name: Copy builds into site repo
-        run: |
-          rm -rf site/liquid_glass_widgets
-          mkdir -p site/liquid_glass_widgets
+          rm -rf ../../site/liquid_glass_widgets/apple_podcasts
+          mkdir -p ../../site/liquid_glass_widgets/apple_podcasts
+          cp -r build/web/* ../../site/liquid_glass_widgets/apple_podcasts/
 
-          cp -r flutter_src/example/build/apple_music site/liquid_glass_widgets/
-          cp -r flutter_src/example/build/apple_podcasts site/liquid_glass_widgets/
-
-      # ---------------- COMMIT + PUSH (FIXED TARGET REPO) ----------------
+      # ---------------- COMMIT + PUSH ----------------
       - name: Commit and push changes
         run: |
           cd site
-
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
@@ -111,5 +104,4 @@ jobs:
           git diff --cached --quiet && echo "No changes" && exit 0
 
           git commit -m "Update Flutter web builds"
-
           git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/Internetperson-dev/site.git main
