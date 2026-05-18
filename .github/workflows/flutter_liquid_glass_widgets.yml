@@ -68,30 +68,30 @@ jobs:
       - name: Build Apple Music
         run: |
           cd flutter_src/example
-
+      
           flutter build web \
             -t lib/apple_music/apple_music_demo.dart \
             --release \
-            --base-href /site/liquid_glass_widgets/apple_music/
-
+            --base-href /liquid_glass_widgets/apple_music/
+      
           rm -rf ../../site/liquid_glass_widgets/apple_music
           mkdir -p ../../site/liquid_glass_widgets/apple_music
           cp -r build/web/* ../../site/liquid_glass_widgets/apple_music/
-
+      
       # ---------------- BUILD APP 2: APPLE PODCASTS ----------------
       - name: Build Apple Podcasts
         run: |
           cd flutter_src/example
-
+      
           flutter build web \
             -t lib/apple_podcasts/apple_podcasts_demo.dart \
             --release \
-            --base-href /site/liquid_glass_widgets/apple_podcasts/
-
+            --base-href /liquid_glass_widgets/apple_podcasts/
+      
           rm -rf ../../site/liquid_glass_widgets/apple_podcasts
           mkdir -p ../../site/liquid_glass_widgets/apple_podcasts
           cp -r build/web/* ../../site/liquid_glass_widgets/apple_podcasts/
-
+    
       # ---------------- COMMIT + PUSH ----------------
       - name: Commit and push changes
         run: |
