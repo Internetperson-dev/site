@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
 
@@ -50,6 +50,7 @@ jobs:
           flutter pub get
 
       # ---------------- BUILD DEMOS ----------------
+
       - name: Build Apple Music
         run: |
           cd liquid_glass_widgets/example
@@ -59,23 +60,25 @@ jobs:
             --base-href /apple_music/ \
             --output ../../build/apple_music
 
-#      - name: Build Apple Messages
-#        run: |
-#          cd liquid_glass_widgets/example
-#          flutter build web \
-#            -t lib/apple_messages/apple_messages_demo.dart \
-#            --release \
-#            --base-href /apple_messages/ \
-#            --output ../../build/apple_messages
+      #  Removed (patched out):
+      # - name: Build Apple Messages
+      #   run: |
+      #     cd liquid_glass_widgets/example
+      #     flutter build web \
+      #       -t lib/apple_messages/apple_messages_demo.dart \
+      #       --release \
+      #       --base-href /apple_messages/ \
+      #       --output ../../build/apple_messages
 
-#      - name: Build Apple News
-#        run: |
-#          cd liquid_glass_widgets/example
-#          flutter build web \
-#            -t lib/apple_news/apple_news_demo.dart \
-#            --release \
-#            --base-href /apple_news/ \
-#            --output ../../build/apple_news
+      #  Removed (patched out):
+      # - name: Build Apple News
+      #   run: |
+      #     cd liquid_glass_widgets/example
+      #     flutter build web \
+      #       -t lib/apple_news/apple_news_demo.dart \
+      #       --release \
+      #       --base-href /apple_news/ \
+      #       --output ../../build/apple_news
 
       - name: Build Apple Podcasts
         run: |
@@ -95,30 +98,27 @@ jobs:
           cp -r site/. public/
 
           # 2. Remove old demo folders if they exist
-          rm -rf public/apple_music public/apple_messages public/apple_news public/apple_podcasts
+          rm -rf public/apple_music public/apple_podcasts
 
           # 3. Overlay new Flutter builds
           cp -r build/* public/
 
-      - name: Commit merged site back to repo
-        run: |
-          cd site
-
-          # Copy Flutter builds into actual repo
-          rm -rf apple_music apple_messages apple_news apple_podcasts
-
-          cp -r ../build/apple_music apple_music
-          cp -r ../build/apple_messages apple_messages
-          cp -r ../build/apple_news apple_news
-          cp -r ../build/apple_podcasts apple_podcasts
-
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          git add .
-          git commit -m "Update Flutter Liquid Glass demos" || echo "No changes to commit"
-
-          git push
+      # ----------------  COMMIT BACK TO REPO ----------------
+       - name: Commit merged site back to repo
+         run: |
+           cd site
+      
+           rm -rf apple_music apple_messages apple_news apple_podcasts
+      
+           cp -r ../build/apple_music apple_music
+           cp -r ../build/apple_podcasts apple_podcasts
+      
+           git config user.name "github-actions[bot]"
+           git config user.email "github-actions[bot]@users.noreply.github.com"
+      
+           git add .
+           git commit -m "Update Flutter Liquid Glass demos" || echo "No changes to commit"
+           git push
 
       # ---------------- UPLOAD ARTIFACT ----------------
       - name: Upload Pages artifact
@@ -135,6 +135,4 @@ jobs:
 
     steps:
       - name: Deploy to GitHub Pages
-        id: deployment
         uses: actions/deploy-pages@v4
-
