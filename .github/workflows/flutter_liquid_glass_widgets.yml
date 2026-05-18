@@ -11,25 +11,25 @@ permissions:
   id-token: write
 
 env:
-  REPO_NAME: liquid_glass_widgets
+  REPO_NAME: site
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      # ---------------- CHECKOUT REPO ----------------
-      - name: Checkout repository
+      # ---------------- CHECKOUT SITE ----------------
+      - name: Checkout site repo
         uses: actions/checkout@v4
         with:
-          path: liquid_glass_widgets
+          path: site
 
       # ---------------- CHECKOUT FLUTTER SOURCE ----------------
-      - name: Checkout flutter widgets source
+      - name: Checkout Flutter widgets
         uses: actions/checkout@v4
         with:
           repository: sdegenaar/liquid_glass_widgets
-          path: liquid_glass_widgets/src
+          path: flutter_src
 
       # ---------------- FLUTTER SETUP ----------------
       - name: Setup Flutter
@@ -42,61 +42,51 @@ jobs:
         run: flutter config --enable-web
 
       # ---------------- PREP ----------------
-      - name: Ensure web support
+      - name: Install dependencies
         run: |
-          cd liquid_glass_widgets/src/example
-          flutter create . --platforms=web
-
-      - name: Get dependencies
-        run: |
-          cd liquid_glass_widgets/src/example
+          cd flutter_src/example
           flutter pub get
 
-      # ---------------- BUILD DEMOS ----------------
+      # ---------------- BUILD ----------------
 
       - name: Build Apple Music
         run: |
-          cd liquid_glass_widgets/src/example
+          cd flutter_src/example
           flutter build web \
             -t lib/apple_music/apple_music_demo.dart \
             --release \
-            --base-href /${{ env.REPO_NAME }}/apple_music/ \
+            --base-href /site/apple_music/ \
             --output build/apple_music
 
       - name: Build Apple Podcasts
         run: |
-          cd liquid_glass_widgets/src/example
+          cd flutter_src/example
           flutter build web \
             -t lib/apple_podcasts/apple_podcasts_demo.dart \
             --release \
-            --base-href /${{ env.REPO_NAME }}/apple_podcasts/ \
+            --base-href /site/apple_podcasts/ \
             --output build/apple_podcasts
 
-      # ---------------- BUILD PUBLIC SITE ----------------
+      # ---------------- BUILD PUBLIC ----------------
 
       - name: Create public folder
         run: |
-          rm -rf liquid_glass_widgets/public
-          mkdir -p liquid_glass_widgets/public
+          rm -rf public
+          mkdir -p public
 
-          # copy static site (if exists)
-          if [ -d "liquid_glass_widgets/site" ]; then
-            cp -r liquid_glass_widgets/site/* liquid_glass_widgets/public/
-          fi
+          cp -r site/* public/
 
-          # clean demo folders
-          rm -rf liquid_glass_widgets/public/apple_music liquid_glass_widgets/public/apple_podcasts
+          rm -rf public/apple_music public/apple_podcasts
 
-          # copy flutter builds
-          cp -r liquid_glass_widgets/src/example/build/apple_music liquid_glass_widgets/public/
-          cp -r liquid_glass_widgets/src/example/build/apple_podcasts liquid_glass_widgets/public/
+          cp -r flutter_src/example/build/apple_music public/
+          cp -r flutter_src/example/build/apple_podcasts public/
 
-      # ---------------- UPLOAD ARTIFACT ----------------
+      # ---------------- DEPLOY ----------------
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: liquid_glass_widgets/public
+          path: public
 
   deploy:
     needs: build
