@@ -25,15 +25,17 @@ jobs:
       - name: Enable web
         run: flutter config --enable-web
 
+      # ✅ IMPORTANT: project root is repo root
       - name: Get dependencies
         run: flutter pub get
 
-      - name: Prepare output dirs
+      - name: Prepare output folders
         run: |
-          mkdir -p build
-          mkdir -p docs
+          rm -rf build docs
+          mkdir -p build docs
 
-      # ---------------- APPLE MUSIC ----------------
+      # ---------------- APPS ----------------
+
       - name: Build Apple Music
         run: |
           flutter build web \
@@ -43,7 +45,6 @@ jobs:
             --base-href /liquid_glass_widgets/apple_music/ \
             --output build/apple_music
 
-      # ---------------- APPLE MESSAGES ----------------
       - name: Build Apple Messages
         run: |
           flutter build web \
@@ -53,7 +54,6 @@ jobs:
             --base-href /liquid_glass_widgets/apple_messages/ \
             --output build/apple_messages
 
-      # ---------------- APPLE NEWS ----------------
       - name: Build Apple News
         run: |
           flutter build web \
@@ -63,7 +63,6 @@ jobs:
             --base-href /liquid_glass_widgets/apple_news/ \
             --output build/apple_news
 
-      # ---------------- APPLE PODCASTS ----------------
       - name: Build Apple Podcasts
         run: |
           flutter build web \
@@ -73,17 +72,17 @@ jobs:
             --base-href /liquid_glass_widgets/apple_podcasts/ \
             --output build/apple_podcasts
 
-      # ---------------- SHOWCASE (ROOT main.dart) ----------------
       - name: Build Showcase
         run: |
           flutter build web \
-            -t lib/main.dart \
+            -t lib/showcase/main.dart \
             --release \
             --web-renderer canvaskit \
             --base-href /liquid_glass_widgets/showcase/ \
             --output build/showcase
 
       # ---------------- PACKAGE ----------------
+
       - name: Copy to docs
         run: cp -r build/* docs/
 
@@ -101,6 +100,7 @@ jobs:
           EOF
 
       # ---------------- DEPLOY ----------------
+
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
