@@ -76,13 +76,8 @@ jobs:
           cd flutter_src/example
           flutter pub get
 
-      # ---------------- BUILD APP 1: APPLE MUSIC ----------------
-      # ---------------- BUILD APP 2: APPLE PODCASTS ----------------
-      # ---------------- BUILD APP 3: APPLE MESSAGES ----------------
-      # - Broken on Flutter 3.44.0, works on 3.41.9
-      # ---------------- BUILD APP 4: APPLE NEWS ----------------
-      # - Broken on Flutter 3.44.0, works on 3.41.9
-      - name: Build Apps (Matrix)
+      # ---------------- BUILD APP (MATRIX) ----------------
+      - name: Build Flutter Web App
         run: |
           cd flutter_src/example
 
@@ -116,4 +111,8 @@ jobs:
           git diff --cached --quiet && echo "No changes" && exit 0
 
           git commit -m "Update Flutter web builds"
+
+          # 🔥 FIX: prevent non-fast-forward push failures
+          git pull --rebase origin main
+
           git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/Internetperson-dev/site.git main
