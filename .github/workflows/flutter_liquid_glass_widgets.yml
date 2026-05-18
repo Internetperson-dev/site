@@ -77,7 +77,7 @@ jobs:
           flutter pub get
 
       # ---------------- BUILD APP (MATRIX) ----------------
-      - name: Build Flutter Web App
+      - name: Build Flutter Web App (Web + WASM)
         run: |
           cd flutter_src/example
 
@@ -86,18 +86,32 @@ jobs:
 
           BASE_PATH="/site/liquid_glass_widgets"
 
-          echo "Building $APP_NAME"
+          echo "Building WEB + WASM for $APP_NAME"
 
+          # ---------------- NORMAL WEB BUILD ----------------
           flutter build web \
             -t "$ENTRY_FILE" \
             --release \
             --base-href "$BASE_PATH/$APP_NAME/"
 
-          DEST="../../site/liquid_glass_widgets/$APP_NAME"
+          DEST_WEB="../../site/liquid_glass_widgets/$APP_NAME"
 
-          rm -rf "$DEST"
-          mkdir -p "$DEST"
-          cp -r build/web/* "$DEST/"
+          rm -rf "$DEST_WEB"
+          mkdir -p "$DEST_WEB"
+          cp -r build/web/* "$DEST_WEB/"
+
+          # ---------------- WASM BUILD ----------------
+          flutter build web \
+            -t "$ENTRY_FILE" \
+            --release \
+            --wasm \
+            --base-href "$BASE_PATH/${APP_NAME}_wasm/"
+
+          DEST_WASM="../../site/liquid_glass_widgets/${APP_NAME}_wasm"
+
+          rm -rf "$DEST_WASM"
+          mkdir -p "$DEST_WASM"
+          cp -r build/web/* "$DEST_WASM/"
 
       # ---------------- COMMIT + PUSH ----------------
       - name: Commit and push changes
