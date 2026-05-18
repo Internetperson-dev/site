@@ -56,7 +56,6 @@ jobs:
           flutter build web \
             -t lib/apple_music/apple_music_demo.dart \
             --release \
-            --web-renderer canvaskit \
             --base-href /site/apple_music/ \
             --output ../../build/apple_music
 
@@ -66,7 +65,6 @@ jobs:
           flutter build web \
             -t lib/apple_messages/apple_messages_demo.dart \
             --release \
-            --web-renderer canvaskit \
             --base-href /site/apple_messages/ \
             --output ../../build/apple_messages
 
@@ -76,7 +74,6 @@ jobs:
           flutter build web \
             -t lib/apple_news/apple_news_demo.dart \
             --release \
-            --web-renderer canvaskit \
             --base-href /site/apple_news/ \
             --output ../../build/apple_news
 
@@ -86,7 +83,6 @@ jobs:
           flutter build web \
             -t lib/apple_podcasts/apple_podcasts_demo.dart \
             --release \
-            --web-renderer canvaskit \
             --base-href /site/apple_podcasts/ \
             --output ../../build/apple_podcasts
 
@@ -96,7 +92,6 @@ jobs:
           flutter build web \
             -t showcase/lib/main.dart \
             --release \
-            --web-renderer canvaskit \
             --base-href /site/showcase/ \
             --output ../../build/showcase
 
