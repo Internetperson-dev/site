@@ -22,13 +22,14 @@ jobs:
           path: site
           fetch-depth: 0
 
-      # ---------------- CHECKOUT FLUTTER SOURCE ----------------
-      - name: Checkout Flutter source
+      # ---------------- CHECKOUT FLUTTER SOURCE (WITH PAT) ----------------
+      - name: Checkout Flutter source repo
         uses: actions/checkout@v4
         with:
           repository: sdegenaar/liquid_glass_widgets
           path: flutter_src
           fetch-depth: 0
+          token: ${{ secrets.GH_PAT }}
 
       # ---------------- FLUTTER SETUP ----------------
       - name: Setup Flutter
@@ -82,8 +83,8 @@ jobs:
           cp -r flutter_src/example/build/apple_music flutter_src/liquid_glass_widgets/
           cp -r flutter_src/example/build/apple_podcasts flutter_src/liquid_glass_widgets/
 
-      # ---------------- COMMIT & PUSH ----------------
-      - name: Commit build output
+      # ---------------- COMMIT & PUSH (USING PAT) ----------------
+      - name: Commit and push builds
         run: |
           cd flutter_src
 
@@ -92,8 +93,10 @@ jobs:
 
           git add liquid_glass_widgets
 
-          # Only commit if there are changes
-          git diff --cached --quiet && echo "No changes to commit" && exit 0
+          # skip if no changes
+          git diff --cached --quiet && echo "No changes" && exit 0
 
           git commit -m "Update Flutter web builds"
+
+          git remote set-url origin https://x-access-token:${{ secrets.GH_PAT }}@github.com/sdegenaar/liquid_glass_widgets.git
           git push origin main
