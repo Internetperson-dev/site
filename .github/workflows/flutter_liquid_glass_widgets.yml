@@ -91,16 +91,7 @@ jobs:
             --release \
             --base-href /site/apple_podcasts/ \
             --output ../../build/apple_podcasts
-
-      - name: Build Showcase
-        run: |
-          cd liquid_glass_widgets/example
-          flutter build web \
-            -t lib/showcase/main.dart \
-            --release \
-            --base-href /site/showcase/ \
-            --output ../../build/showcase
-
+            
       # ---------------- PREP PAGES ----------------
       - name: Create Pages folder
         run: |
