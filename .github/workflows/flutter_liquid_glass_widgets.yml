@@ -1,4 +1,4 @@
-name: Build & Deploy Liquid Glass Demos
+name: Build Liquid Glass Demos & Deploy
 
 on:
   push:
@@ -13,9 +13,18 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # ---------------- CHECKOUT ----------------
-      - name: Checkout repo
+      # ---------------- SITE REPO ----------------
+      - name: Checkout site repo
         uses: actions/checkout@v4
+        with:
+          path: site
+
+      # ---------------- SOURCE REPO ----------------
+      - name: Checkout liquid_glass_widgets
+        uses: actions/checkout@v4
+        with:
+          repository: sdegenaar/liquid_glass_widgets
+          path: liquid_glass_widgets
 
       # ---------------- FLUTTER ----------------
       - name: Setup Flutter
@@ -28,7 +37,7 @@ jobs:
         run: flutter config --enable-web
 
       # ---------------- PREP PROJECT ----------------
-      - name: Ensure Flutter web support exists
+      - name: Ensure web support exists
         run: |
           cd liquid_glass_widgets/example
           flutter create . --platforms=web
@@ -38,13 +47,14 @@ jobs:
           cd liquid_glass_widgets/example
           flutter pub get
 
-      # ---------------- BUILD OUTPUT ----------------
+      # ---------------- OUTPUT ----------------
       - name: Prepare output folders
         run: |
-          rm -rf build docs
-          mkdir -p build docs
+          rm -rf build
+          mkdir -p build
+          mkdir -p site/docs
 
-      # ---------------- BUILD DEMOS ----------------
+      # ---------------- BUILD ----------------
 
       - name: Build Apple Music
         run: |
@@ -91,14 +101,15 @@ jobs:
             --base-href /site/showcase/ \
             --output ../../build/showcase
 
-      # ---------------- PACKAGE ----------------
+      # ---------------- DEPLOY PACKAGE ----------------
 
-      - name: Copy builds to docs
-        run: cp -r build/* docs/
+      - name: Copy build to site
+        run: |
+          cp -r build/* site/docs/
 
       - name: Add landing page
         run: |
-          cat <<EOF > docs/index.html
+          cat <<EOF > site/docs/index.html
           <html>
             <head>
               <meta http-equiv="refresh" content="0; url=./showcase/" />
@@ -110,9 +121,8 @@ jobs:
           EOF
 
       # ---------------- DEPLOY ----------------
-
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs
+          publish_dir: site/docs
