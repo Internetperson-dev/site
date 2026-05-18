@@ -6,12 +6,9 @@ on:
   workflow_dispatch:
 
 permissions:
-  contents: read
+  contents: write
   pages: write
   id-token: write
-
-env:
-  REPO_NAME: site
 
 jobs:
   build:
@@ -23,6 +20,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           path: site
+          fetch-depth: 0
 
       # ---------------- CHECKOUT FLUTTER SOURCE ----------------
       - name: Checkout Flutter source
@@ -30,6 +28,7 @@ jobs:
         with:
           repository: sdegenaar/liquid_glass_widgets
           path: flutter_src
+          fetch-depth: 0
 
       # ---------------- FLUTTER SETUP ----------------
       - name: Setup Flutter
@@ -74,36 +73,27 @@ jobs:
             --base-href /liquid_glass_widgets/apple_podcasts/ \
             --output build/apple_podcasts
 
-      # ---------------- COPY INTO REPO ROOT ----------------
-      - name: Inject builds into repo folder
+      # ---------------- COPY INTO REPO ----------------
+      - name: Copy builds into repo folder
         run: |
-          rm -rf site/liquid_glass_widgets
-          mkdir -p site/liquid_glass_widgets
+          rm -rf flutter_src/liquid_glass_widgets
+          mkdir -p flutter_src/liquid_glass_widgets
 
-          cp -r flutter_src/example/build/apple_music site/liquid_glass_widgets/
-          cp -r flutter_src/example/build/apple_podcasts site/liquid_glass_widgets/
+          cp -r flutter_src/example/build/apple_music flutter_src/liquid_glass_widgets/
+          cp -r flutter_src/example/build/apple_podcasts flutter_src/liquid_glass_widgets/
 
-      # ---------------- PREPARE PUBLIC SITE ----------------
-      - name: Create public folder
+      # ---------------- COMMIT & PUSH ----------------
+      - name: Commit build output
         run: |
-          rm -rf public
-          mkdir -p public
+          cd flutter_src
 
-          cp -r site/* public/
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      # ---------------- DEPLOY ----------------
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: public
+          git add liquid_glass_widgets
 
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
+          # Only commit if there are changes
+          git diff --cached --quiet && echo "No changes to commit" && exit 0
 
-    environment:
-      name: github-pages
-
-    steps:
-      - name: Deploy to GitHub Pages
-        uses: actions/deploy-pages@v4
+          git commit -m "Update Flutter web builds"
+          git push origin main
