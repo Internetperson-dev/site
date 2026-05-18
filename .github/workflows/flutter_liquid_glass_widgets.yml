@@ -59,14 +59,14 @@ jobs:
             --base-href /apple_music/ \
             --output ../../build/apple_music
 
-      - name: Build Apple Messages
-        run: |
-          cd liquid_glass_widgets/example
-          flutter build web \
-            -t lib/apple_messages/apple_messages_demo.dart \
-            --release \
-            --base-href /apple_messages/ \
-            --output ../../build/apple_messages
+#      - name: Build Apple Messages
+#        run: |
+#          cd liquid_glass_widgets/example
+#          flutter build web \
+#            -t lib/apple_messages/apple_messages_demo.dart \
+#            --release \
+#            --base-href /apple_messages/ \
+#            --output ../../build/apple_messages
 
 #      - name: Build Apple News
 #        run: |
