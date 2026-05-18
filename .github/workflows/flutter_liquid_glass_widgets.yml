@@ -12,10 +12,6 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    defaults:
-      run:
-        working-directory: example
-
     steps:
       - name: Checkout repo
         uses: actions/checkout@v4
@@ -30,15 +26,19 @@ jobs:
         run: flutter config --enable-web
 
       - name: Get dependencies
-        run: flutter pub get
+        run: |
+          cd example
+          flutter pub get
 
-      # ---------- BUILD OUTPUT ROOT ----------
-      - name: Prepare build folder
-        run: mkdir -p ../build
+      - name: Prepare build folders
+        run: |
+          mkdir -p build
+          mkdir -p docs
 
-      # ---------- APPLE MUSIC ----------
+      # ---------------- APPLE MUSIC ----------------
       - name: Build Apple Music
         run: |
+          cd example
           flutter build web \
             -t lib/apple_music/apple_music_demo.dart \
             --release \
@@ -46,9 +46,10 @@ jobs:
             --base-href /liquid_glass_widgets/apple_music/ \
             --output ../build/apple_music
 
-      # ---------- APPLE MESSAGES ----------
+      # ---------------- APPLE MESSAGES ----------------
       - name: Build Apple Messages
         run: |
+          cd example
           flutter build web \
             -t lib/apple_messages/apple_messages_demo.dart \
             --release \
@@ -56,9 +57,10 @@ jobs:
             --base-href /liquid_glass_widgets/apple_messages/ \
             --output ../build/apple_messages
 
-      # ---------- APPLE NEWS ----------
+      # ---------------- APPLE NEWS ----------------
       - name: Build Apple News
         run: |
+          cd example
           flutter build web \
             -t lib/apple_news/apple_news_demo.dart \
             --release \
@@ -66,9 +68,10 @@ jobs:
             --base-href /liquid_glass_widgets/apple_news/ \
             --output ../build/apple_news
 
-      # ---------- APPLE PODCASTS ----------
+      # ---------------- APPLE PODCASTS ----------------
       - name: Build Apple Podcasts
         run: |
+          cd example
           flutter build web \
             -t lib/apple_podcasts/apple_podcasts_demo.dart \
             --release \
@@ -76,9 +79,10 @@ jobs:
             --base-href /liquid_glass_widgets/apple_podcasts/ \
             --output ../build/apple_podcasts
 
-      # ---------- SHOWCASE ----------
+      # ---------------- SHOWCASE ----------------
       - name: Build Showcase
         run: |
+          cd example
           flutter build web \
             -t showcase/lib/main.dart \
             --release \
@@ -86,16 +90,14 @@ jobs:
             --base-href /liquid_glass_widgets/showcase/ \
             --output ../build/showcase
 
-      # ---------- PACKAGE FOR GITHUB PAGES ----------
-      - name: Prepare docs folder
+      # ---------------- PACKAGE ----------------
+      - name: Copy to docs
         run: |
-          rm -rf ../docs
-          mkdir -p ../docs
-          cp -r ../build/* ../docs/
+          cp -r build/* docs/
 
-      - name: Add index page
+      - name: Create landing redirect
         run: |
-          cat <<EOF > ../docs/index.html
+          cat <<EOF > docs/index.html
           <html>
             <head>
               <meta http-equiv="refresh" content="0; url=./showcase/" />
@@ -106,7 +108,7 @@ jobs:
           </html>
           EOF
 
-      # ---------- DEPLOY ----------
+      # ---------------- DEPLOY ----------------
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
