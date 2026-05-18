@@ -100,6 +100,26 @@ jobs:
           # 3. Overlay new Flutter builds
           cp -r build/* public/
 
+      - name: Commit merged site back to repo
+        run: |
+          cd site
+
+          # Copy Flutter builds into actual repo
+          rm -rf apple_music apple_messages apple_news apple_podcasts
+
+          cp -r ../build/apple_music apple_music
+          cp -r ../build/apple_messages apple_messages
+          cp -r ../build/apple_news apple_news
+          cp -r ../build/apple_podcasts apple_podcasts
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add .
+          git commit -m "Update Flutter Liquid Glass demos" || echo "No changes to commit"
+
+          git push
+
       # ---------------- UPLOAD ARTIFACT ----------------
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
@@ -117,3 +137,4 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
+
