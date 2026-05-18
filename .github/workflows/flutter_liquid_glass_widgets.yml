@@ -60,26 +60,6 @@ jobs:
             --base-href /apple_music/ \
             --output ../../build/apple_music
 
-      #  Removed (patched out):
-      # - name: Build Apple Messages
-      #   run: |
-      #     cd liquid_glass_widgets/example
-      #     flutter build web \
-      #       -t lib/apple_messages/apple_messages_demo.dart \
-      #       --release \
-      #       --base-href /apple_messages/ \
-      #       --output ../../build/apple_messages
-
-      #  Removed (patched out):
-      # - name: Build Apple News
-      #   run: |
-      #     cd liquid_glass_widgets/example
-      #     flutter build web \
-      #       -t lib/apple_news/apple_news_demo.dart \
-      #       --release \
-      #       --base-href /apple_news/ \
-      #       --output ../../build/apple_news
-
       - name: Build Apple Podcasts
         run: |
           cd liquid_glass_widgets/example
@@ -103,22 +83,22 @@ jobs:
           # 3. Overlay new Flutter builds
           cp -r build/* public/
 
-          # ----------------  COMMIT BACK TO REPO ----------------
-           - name: Commit merged site back to repo
-             run: |
-               cd site
-          
-               rm -rf apple_music apple_messages apple_news apple_podcasts
-          
-               cp -r ../build/apple_music apple_music
-               cp -r ../build/apple_podcasts apple_podcasts
-          
-               git config user.name "github-actions[bot]"
-               git config user.email "github-actions[bot]@users.noreply.github.com"
-          
-               git add .
-               git commit -m "Update Flutter Liquid Glass demos" || echo "No changes to commit"
-               git push
+      # ---------------- COMMIT BACK TO REPO (FIXED) ----------------
+      - name: Commit merged site back to repo
+        run: |
+          cd site
+
+          rm -rf apple_music apple_podcasts
+
+          cp -r ../build/apple_music apple_music
+          cp -r ../build/apple_podcasts apple_podcasts
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add .
+          git commit -m "Update Flutter Liquid Glass demos" || echo "No changes to commit"
+          git push
 
       # ---------------- UPLOAD ARTIFACT ----------------
       - name: Upload Pages artifact
