@@ -5,8 +5,13 @@ on:
     branches: [main]
   workflow_dispatch:
 
+# ---------------- PREVENT PARALLEL BUILDS ----------------
+concurrency:
+  group: flutter-liquid-glass-build
+  cancel-in-progress: true
+
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
 
@@ -27,13 +32,6 @@ jobs:
             entry: lib/apple_news/apple_news_demo.dart
 
     steps:
-      # ---------------- CHECKOUT SITE ----------------
-      - name: Checkout site repo
-        uses: actions/checkout@v4
-        with:
-          path: site
-          fetch-depth: 0
-
       # ---------------- CHECKOUT FLUTTER SOURCE ----------------
       - name: Checkout Flutter source
         uses: actions/checkout@v4
@@ -48,15 +46,6 @@ jobs:
         with:
           flutter-version: '3.41.9'
           cache: true
-
-      # ---------------- PUB CACHE ----------------
-      - name: Cache pub dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.pub-cache
-          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pub-
 
       # ---------------- ENABLE WEB ----------------
       - name: Enable Flutter web
@@ -76,57 +65,53 @@ jobs:
           cd flutter_src/example
           flutter pub get
 
-      # ---------------- BUILD APP (MATRIX) ----------------
-      - name: Build Flutter Web App (Web + WASM)
+      # ---------------- BUILD ALL VARIANTS ----------------
+      - name: Build Web + WASM
         run: |
           cd flutter_src/example
 
           APP_NAME=${{ matrix.app.name }}
           ENTRY_FILE=${{ matrix.app.entry }}
 
-          BASE_PATH="/site/liquid_glass_widgets"
+          BASE_PATH="/liquid_glass_widgets"
 
           echo "Building WEB + WASM for $APP_NAME"
 
-          # ---------------- NORMAL WEB BUILD ----------------
+          # ---------------- WEB (CanvasKit) ----------------
           flutter build web \
             -t "$ENTRY_FILE" \
             --release \
             --base-href "$BASE_PATH/$APP_NAME/"
 
-          DEST_WEB="../../site/liquid_glass_widgets/$APP_NAME"
+          mkdir -p ../../site/$APP_NAME
+          rm -rf ../../site/$APP_NAME
+          cp -r build/web ../../site/$APP_NAME
 
-          rm -rf "$DEST_WEB"
-          mkdir -p "$DEST_WEB"
-          cp -r build/web/* "$DEST_WEB/"
-
-          # ---------------- WASM BUILD ----------------
+          # ---------------- WASM ----------------
           flutter build web \
             -t "$ENTRY_FILE" \
             --release \
             --wasm \
             --base-href "$BASE_PATH/${APP_NAME}_wasm/"
 
-          DEST_WASM="../../site/liquid_glass_widgets/${APP_NAME}_wasm"
+          mkdir -p ../../site/${APP_NAME}_wasm
+          rm -rf ../../site/${APP_NAME}_wasm
+          cp -r build/web ../../site/${APP_NAME}_wasm
 
-          rm -rf "$DEST_WASM"
-          mkdir -p "$DEST_WASM"
-          cp -r build/web/* "$DEST_WASM/"
+      # ---------------- UPLOAD PAGES ARTIFACT ----------------
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
 
-      # ---------------- COMMIT + PUSH ----------------
-      - name: Commit and push changes
-        run: |
-          cd site
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
 
-          git add liquid_glass_widgets
+    # REQUIRED (fixes your earlier error)
+    environment:
+      name: github-pages
 
-          git diff --cached --quiet && echo "No changes" && exit 0
-
-          git commit -m "Update Flutter web builds"
-
-          # 🔥 FIX: prevent non-fast-forward push failures
-          git pull --rebase origin main
-
-          git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/Internetperson-dev/site.git main
+    steps:
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
