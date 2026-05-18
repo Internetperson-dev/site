@@ -25,7 +25,7 @@ jobs:
           path: site
 
       # ---------------- CHECKOUT FLUTTER SOURCE ----------------
-      - name: Checkout Flutter widgets
+      - name: Checkout Flutter source
         uses: actions/checkout@v4
         with:
           repository: sdegenaar/liquid_glass_widgets
@@ -41,13 +41,13 @@ jobs:
       - name: Enable web
         run: flutter config --enable-web
 
-      # ---------------- PREP ----------------
-      - name: Install dependencies
+      # ---------------- DEPENDENCIES ----------------
+      - name: Get dependencies
         run: |
           cd flutter_src/example
           flutter pub get
 
-      # ---------------- BUILD ----------------
+      # ---------------- BUILD DEMOS ----------------
 
       - name: Build Apple Music
         run: |
@@ -67,17 +67,20 @@ jobs:
             --base-href /site/apple_podcasts/ \
             --output build/apple_podcasts
 
-      # ---------------- BUILD PUBLIC ----------------
+      # ---------------- CREATE PUBLIC SITE ----------------
 
       - name: Create public folder
         run: |
           rm -rf public
           mkdir -p public
 
+          # copy static site
           cp -r site/* public/
 
+          # remove old builds if they exist
           rm -rf public/apple_music public/apple_podcasts
 
+          # copy flutter builds
           cp -r flutter_src/example/build/apple_music public/
           cp -r flutter_src/example/build/apple_podcasts public/
 
