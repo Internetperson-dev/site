@@ -13,8 +13,6 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-latest
-    environment:
-    name: github-pages
 
     steps:
       # ---------------- CHECKOUT SITE ----------------
@@ -93,25 +91,12 @@ jobs:
             --release \
             --base-href /site/apple_podcasts/ \
             --output ../../build/apple_podcasts
-            
-      # ---------------- PREP PAGES ----------------
+
+      # ---------------- PACKAGE ----------------
       - name: Create Pages folder
         run: |
           mkdir -p public
           cp -r build/* public/
-
-      - name: Add index redirect
-        run: |
-          cat <<EOF > public/index.html
-          <html>
-            <head>
-              <meta http-equiv="refresh" content="0; url=./showcase/" />
-            </head>
-            <body>
-              Redirecting to showcase...
-            </body>
-          </html>
-          EOF
 
       # ---------------- UPLOAD ARTIFACT ----------------
       - name: Upload Pages artifact
@@ -123,6 +108,10 @@ jobs:
     needs: build
     runs-on: ubuntu-latest
 
+    environment:
+      name: github-pages
+
     steps:
       - name: Deploy to GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4
