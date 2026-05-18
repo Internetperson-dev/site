@@ -22,14 +22,13 @@ jobs:
           path: site
           fetch-depth: 0
 
-      # ---------------- CHECKOUT FLUTTER SOURCE (WITH PAT) ----------------
-      - name: Checkout Flutter source repo
+      # ---------------- CHECKOUT FLUTTER SOURCE ----------------
+      - name: Checkout Flutter source
         uses: actions/checkout@v4
         with:
           repository: sdegenaar/liquid_glass_widgets
           path: flutter_src
           fetch-depth: 0
-          token: ${{ secrets.GH_PAT }}
 
       # ---------------- FLUTTER SETUP ----------------
       - name: Setup Flutter
@@ -37,6 +36,22 @@ jobs:
         with:
           channel: stable
           cache: true
+
+      # ---------------- PUB CACHE ----------------
+      - name: Cache pub dependencies
+        uses: actions/cache@v4
+        with:
+          path: ~/.pub-cache
+          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-pub-
+
+      # ---------------- FLUTTER BUILD CACHE ----------------
+      - name: Cache Flutter build
+        uses: actions/cache@v4
+        with:
+          path: flutter_src/example/build
+          key: ${{ runner.os }}-flutter-build-${{ github.sha }}
 
       - name: Enable Flutter web
         run: flutter config --enable-web
@@ -74,40 +89,27 @@ jobs:
             --base-href /liquid_glass_widgets/apple_podcasts/ \
             --output build/apple_podcasts
 
-      # ---------------- COPY INTO REPO ----------------
-      - name: Copy builds into repo folder
+      # ---------------- COPY INTO SITE REPO ----------------
+      - name: Copy builds into site repo
         run: |
-          rm -rf flutter_src/liquid_glass_widgets
-          mkdir -p flutter_src/liquid_glass_widgets
+          rm -rf site/liquid_glass_widgets
+          mkdir -p site/liquid_glass_widgets
 
-          cp -r flutter_src/example/build/apple_music flutter_src/liquid_glass_widgets/
-          cp -r flutter_src/example/build/apple_podcasts flutter_src/liquid_glass_widgets/
+          cp -r flutter_src/example/build/apple_music site/liquid_glass_widgets/
+          cp -r flutter_src/example/build/apple_podcasts site/liquid_glass_widgets/
 
-      # ---------------- COMMIT & PUSH (USING PAT) ----------------
-      - name: Commit and push builds
+      # ---------------- COMMIT + PUSH (FIXED TARGET REPO) ----------------
+      - name: Commit and push changes
         run: |
-          cd flutter_src
-      
+          cd site
+
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-      
+
           git add liquid_glass_widgets
-      
+
           git diff --cached --quiet && echo "No changes" && exit 0
-      
+
           git commit -m "Update Flutter web builds"
-      
-          # ----------------- 🔥 CRITICAL FIX -----------------
-          export GIT_ASKPASS=$(mktemp)
-      
-          cat << 'EOF' > "$GIT_ASKPASS"
-          #!/bin/sh
-          echo "${{ secrets.GH_PAT }}"
-          EOF
-          
-              chmod +x "$GIT_ASKPASS"
-          
-              export GIT_ASKPASS="$GIT_ASKPASS"
-              export GIT_USERNAME="x-access-token"
-          
-              git push https://github.com/sdegenaar/liquid_glass_widgets.git main
+
+          git push https://x-access-token:${{ secrets.GH_PAT }}@github.com/Internetperson-dev/site.git main
