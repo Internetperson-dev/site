@@ -91,6 +91,36 @@ jobs:
           rm -rf ../../site/liquid_glass_widgets/apple_podcasts
           mkdir -p ../../site/liquid_glass_widgets/apple_podcasts
           cp -r build/web/* ../../site/liquid_glass_widgets/apple_podcasts/
+
+        # ---------------- BUILD APP 3: APPLE MESSAGES ----------------
+      - name: Build Apple Podcasts
+        run: |
+          cd flutter_src/example
+      
+          flutter build web \
+            -t lib/apple_messages/apple_messages_demo.dart \
+            --release \
+            --base-href /liquid_glass_widgets/apple_messages/
+      
+          rm -rf ../../site/liquid_glass_widgets/apple_messages
+          mkdir -p ../../site/liquid_glass_widgets/apple_messages
+          cp -r build/web/* ../../site/liquid_glass_widgets/apple_messages/
+
+
+        # ---------------- BUILD APP 4: APPLE NEWS ----------------
+      - name: Build Apple Podcasts
+        run: |
+          cd flutter_src/example
+      
+          flutter build web \
+            -t lib/apple_news/apple_news_demo.dart \
+            --release \
+            --base-href /liquid_glass_widgets/apple_news/
+      
+          rm -rf ../../site/liquid_glass_widgets/apple_news
+          mkdir -p ../../site/liquid_glass_widgets/apple_news
+          cp -r build/web/* ../../site/liquid_glass_widgets/apple_news/
+
     
       # ---------------- COMMIT + PUSH ----------------
       - name: Commit and push changes
