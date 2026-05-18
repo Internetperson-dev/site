@@ -93,7 +93,7 @@ jobs:
           cp -r build/web/* ../../site/liquid_glass_widgets/apple_podcasts/
 
         # ---------------- BUILD APP 3: APPLE MESSAGES ----------------
-      - name: Build Apple Podcasts
+      - name: Build Apple Messages # - Broken on Flutter 3.44.0, works on 3.41.9
         run: |
           cd flutter_src/example
       
@@ -108,7 +108,7 @@ jobs:
 
 
         # ---------------- BUILD APP 4: APPLE NEWS ----------------
-      - name: Build Apple Podcasts
+      - name: Build Apple News # - Broken on Flutter 3.44.0, works on 3.41.9
         run: |
           cd flutter_src/example
       
