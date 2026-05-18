@@ -1,4 +1,4 @@
-name: Build & Deploy Flutter Web Demos
+name: Build Liquid Glass Demos & Deploy
 
 on:
   push:
@@ -13,9 +13,20 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      # ---------------- CHECKOUT SITE ----------------
+      - name: Checkout site repo
         uses: actions/checkout@v4
+        with:
+          path: site
 
+      # ---------------- CHECKOUT SOURCE ----------------
+      - name: Checkout liquid_glass_widgets
+        uses: actions/checkout@v4
+        with:
+          repository: sdegenaar/liquid_glass_widgets
+          path: liquid_glass_widgets
+
+      # ---------------- SETUP FLUTTER ----------------
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -25,70 +36,79 @@ jobs:
       - name: Enable web
         run: flutter config --enable-web
 
-      # ✅ ROOT IS ALREADY FLUTTER PROJECT
+      # ---------------- GET DEPENDENCIES ----------------
       - name: Get dependencies
-        run: flutter pub get
+        run: |
+          cd liquid_glass_widgets/example
+          flutter pub get
 
+      # ---------------- BUILD OUTPUT ----------------
       - name: Prepare output folders
         run: |
-          rm -rf build docs
-          mkdir -p build docs
+          mkdir -p site/docs
+          mkdir -p build
 
-      # ---------------- BUILD ----------------
+      # ---------------- BUILD DEMOS ----------------
 
       - name: Build Apple Music
         run: |
+          cd liquid_glass_widgets/example
           flutter build web \
             -t lib/apple_music/apple_music_demo.dart \
             --release \
             --web-renderer canvaskit \
             --base-href /site/apple_music/ \
-            --output build/apple_music
+            --output ../../build/apple_music
 
       - name: Build Apple Messages
         run: |
+          cd liquid_glass_widgets/example
           flutter build web \
             -t lib/apple_messages/apple_messages_demo.dart \
             --release \
             --web-renderer canvaskit \
             --base-href /site/apple_messages/ \
-            --output build/apple_messages
+            --output ../../build/apple_messages
 
       - name: Build Apple News
         run: |
+          cd liquid_glass_widgets/example
           flutter build web \
             -t lib/apple_news/apple_news_demo.dart \
             --release \
             --web-renderer canvaskit \
             --base-href /site/apple_news/ \
-            --output build/apple_news
+            --output ../../build/apple_news
 
       - name: Build Apple Podcasts
         run: |
+          cd liquid_glass_widgets/example
           flutter build web \
             -t lib/apple_podcasts/apple_podcasts_demo.dart \
             --release \
             --web-renderer canvaskit \
             --base-href /site/apple_podcasts/ \
-            --output build/apple_podcasts
+            --output ../../build/apple_podcasts
 
       - name: Build Showcase
         run: |
+          cd liquid_glass_widgets/example
           flutter build web \
-            -t lib/showcase/main.dart \
+            -t showcase/lib/main.dart \
             --release \
             --web-renderer canvaskit \
             --base-href /site/showcase/ \
-            --output build/showcase
+            --output ../../build/showcase
 
-      # ---------------- PACKAGE ----------------
+      # ---------------- DEPLOY PACKAGE ----------------
 
-      - name: Copy to docs
-        run: cp -r build/* docs/
+      - name: Copy builds into site
+        run: |
+          cp -r build/* site/docs/
 
       - name: Add landing page
         run: |
-          cat <<EOF > docs/index.html
+          cat <<EOF > site/docs/index.html
           <html>
             <head>
               <meta http-equiv="refresh" content="0; url=./showcase/" />
@@ -100,9 +120,8 @@ jobs:
           EOF
 
       # ---------------- DEPLOY ----------------
-
       - name: Deploy to GitHub Pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./docs
+          publish_dir: site/docs
