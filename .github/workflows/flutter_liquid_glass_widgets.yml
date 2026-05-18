@@ -97,7 +97,9 @@ jobs:
       
           git commit -m "Update Flutter web builds"
       
-          # 🔥 FORCE PAT AUTH HERE (this is the missing piece)
-          git remote set-url origin https://x-access-token:${{ secrets.GH_PAT }}@github.com/sdegenaar/liquid_glass_widgets.git
+          # ✅ FORCE AUTH PROPERLY USING GIT CREDENTIAL STORE
+          git config --global credential.helper store
       
-          git push origin main
+          echo "https://x-access-token:${{ secrets.GH_PAT }}@github.com" > ~/.git-credentials
+      
+          git push https://github.com/sdegenaar/liquid_glass_widgets.git main
