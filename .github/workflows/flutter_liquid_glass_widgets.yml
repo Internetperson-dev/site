@@ -25,9 +25,9 @@ jobs:
       - name: Enable web
         run: flutter config --enable-web
 
-      # ✅ FIX: go into real Flutter project root
-      - name: Go to Flutter project root
-        run: cd liquid_glass_widgets && flutter pub get
+      # ✅ ROOT IS ALREADY FLUTTER PROJECT
+      - name: Get dependencies
+        run: flutter pub get
 
       - name: Prepare output folders
         run: |
@@ -38,53 +38,48 @@ jobs:
 
       - name: Build Apple Music
         run: |
-          cd liquid_glass_widgets
           flutter build web \
             -t lib/apple_music/apple_music_demo.dart \
             --release \
             --web-renderer canvaskit \
-            --base-href /liquid_glass_widgets/apple_music/ \
-            --output ../build/apple_music
+            --base-href /site/apple_music/ \
+            --output build/apple_music
 
       - name: Build Apple Messages
         run: |
-          cd liquid_glass_widgets
           flutter build web \
             -t lib/apple_messages/apple_messages_demo.dart \
             --release \
             --web-renderer canvaskit \
-            --base-href /liquid_glass_widgets/apple_messages/ \
-            --output ../build/apple_messages
+            --base-href /site/apple_messages/ \
+            --output build/apple_messages
 
       - name: Build Apple News
         run: |
-          cd liquid_glass_widgets
           flutter build web \
             -t lib/apple_news/apple_news_demo.dart \
             --release \
             --web-renderer canvaskit \
-            --base-href /liquid_glass_widgets/apple_news/ \
-            --output ../build/apple_news
+            --base-href /site/apple_news/ \
+            --output build/apple_news
 
       - name: Build Apple Podcasts
         run: |
-          cd liquid_glass_widgets
           flutter build web \
             -t lib/apple_podcasts/apple_podcasts_demo.dart \
             --release \
             --web-renderer canvaskit \
-            --base-href /liquid_glass_widgets/apple_podcasts/ \
-            --output ../build/apple_podcasts
+            --base-href /site/apple_podcasts/ \
+            --output build/apple_podcasts
 
       - name: Build Showcase
         run: |
-          cd liquid_glass_widgets
           flutter build web \
             -t lib/showcase/main.dart \
             --release \
             --web-renderer canvaskit \
-            --base-href /liquid_glass_widgets/showcase/ \
-            --output ../build/showcase
+            --base-href /site/showcase/ \
+            --output build/showcase
 
       # ---------------- PACKAGE ----------------
 
