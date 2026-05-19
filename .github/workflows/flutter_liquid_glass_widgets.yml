@@ -35,15 +35,22 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh release download --latest \
-            --repo Internetperson-dev/liquid_glass_widgets \
+          TAG=$(gh release list \
+            -R Internetperson-dev/liquid_glass_widgets \
+            --limit 1 \
+            --json tagName \
+            -q '.[0].tagName')
+      
+          echo "Latest tag: $TAG"
+      
+          gh release download "$TAG" \
+            -R Internetperson-dev/liquid_glass_widgets \
             --pattern "web-builds.tar.gz" \
             --pattern "wasm-builds.tar.gz"
-
-      - name: Extract web builds
-        run: |
-          mkdir -p web_extract
-          tar -xzf web-builds.tar.gz -C web_extract
+            - name: Extract web builds
+              run: |
+                mkdir -p web_extract
+                tar -xzf web-builds.tar.gz -C web_extract
 
       - name: Extract wasm builds
         run: |
