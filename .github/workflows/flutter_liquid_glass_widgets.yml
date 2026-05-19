@@ -26,7 +26,7 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install GitHub CLI (ensure latest)
+      - name: Install GitHub CLI
         run: |
           sudo apt-get update
           sudo apt-get install -y gh
@@ -63,33 +63,41 @@ jobs:
           mkdir -p wasm_extract
           tar -xzf wasm-builds.tar.gz -C wasm_extract
 
+      # ---------------- DEBUG STEP (NEW) ----------------
+      - name: Debug extracted structure
+        run: |
+          echo "================ WEB STRUCTURE ================"
+          find web_extract/web -maxdepth 3 -type d -print
+          find web_extract/web -maxdepth 3 -type f -print
+
+          echo "================ WASM STRUCTURE ================"
+          find wasm_extract/wasm -maxdepth 3 -type d -print
+          find wasm_extract/wasm -maxdepth 3 -type f -print
+      # ---------------------------------------------------
+
       - name: Move web builds into final structure (FIXED)
         run: |
           shopt -s nullglob
 
-          # Copy directories
           for dir in web_extract/web/*; do
             if [ -d "$dir" ]; then
               name=$(basename "$dir")
+              echo "Processing web widget: $name"
+
               mkdir -p "liquid_glass_widgets/$name"
               cp -a "$dir/." "liquid_glass_widgets/$name/"
             fi
           done
 
-          # Copy loose files (e.g. favicon.png)
-          for file in web_extract/web/*; do
-            if [ -f "$file" ]; then
-              cp -a "$file" liquid_glass_widgets/
-            fi
-          done
-
-      - name: Move wasm builds into final structure
+      - name: Move wasm builds into final structure (FIXED)
         run: |
           shopt -s nullglob
 
           for dir in wasm_extract/wasm/*; do
             if [ -d "$dir" ]; then
               name=$(basename "$dir")
+              echo "Processing wasm widget: $name"
+
               rm -rf "liquid_glass_widgets/$name"
               mkdir -p "liquid_glass_widgets/$name"
               cp -a "$dir/." "liquid_glass_widgets/$name/"
