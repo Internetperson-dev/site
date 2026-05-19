@@ -18,54 +18,10 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
-    strategy:
-      fail-fast: false
-
-      matrix:
-        include:
-          # ---------------- APPLE MUSIC ----------------
-          - name: apple_music
-            entry: lib/apple_music/apple_music_demo.dart
-            variant: web
-
-          - name: apple_music
-            entry: lib/apple_music/apple_music_demo.dart
-            variant: wasm
-
-          # ---------------- APPLE PODCASTS ----------------
-          - name: apple_podcasts
-            entry: lib/apple_podcasts/apple_podcasts_demo.dart
-            variant: web
-
-          - name: apple_podcasts
-            entry: lib/apple_podcasts/apple_podcasts_demo.dart
-            variant: wasm
-
-          # ---------------- APPLE MESSAGES ----------------
-          - name: apple_messages
-            entry: lib/apple_messages/apple_messages_demo.dart
-            variant: web
-
-          - name: apple_messages
-            entry: lib/apple_messages/apple_messages_demo.dart
-            variant: wasm
-
-          # ---------------- APPLE NEWS ----------------
-          - name: apple_news
-            entry: lib/apple_news/apple_news_demo.dart
-            variant: web
-
-          - name: apple_news
-            entry: lib/apple_news/apple_news_demo.dart
-            variant: wasm
-
     steps:
       # ---------------- CHECKOUT ----------------
-      - name: Checkout Flutter source
+      - name: Checkout repo
         uses: actions/checkout@v4
-        with:
-          repository: sdegenaar/liquid_glass_widgets
-          path: flutter_src
 
       # ---------------- FLUTTER ----------------
       - name: Setup Flutter
@@ -77,67 +33,69 @@ jobs:
       - name: Enable web
         run: flutter config --enable-web
 
-      # ---------------- FIX: GENERATE WEB PLATFORM ----------------
-      - name: Ensure web platform exists
-        run: |
-          cd flutter_src/example
-          flutter create . --platforms web
-
       # ---------------- DEPENDENCIES ----------------
       - name: Get dependencies
         run: |
-          cd flutter_src/example
+          cd flutter_src/example || cd example || true
+
+      # If your example folder is inside repo:
+      - name: Install dependencies
+        run: |
+          cd example
           flutter pub get
 
-      # ---------------- BUILD ----------------
-      - name: Build Flutter app
+      # ---------------- BUILD ALL APPS ----------------
+      - name: Build Web + WASM
         run: |
-          cd flutter_src/example
+          cd example
 
-          APP_NAME="${{ matrix.name }}"
-          ENTRY_FILE="${{ matrix.entry }}"
-          VARIANT="${{ matrix.variant }}"
-
+          PUBLIC_DIR="../public"
           BASE="/liquid_glass_widgets"
 
-          echo "--------------------------------------"
-          echo "Building: $APP_NAME"
-          echo "Variant : $VARIANT"
-          echo "Entry   : $ENTRY_FILE"
-          echo "--------------------------------------"
+          mkdir -p "$PUBLIC_DIR"
 
-          if [ "$VARIANT" = "web" ]; then
+          build_app () {
+            NAME=$1
+            ENTRY=$2
+
+            echo "=============================="
+            echo "Building WEB: $NAME"
+            echo "=============================="
 
             flutter build web \
-              -t "$ENTRY_FILE" \
+              -t "$ENTRY" \
               --release \
-              --base-href "$BASE/$APP_NAME/"
+              --base-href "$BASE/$NAME/"
 
-            OUT_DIR="../../site/${APP_NAME}"
+            rm -rf "$PUBLIC_DIR/$NAME"
+            mkdir -p "$PUBLIC_DIR/$NAME"
+            cp -r build/web/* "$PUBLIC_DIR/$NAME/"
 
-          else
+            echo "=============================="
+            echo "Building WASM: $NAME"
+            echo "=============================="
 
             flutter build web \
-              -t "$ENTRY_FILE" \
+              -t "$ENTRY" \
               --release \
               --wasm \
-              --base-href "$BASE/${APP_NAME}_wasm/"
+              --base-href "$BASE/${NAME}_wasm/"
 
-            OUT_DIR="../../site/${APP_NAME}_wasm"
+            rm -rf "$PUBLIC_DIR/${NAME}_wasm"
+            mkdir -p "$PUBLIC_DIR/${NAME}_wasm"
+            cp -r build/web/* "$PUBLIC_DIR/${NAME}_wasm/"
+          }
 
-          fi
+          build_app apple_music lib/apple_music/apple_music_demo.dart
+          build_app apple_podcasts lib/apple_podcasts/apple_podcasts_demo.dart
+          build_app apple_messages lib/apple_messages/apple_messages_demo.dart
+          build_app apple_news lib/apple_news/apple_news_demo.dart
 
-          rm -rf "$OUT_DIR"
-          mkdir -p "$OUT_DIR"
-
-          cp -r build/web/* "$OUT_DIR"
-
-      # ---------------- ARTIFACT ----------------
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4
+      # ---------------- UPLOAD PAGES ----------------
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
         with:
-          name: site-${{ matrix.name }}-${{ matrix.variant }}
-          path: site
+          path: public
 
   deploy:
     needs: build
@@ -147,26 +105,5 @@ jobs:
       name: github-pages
 
     steps:
-      # ---------------- DOWNLOAD ALL ARTIFACTS ----------------
-      - name: Download all artifacts
-        uses: actions/download-artifact@v4
-        with:
-          path: site
-
-      # ---------------- MERGE INTO PUBLIC ----------------
-      - name: Merge artifacts
-        run: |
-          mkdir -p public
-
-          find site -mindepth 2 -maxdepth 2 -type d | while read dir; do
-            cp -r "$dir" public/
-          done
-
-      # ---------------- GITHUB PAGES ----------------
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: public
-
       - name: Deploy to GitHub Pages
         uses: actions/deploy-pages@v4
