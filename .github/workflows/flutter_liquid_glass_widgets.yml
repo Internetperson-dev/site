@@ -1,110 +1,72 @@
-name: Build & Deploy Liquid Glass Demos
+name: Deploy Liquid Glass Website
 
 on:
+  workflow_dispatch:
   push:
     branches: [main]
-  workflow_dispatch:
-
-concurrency:
-  group: flutter-liquid-glass-build
-  cancel-in-progress: true
 
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
 
 jobs:
   build:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout repo
+      - name: Checkout website repo
         uses: actions/checkout@v4
-        with:
-          token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install gh CLI
+      - name: Prepare directories
         run: |
-          curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg \
-            | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+          rm -rf site/liquid_glass_widgets
+          mkdir -p site/liquid_glass_widgets
 
-          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" \
-            | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
-
-          sudo apt update
-          sudo apt install gh -y
-
-      - name: Setup Flutter
-        uses: subosito/flutter-action@v2
-        with:
-          flutter-version: "3.41.9"
-          cache: true
-
-      - name: Enable web
-        run: flutter config --enable-web
-
-      - name: Clone and get dependencies
+      - name: Download release assets
         env:
-          GH_TOKEN: ${{ secrets.GH_PAT }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          gh repo clone Internetperson-dev/flutter_liquid_glass_widgets flutter_src
+          gh release download build-22 \
+            --repo Internetperson-dev/liquid_glass_widgets \
+            --pattern "web-builds.tar.gz" \
+            --pattern "wasm-builds.tar.gz"
 
-          cd flutter_src/example
-          flutter pub get
-
-      - name: Build Web + WASM
+      - name: Extract web builds
         run: |
-          cd flutter_src/example
+          mkdir web_extract
+          tar -xzf web-builds.tar.gz -C web_extract
 
-          PUBLIC_DIR="../../public"
-          BASE="/liquid_glass_widgets"
+      - name: Extract wasm builds
+        run: |
+          mkdir wasm_extract
+          tar -xzf wasm-builds.tar.gz -C wasm_extract
 
-          mkdir -p "$PUBLIC_DIR"
+      - name: Move web builds into final structure
+        run: |
+          for dir in web_extract/*; do
+            name=$(basename "$dir")
+            mv "$dir" "site/liquid_glass_widgets/$name"
+          done
 
-          build_app () {
-            NAME=$1
-            ENTRY=$2
-
-            echo "Building WEB: $NAME"
-
-            flutter build web \
-              -t "$ENTRY" \
-              --release \
-              --base-href "$BASE/$NAME/"
-
-            rm -rf "$PUBLIC_DIR/$NAME"
-            mkdir -p "$PUBLIC_DIR/$NAME"
-
-            cp -r build/web/* "$PUBLIC_DIR/$NAME/"
-
-            echo "Building WASM: $NAME"
-
-            flutter build web \
-              -t "$ENTRY" \
-              --release \
-              --wasm \
-              --base-href "$BASE/${NAME}_wasm/"
-
-            rm -rf "$PUBLIC_DIR/${NAME}_wasm"
-            mkdir -p "$PUBLIC_DIR/${NAME}_wasm"
-
-            cp -r build/web/* "$PUBLIC_DIR/${NAME}_wasm/"
-          }
-
-          build_app apple_music lib/apple_music/apple_music_demo.dart
-          build_app apple_podcasts lib/apple_podcasts/apple_podcasts_demo.dart
-          build_app apple_messages lib/apple_messages/apple_messages_demo.dart
-          build_app apple_news lib/apple_news/apple_news_demo.dart
+      - name: Move wasm builds into final structure
+        run: |
+          for dir in wasm_extract/*; do
+            name=$(basename "$dir")
+            mv "$dir" "site/liquid_glass_widgets/${name}_wasm"
+          done
 
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: public
+          path: site
 
   deploy:
     needs: build
-
     runs-on: ubuntu-latest
 
     environment:
