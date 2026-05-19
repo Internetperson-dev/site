@@ -19,11 +19,16 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      # ---------------- CHECKOUT ----------------
       - name: Checkout repo
         uses: actions/checkout@v4
 
-      # ---------------- FLUTTER ----------------
+      - name: Install gh CLI
+        run: |
+          curl -fsSL https://cli.github.com/packages/githubcli-archive-keyring.gpg | sudo dd of=/usr/share/keyrings/githubcli-archive-keyring.gpg
+          echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/githubcli-archive-keyring.gpg] https://cli.github.com/packages stable main" | sudo tee /etc/apt/sources.list.d/github-cli.list > /dev/null
+          sudo apt update
+          sudo apt install gh -y
+
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
@@ -33,23 +38,19 @@ jobs:
       - name: Enable web
         run: flutter config --enable-web
 
-      # ---------------- DEPENDENCIES ----------------
-      - name: Get dependencies
+      - name: Clone and get dependencies
+        env:
+          GH_TOKEN: ${{ secrets.PAT }}
         run: |
-          cd flutter_src/example || cd example || true
-
-      # If your example folder is inside repo:
-      - name: Install dependencies
-        run: |
-          cd example
+          gh repo clone Internetperson-dev/flutter_liquid_glass_widgets flutter_src
+          cd flutter_src/example
           flutter pub get
 
-      # ---------------- BUILD ALL APPS ----------------
       - name: Build Web + WASM
         run: |
-          cd example
+          cd flutter_src/example
 
-          PUBLIC_DIR="../public"
+          PUBLIC_DIR="../../public"
           BASE="/liquid_glass_widgets"
 
           mkdir -p "$PUBLIC_DIR"
@@ -58,29 +59,14 @@ jobs:
             NAME=$1
             ENTRY=$2
 
-            echo "=============================="
             echo "Building WEB: $NAME"
-            echo "=============================="
-
-            flutter build web \
-              -t "$ENTRY" \
-              --release \
-              --base-href "$BASE/$NAME/"
-
+            flutter build web -t "$ENTRY" --release --base-href "$BASE/$NAME/"
             rm -rf "$PUBLIC_DIR/$NAME"
             mkdir -p "$PUBLIC_DIR/$NAME"
             cp -r build/web/* "$PUBLIC_DIR/$NAME/"
 
-            echo "=============================="
             echo "Building WASM: $NAME"
-            echo "=============================="
-
-            flutter build web \
-              -t "$ENTRY" \
-              --release \
-              --wasm \
-              --base-href "$BASE/${NAME}_wasm/"
-
+            flutter build web -t "$ENTRY" --release --wasm --base-href "$BASE/${NAME}_wasm/"
             rm -rf "$PUBLIC_DIR/${NAME}_wasm"
             mkdir -p "$PUBLIC_DIR/${NAME}_wasm"
             cp -r build/web/* "$PUBLIC_DIR/${NAME}_wasm/"
@@ -91,7 +77,6 @@ jobs:
           build_app apple_messages lib/apple_messages/apple_messages_demo.dart
           build_app apple_news lib/apple_news/apple_news_demo.dart
 
-      # ---------------- UPLOAD PAGES ----------------
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
