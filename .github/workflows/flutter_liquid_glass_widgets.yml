@@ -31,21 +31,34 @@ jobs:
           rm -rf liquid_glass_widgets
           mkdir -p liquid_glass_widgets
       
-      - name: Get latest release tag and download assets
+      #- name: Get latest release tag and download assets
+        #env:
+          #GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        #run: |
+          #TAG=$(gh release list \
+            #-R Internetperson-dev/liquid_glass_widgets \
+            #--limit 1 \
+            #--json tagName \
+            #-q '.[0].tagName')
+          #echo "Latest tag: $TAG"
+          #gh release download "$TAG" \
+            #-R Internetperson-dev/liquid_glass_widgets \
+            #--pattern "web-builds.tar.gz" \
+            #--pattern "wasm-builds.tar.gz"
+
+      - name: Get build-27 release and download assets
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          TAG=$(gh release list \
-            -R Internetperson-dev/liquid_glass_widgets \
-            --limit 1 \
-            --json tagName \
-            -q '.[0].tagName')
-          echo "Latest tag: $TAG"
+          TAG="build-27"
+          echo "Using tag: $TAG"
+      
           gh release download "$TAG" \
             -R Internetperson-dev/liquid_glass_widgets \
             --pattern "web-builds.tar.gz" \
             --pattern "wasm-builds.tar.gz"
-      
+
+
       - name: Debug - Check tar contents
         run: |
           echo "=== web-builds.tar.gz structure (first 30 files) ==="
