@@ -46,11 +46,11 @@ jobs:
             #--pattern "web-builds.tar.gz" \
             #--pattern "wasm-builds.tar.gz"
 
-      - name: Get build-27 release and download assets
+      - name: Get build-22 release and download assets
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          TAG="build-27"
+          TAG="build-22"
           echo "Using tag: $TAG"
       
           gh release download "$TAG" \
