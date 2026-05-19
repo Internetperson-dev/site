@@ -59,9 +59,9 @@ jobs:
         run: |
           for dir in wasm_extract/wasm/*; do
             name=$(basename "$dir")
-            mv "$dir" "liquid_glass_widgets/${name}_wasm"
+            mv "$dir" "liquid_glass_widgets/$name"
           done
-
+          
       - name: Commit updated builds
         run: |
           git config user.name "github-actions[bot]"
