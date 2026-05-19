@@ -3,7 +3,7 @@ name: Deploy Liquid Glass Website
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 0 * * *"  # daily at 00:00 UTC
+    - cron: "0 0 * * *" # daily at 00:00 UTC
   push:
     branches: [main]
 
@@ -26,14 +26,11 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install GitHub CLI (ensure latest)
-        run: |
-          sudo apt-get update
-          sudo apt-get install -y gh
       - name: Clean old builds
         run: |
           rm -rf liquid_glass_widgets
           mkdir -p liquid_glass_widgets
+
       - name: Get latest release tag and download assets
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -43,72 +40,41 @@ jobs:
             --limit 1 \
             --json tagName \
             -q '.[0].tagName')
+
           echo "Latest tag: $TAG"
+
           gh release download "$TAG" \
             -R Internetperson-dev/liquid_glass_widgets \
             --pattern "web-builds.tar.gz" \
             --pattern "wasm-builds.tar.gz"
+
       - name: Extract web builds
         run: |
           mkdir -p web_extract
           tar -xzf web-builds.tar.gz -C web_extract
+
       - name: Extract wasm builds
         run: |
           mkdir -p wasm_extract
           tar -xzf wasm-builds.tar.gz -C wasm_extract
-      - name: Move web builds into final structure (FIXED)
+
+      - name: Move web builds into final structure
         run: |
-          shopt -s nullglob
-          # Copy directories
           for dir in web_extract/web/*; do
-            if [ -d "$dir" ]; then
-              name=$(basename "$dir")
-              mkdir -p "liquid_glass_widgets/$name"
-              cp -a "$dir/." "liquid_glass_widgets/$name/"
-            fi
+            name=$(basename "$dir")
+            mv "$dir" "liquid_glass_widgets/$name"
           done
-          # Copy loose files (e.g. favicon.png)
-          for file in web_extract/web/*; do
-            if [ -f "$file" ]; then
-              cp -a "$file" liquid_glass_widgets/
-            fi
-          done
+
       - name: Move wasm builds into final structure
         run: |
-          shopt -s nullglob
           for dir in wasm_extract/wasm/*; do
-            if [ -d "$dir" ]; then
-              name=$(basename "$dir")
-              rm -rf "liquid_glass_widgets/$name"
-              mkdir -p "liquid_glass_widgets/$name"
-              cp -a "$dir/." "liquid_glass_widgets/$name/"
-            fi
+            name=$(basename "$dir")
+            mv "$dir" "liquid_glass_widgets/$name"
           done
+
       - name: Commit updated builds
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add liquid_glass_widgets
-          if git diff --cached --quiet; then
-            echo "No changes to commit"
-          else
-            git commit -m "Update Flutter web builds"
-            git push
-          fi
-      - name: Upload Pages artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: .
-
-  deploy:
-    needs: build
-    runs-on: ubuntu-latest
-
-    environment:
-      name: github-pages
-      url: ${{ steps.deployment.outputs.page_url }}
-
-    steps:
-      - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+          if git d
