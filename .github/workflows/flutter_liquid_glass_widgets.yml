@@ -68,6 +68,8 @@ jobs:
 
       - name: Move wasm builds into final structure
         run: |
+          rm -rf "liquid_glass_widgets/$name"
+          mv "$dir" "liquid_glass_widgets/$name"
           for dir in wasm_extract/wasm/*; do
             name=$(basename "$dir")
             mv "$dir" "liquid_glass_widgets/$name"
