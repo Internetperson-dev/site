@@ -40,7 +40,7 @@ jobs:
 
       - name: Clone and get dependencies
         env:
-          GH_TOKEN: ${{ secrets.PAT }}
+          GH_TOKEN: ${{ GH_PAT }}
         run: |
           gh repo clone Internetperson-dev/flutter_liquid_glass_widgets flutter_src
           cd flutter_src/example
