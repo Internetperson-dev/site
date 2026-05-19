@@ -1,4 +1,3 @@
-
 name: Build & Deploy Liquid Glass Demos
 
 on:
@@ -58,6 +57,7 @@ jobs:
           key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
           restore-keys: |
             ${{ runner.os }}-pub-
+
       # ---------------- ENABLE WEB ----------------
       - name: Enable Flutter web
         run: flutter config --enable-web
@@ -66,40 +66,78 @@ jobs:
       - name: Ensure web support exists
         run: |
           cd flutter_src/example
+
           if [ ! -d "web" ]; then
             flutter create . --platforms=web
           fi
+
       # ---------------- DEPENDENCIES ----------------
       - name: Get dependencies
         run: |
           cd flutter_src/example
           flutter pub get
-      # ---------------- BUILD APP (MATRIX) ----------------
+
+      # ---------------- BUILD WEB APP (MATRIX) ----------------
       - name: Build Flutter Web App
         run: |
           cd flutter_src/example
+
           APP_NAME=${{ matrix.app.name }}
           ENTRY_FILE=${{ matrix.app.entry }}
           BASE_PATH="/site/liquid_glass_widgets"
-          echo "Building $APP_NAME"
+
+          echo "Building WEB for $APP_NAME"
+
           flutter build web \
             -t "$ENTRY_FILE" \
             --release \
             --base-href "$BASE_PATH/$APP_NAME/"
+
           DEST="../../site/liquid_glass_widgets/$APP_NAME"
+
           rm -rf "$DEST"
           mkdir -p "$DEST"
+
           cp -r build/web/* "$DEST/"
+
+      # ---------------- BUILD WASM APP (MATRIX) ----------------
+      - name: Build Flutter WASM App
+        run: |
+          cd flutter_src/example
+
+          APP_NAME=${{ matrix.app.name }}
+          ENTRY_FILE=${{ matrix.app.entry }}
+          BASE_PATH="/site/liquid_glass_widgets"
+
+          echo "Building WASM for $APP_NAME"
+
+          flutter build wasm \
+            -t "$ENTRY_FILE" \
+            --release \
+            --base-href "$BASE_PATH/${APP_NAME}_wasm/"
+
+          DEST="../../site/liquid_glass_widgets/${APP_NAME}_wasm"
+
+          rm -rf "$DEST"
+          mkdir -p "$DEST"
+
+          cp -r build/web/* "$DEST/"
+
       # ---------------- COMMIT + PUSH ----------------
       - name: Commit and push changes
         run: |
           cd site
+
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
-          
+
           git add liquid_glass_widgets
-          
+
           if git diff --cached --quiet; then
             echo "No changes"
             exit 0
           fi
+
+          git commit -m "Deploy Liquid Glass demos"
+
+          git push
