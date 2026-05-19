@@ -31,7 +31,7 @@ jobs:
           rm -rf liquid_glass_widgets
           mkdir -p liquid_glass_widgets
 
-      - name: Download release assets
+      - name: Get latest release tag and download assets
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -47,10 +47,12 @@ jobs:
             -R Internetperson-dev/liquid_glass_widgets \
             --pattern "web-builds.tar.gz" \
             --pattern "wasm-builds.tar.gz"
-            - name: Extract web builds
-              run: |
-                mkdir -p web_extract
-                tar -xzf web-builds.tar.gz -C web_extract
+      
+      - name: Extract web builds
+        run: |
+          mkdir -p web_extract
+          tar -xzf web-builds.tar.gz -C web_extract
+
 
       - name: Extract wasm builds
         run: |
