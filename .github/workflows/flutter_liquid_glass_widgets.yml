@@ -5,8 +5,12 @@ on:
     branches: [main]
   workflow_dispatch:
 
+concurrency:
+  group: flutter-liquid-glass-build
+  cancel-in-progress: true
+
 permissions:
-  contents: write
+  contents: read
   pages: write
   id-token: write
 
@@ -15,61 +19,69 @@ jobs:
     runs-on: ubuntu-latest
 
     strategy:
+      fail-fast: false
+
       matrix:
-        app:
+        include:
+          # ---------------- APPLE MUSIC ----------------
           - name: apple_music
             entry: lib/apple_music/apple_music_demo.dart
+            variant: web
+
+          - name: apple_music
+            entry: lib/apple_music/apple_music_demo.dart
+            variant: wasm
+
+          # ---------------- APPLE PODCASTS ----------------
           - name: apple_podcasts
             entry: lib/apple_podcasts/apple_podcasts_demo.dart
+            variant: web
+
+          - name: apple_podcasts
+            entry: lib/apple_podcasts/apple_podcasts_demo.dart
+            variant: wasm
+
+          # ---------------- APPLE MESSAGES ----------------
           - name: apple_messages
             entry: lib/apple_messages/apple_messages_demo.dart
+            variant: web
+
+          - name: apple_messages
+            entry: lib/apple_messages/apple_messages_demo.dart
+            variant: wasm
+
+          # ---------------- APPLE NEWS ----------------
           - name: apple_news
             entry: lib/apple_news/apple_news_demo.dart
+            variant: web
+
+          - name: apple_news
+            entry: lib/apple_news/apple_news_demo.dart
+            variant: wasm
 
     steps:
-      # ---------------- CHECKOUT SITE ----------------
-      - name: Checkout site repo
-        uses: actions/checkout@v4
-        with:
-          path: site
-          fetch-depth: 0
-
-      # ---------------- CHECKOUT FLUTTER SOURCE ----------------
+      # ---------------- CHECKOUT ----------------
       - name: Checkout Flutter source
         uses: actions/checkout@v4
         with:
           repository: sdegenaar/liquid_glass_widgets
           path: flutter_src
-          fetch-depth: 0
 
-      # ---------------- FLUTTER SETUP ----------------
+      # ---------------- FLUTTER ----------------
       - name: Setup Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: '3.41.9'
+          flutter-version: "3.41.9"
           cache: true
 
-      # ---------------- PUB CACHE ----------------
-      - name: Cache pub dependencies
-        uses: actions/cache@v4
-        with:
-          path: ~/.pub-cache
-          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pub-
-
-      # ---------------- ENABLE WEB ----------------
-      - name: Enable Flutter web
+      - name: Enable web
         run: flutter config --enable-web
 
-      # ---------------- ENSURE WEB SUPPORT ----------------
-      - name: Ensure web support exists
+      # ---------------- FIX: GENERATE WEB PLATFORM ----------------
+      - name: Ensure web platform exists
         run: |
           cd flutter_src/example
-
-          if [ ! -d "web" ]; then
-            flutter create . --platforms=web
-          fi
+          flutter create . --platforms web
 
       # ---------------- DEPENDENCIES ----------------
       - name: Get dependencies
@@ -77,67 +89,84 @@ jobs:
           cd flutter_src/example
           flutter pub get
 
-      # ---------------- BUILD WEB APP (MATRIX) ----------------
-      - name: Build Flutter Web App
+      # ---------------- BUILD ----------------
+      - name: Build Flutter app
         run: |
           cd flutter_src/example
 
-          APP_NAME=${{ matrix.app.name }}
-          ENTRY_FILE=${{ matrix.app.entry }}
-          BASE_PATH="/site/liquid_glass_widgets"
+          APP_NAME="${{ matrix.name }}"
+          ENTRY_FILE="${{ matrix.entry }}"
+          VARIANT="${{ matrix.variant }}"
 
-          echo "Building WEB for $APP_NAME"
+          BASE="/liquid_glass_widgets"
 
-          flutter build web \
-            -t "$ENTRY_FILE" \
-            --release \
-            --base-href "$BASE_PATH/$APP_NAME/"
+          echo "--------------------------------------"
+          echo "Building: $APP_NAME"
+          echo "Variant : $VARIANT"
+          echo "Entry   : $ENTRY_FILE"
+          echo "--------------------------------------"
 
-          DEST="../../site/liquid_glass_widgets/$APP_NAME"
+          if [ "$VARIANT" = "web" ]; then
 
-          rm -rf "$DEST"
-          mkdir -p "$DEST"
+            flutter build web \
+              -t "$ENTRY_FILE" \
+              --release \
+              --base-href "$BASE/$APP_NAME/"
 
-          cp -r build/web/* "$DEST/"
+            OUT_DIR="../../site/${APP_NAME}"
 
-      # ---------------- BUILD WASM APP (MATRIX) ----------------
-      - name: Build Flutter WASM App
-        run: |
-          cd flutter_src/example
+          else
 
-          APP_NAME=${{ matrix.app.name }}
-          ENTRY_FILE=${{ matrix.app.entry }}
-          BASE_PATH="/site/liquid_glass_widgets"
+            flutter build web \
+              -t "$ENTRY_FILE" \
+              --release \
+              --wasm \
+              --base-href "$BASE/${APP_NAME}_wasm/"
 
-          echo "Building WASM for $APP_NAME"
+            OUT_DIR="../../site/${APP_NAME}_wasm"
 
-          flutter build wasm \
-            -t "$ENTRY_FILE" \
-            --release \
-            --base-href "$BASE_PATH/${APP_NAME}_wasm/"
-
-          DEST="../../site/liquid_glass_widgets/${APP_NAME}_wasm"
-
-          rm -rf "$DEST"
-          mkdir -p "$DEST"
-
-          cp -r build/web/* "$DEST/"
-
-      # ---------------- COMMIT + PUSH ----------------
-      - name: Commit and push changes
-        run: |
-          cd site
-
-          git config user.name "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-
-          git add liquid_glass_widgets
-
-          if git diff --cached --quiet; then
-            echo "No changes"
-            exit 0
           fi
 
-          git commit -m "Deploy Liquid Glass demos"
+          rm -rf "$OUT_DIR"
+          mkdir -p "$OUT_DIR"
 
-          git push
+          cp -r build/web/* "$OUT_DIR"
+
+      # ---------------- ARTIFACT ----------------
+      - name: Upload build artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: site-${{ matrix.name }}-${{ matrix.variant }}
+          path: site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+
+    environment:
+      name: github-pages
+
+    steps:
+      # ---------------- DOWNLOAD ALL ARTIFACTS ----------------
+      - name: Download all artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: site
+
+      # ---------------- MERGE INTO PUBLIC ----------------
+      - name: Merge artifacts
+        run: |
+          mkdir -p public
+
+          find site -mindepth 2 -maxdepth 2 -type d | while read dir; do
+            cp -r "$dir" public/
+          done
+
+      # ---------------- GITHUB PAGES ----------------
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: public
+
+      - name: Deploy to GitHub Pages
+        uses: actions/deploy-pages@v4
