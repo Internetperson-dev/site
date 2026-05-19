@@ -67,13 +67,12 @@ jobs:
         run: |
           for dir in wasm_extract/wasm/*; do
             name=$(basename "$dir")
-            if [ -d "liquid_glass_widgets/$name" ]; then
-              cp -r "$dir"/* "liquid_glass_widgets/$name/"
-              rm -rf "$dir"
-            else
-              mv "$dir" "liquid_glass_widgets/$name"
-            fi
+            mv "$dir" "liquid_glass_widgets/${name}_wasm"
           done
+      
+      - name: Cleanup extraction directories
+        run: |
+          rm -rf web_extract wasm_extract
       
       - name: Commit updated builds
         run: |
