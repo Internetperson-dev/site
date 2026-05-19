@@ -30,7 +30,7 @@ jobs:
         run: |
           rm -rf liquid_glass_widgets
           mkdir -p liquid_glass_widgets
-
+      
       - name: Get latest release tag and download assets
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -40,41 +40,45 @@ jobs:
             --limit 1 \
             --json tagName \
             -q '.[0].tagName')
-
           echo "Latest tag: $TAG"
-
           gh release download "$TAG" \
             -R Internetperson-dev/liquid_glass_widgets \
             --pattern "web-builds.tar.gz" \
             --pattern "wasm-builds.tar.gz"
-
+      
       - name: Extract web builds
         run: |
           mkdir -p web_extract
           tar -xzf web-builds.tar.gz -C web_extract
-
+      
       - name: Extract wasm builds
         run: |
           mkdir -p wasm_extract
           tar -xzf wasm-builds.tar.gz -C wasm_extract
-
+      
       - name: Move web builds into final structure
         run: |
           for dir in web_extract/web/*; do
             name=$(basename "$dir")
             mv "$dir" "liquid_glass_widgets/$name"
           done
-
+      
       - name: Move wasm builds into final structure
         run: |
           for dir in wasm_extract/wasm/*; do
             name=$(basename "$dir")
-            mv "$dir" "liquid_glass_widgets/$name"
+            if [ -d "liquid_glass_widgets/$name" ]; then
+              cp -r "$dir"/* "liquid_glass_widgets/$name/"
+              rm -rf "$dir"
+            else
+              mv "$dir" "liquid_glass_widgets/$name"
+            fi
           done
-
+      
       - name: Commit updated builds
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add liquid_glass_widgets
-          if git d
+          git commit -m "Update builds from latest release" || echo "No changes to commit"
+          git push
