@@ -3,7 +3,7 @@ name: Deploy Liquid Glass Website
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 0 * * *"  # daily at 00:00 UTC
+    - cron: "0 0 * * *"
   push:
     branches: [main]
 
@@ -36,7 +36,7 @@ jobs:
           rm -rf liquid_glass_widgets
           mkdir -p liquid_glass_widgets
 
-      - name: Get latest release tag and download assets
+      - name: Get latest release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -63,46 +63,60 @@ jobs:
           mkdir -p wasm_extract
           tar -xzf wasm-builds.tar.gz -C wasm_extract
 
-      # ---------------- DEBUG STEP (NEW) ----------------
-      - name: Debug extracted structure
+      - name: Debug structure
         run: |
-          echo "================ WEB STRUCTURE ================"
-          find web_extract/web -maxdepth 3 -type d -print
-          find web_extract/web -maxdepth 3 -type f -print
+          echo "==== WEB ===="
+          find web_extract -maxdepth 3 -type f -o -type d
 
-          echo "================ WASM STRUCTURE ================"
-          find wasm_extract/wasm -maxdepth 3 -type d -print
-          find wasm_extract/wasm -maxdepth 3 -type f -print
-      # ---------------------------------------------------
+          echo "==== WASM ===="
+          find wasm_extract -maxdepth 3 -type f -o -type d
 
-      - name: Move web builds into final structure (FIXED)
+      - name: Build widget structure (FIXED LOGIC)
         run: |
-          shopt -s nullglob
+          set -e
 
-          for dir in web_extract/web/*; do
-            if [ -d "$dir" ]; then
-              name=$(basename "$dir")
-              echo "Processing web widget: $name"
+          WIDGETS=("apple_music" "apple_news" "apple_podcasts")
 
-              mkdir -p "liquid_glass_widgets/$name"
-              cp -a "$dir/." "liquid_glass_widgets/$name/"
-            fi
-          done
+          # Detect if we actually have widget folders
+          if [ -d "web_extract/web/apple_music" ]; then
+            echo "Multi-widget build detected (good)"
+            for w in "${WIDGETS[@]}"; do
+              if [ -d "web_extract/web/$w" ]; then
+                mkdir -p "liquid_glass_widgets/$w"
+                cp -a "web_extract/web/$w/." "liquid_glass_widgets/$w/"
+              fi
+            done
+          else
+            echo "Single build detected → replicating into widget folders"
 
-      - name: Move wasm builds into final structure (FIXED)
+            for w in "${WIDGETS[@]}"; do
+              mkdir -p "liquid_glass_widgets/$w"
+              cp -a web_extract/web/. "liquid_glass_widgets/$w/"
+            done
+          fi
+
+      - name: Build wasm structure (same logic)
         run: |
-          shopt -s nullglob
+          set -e
 
-          for dir in wasm_extract/wasm/*; do
-            if [ -d "$dir" ]; then
-              name=$(basename "$dir")
-              echo "Processing wasm widget: $name"
+          WIDGETS=("apple_music" "apple_news" "apple_podcasts")
 
-              rm -rf "liquid_glass_widgets/$name"
-              mkdir -p "liquid_glass_widgets/$name"
-              cp -a "$dir/." "liquid_glass_widgets/$name/"
-            fi
-          done
+          if [ -d "wasm_extract/wasm/apple_music" ]; then
+            for w in "${WIDGETS[@]}"; do
+              if [ -d "wasm_extract/wasm/$w" ]; then
+                rm -rf "liquid_glass_widgets/$w"
+                mkdir -p "liquid_glass_widgets/$w"
+                cp -a "wasm_extract/wasm/$w/." "liquid_glass_widgets/$w/"
+              fi
+            done
+          else
+            echo "Single wasm build → mirroring into widgets"
+            for w in "${WIDGETS[@]}"; do
+              rm -rf "liquid_glass_widgets/$w"
+              mkdir -p "liquid_glass_widgets/$w"
+              cp -a wasm_extract/wasm/. "liquid_glass_widgets/$w/"
+            done
+          fi
 
       - name: Commit updated builds
         run: |
@@ -112,7 +126,7 @@ jobs:
           git add liquid_glass_widgets
 
           if git diff --cached --quiet; then
-            echo "No changes to commit"
+            echo "No changes"
           else
             git commit -m "Update Flutter web builds"
             git push
@@ -132,6 +146,6 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-      - name: Deploy to GitHub Pages
+      - name: Deploy
         id: deployment
         uses: actions/deploy-pages@v4
