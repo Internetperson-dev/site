@@ -24,10 +24,10 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Prepare directories
+      - name: Clean old builds
         run: |
-          rm -rf site/liquid_glass_widgets
-          mkdir -p site/liquid_glass_widgets
+          rm -rf liquid_glass_widgets
+          mkdir -p liquid_glass_widgets
 
       - name: Download release assets
         env:
@@ -40,26 +40,26 @@ jobs:
 
       - name: Extract web builds
         run: |
-          mkdir web_extract
+          mkdir -p web_extract
           tar -xzf web-builds.tar.gz -C web_extract
 
       - name: Extract wasm builds
         run: |
-          mkdir wasm_extract
+          mkdir -p wasm_extract
           tar -xzf wasm-builds.tar.gz -C wasm_extract
 
       - name: Move web builds into final structure
         run: |
-          for dir in web_extract/*; do
+          for dir in web_extract/web/*; do
             name=$(basename "$dir")
-            mv "$dir" "site/liquid_glass_widgets/$name"
+            mv "$dir" "liquid_glass_widgets/$name"
           done
 
       - name: Move wasm builds into final structure
         run: |
-          for dir in wasm_extract/*; do
+          for dir in wasm_extract/wasm/*; do
             name=$(basename "$dir")
-            mv "$dir" "site/liquid_glass_widgets/${name}_wasm"
+            mv "$dir" "liquid_glass_widgets/${name}_wasm"
           done
 
       - name: Commit updated builds
@@ -67,7 +67,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-          git add site/liquid_glass_widgets
+          git add liquid_glass_widgets
 
           if git diff --cached --quiet; then
             echo "No changes to commit"
@@ -79,7 +79,7 @@ jobs:
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: site
+          path: .
 
   deploy:
     needs: build
