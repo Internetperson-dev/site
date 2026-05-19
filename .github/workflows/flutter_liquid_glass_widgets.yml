@@ -3,7 +3,7 @@ name: Deploy Liquid Glass Website
 on:
   workflow_dispatch:
   schedule:
-    - cron: "0 0 * * *"
+    - cron: "0 0 * * *"  # daily at 00:00 UTC
   push:
     branches: [main]
 
@@ -26,17 +26,15 @@ jobs:
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Install GitHub CLI
+      - name: Install GitHub CLI (ensure latest)
         run: |
           sudo apt-get update
           sudo apt-get install -y gh
-
       - name: Clean old builds
         run: |
           rm -rf liquid_glass_widgets
           mkdir -p liquid_glass_widgets
-
-      - name: Get latest release
+      - name: Get latest release tag and download assets
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
@@ -45,93 +43,58 @@ jobs:
             --limit 1 \
             --json tagName \
             -q '.[0].tagName')
-
           echo "Latest tag: $TAG"
-
           gh release download "$TAG" \
             -R Internetperson-dev/liquid_glass_widgets \
             --pattern "web-builds.tar.gz" \
             --pattern "wasm-builds.tar.gz"
-
       - name: Extract web builds
         run: |
           mkdir -p web_extract
           tar -xzf web-builds.tar.gz -C web_extract
-
       - name: Extract wasm builds
         run: |
           mkdir -p wasm_extract
           tar -xzf wasm-builds.tar.gz -C wasm_extract
-
-      - name: Debug structure
+      - name: Move web builds into final structure (FIXED)
         run: |
-          echo "==== WEB ===="
-          find web_extract -maxdepth 3 -type f -o -type d
-
-          echo "==== WASM ===="
-          find wasm_extract -maxdepth 3 -type f -o -type d
-
-      - name: Build widget structure (FIXED LOGIC)
+          shopt -s nullglob
+          # Copy directories
+          for dir in web_extract/web/*; do
+            if [ -d "$dir" ]; then
+              name=$(basename "$dir")
+              mkdir -p "liquid_glass_widgets/$name"
+              cp -a "$dir/." "liquid_glass_widgets/$name/"
+            fi
+          done
+          # Copy loose files (e.g. favicon.png)
+          for file in web_extract/web/*; do
+            if [ -f "$file" ]; then
+              cp -a "$file" liquid_glass_widgets/
+            fi
+          done
+      - name: Move wasm builds into final structure
         run: |
-          set -e
-
-          WIDGETS=("apple_music" "apple_news" "apple_podcasts")
-
-          # Detect if we actually have widget folders
-          if [ -d "web_extract/web/apple_music" ]; then
-            echo "Multi-widget build detected (good)"
-            for w in "${WIDGETS[@]}"; do
-              if [ -d "web_extract/web/$w" ]; then
-                mkdir -p "liquid_glass_widgets/$w"
-                cp -a "web_extract/web/$w/." "liquid_glass_widgets/$w/"
-              fi
-            done
-          else
-            echo "Single build detected → replicating into widget folders"
-
-            for w in "${WIDGETS[@]}"; do
-              mkdir -p "liquid_glass_widgets/$w"
-              cp -a web_extract/web/. "liquid_glass_widgets/$w/"
-            done
-          fi
-
-      - name: Build wasm structure (same logic)
-        run: |
-          set -e
-
-          WIDGETS=("apple_music" "apple_news" "apple_podcasts")
-
-          if [ -d "wasm_extract/wasm/apple_music" ]; then
-            for w in "${WIDGETS[@]}"; do
-              if [ -d "wasm_extract/wasm/$w" ]; then
-                rm -rf "liquid_glass_widgets/$w"
-                mkdir -p "liquid_glass_widgets/$w"
-                cp -a "wasm_extract/wasm/$w/." "liquid_glass_widgets/$w/"
-              fi
-            done
-          else
-            echo "Single wasm build → mirroring into widgets"
-            for w in "${WIDGETS[@]}"; do
-              rm -rf "liquid_glass_widgets/$w"
-              mkdir -p "liquid_glass_widgets/$w"
-              cp -a wasm_extract/wasm/. "liquid_glass_widgets/$w/"
-            done
-          fi
-
+          shopt -s nullglob
+          for dir in wasm_extract/wasm/*; do
+            if [ -d "$dir" ]; then
+              name=$(basename "$dir")
+              rm -rf "liquid_glass_widgets/$name"
+              mkdir -p "liquid_glass_widgets/$name"
+              cp -a "$dir/." "liquid_glass_widgets/$name/"
+            fi
+          done
       - name: Commit updated builds
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-
           git add liquid_glass_widgets
-
           if git diff --cached --quiet; then
-            echo "No changes"
+            echo "No changes to commit"
           else
             git commit -m "Update Flutter web builds"
             git push
           fi
-
       - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
@@ -146,6 +109,6 @@ jobs:
       url: ${{ steps.deployment.outputs.page_url }}
 
     steps:
-      - name: Deploy
+      - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
