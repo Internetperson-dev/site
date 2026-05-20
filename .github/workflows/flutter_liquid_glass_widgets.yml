@@ -1,25 +1,32 @@
-name: Deploy Liquid Glass Website
+name: Deploy Liquid Glass Website to Pages
 
 on:
-  workflow_dispatch:
+  # Runs on pushes targeting the default branch
+  push:
+    branches: ["main"]
+  
+  # Daily scheduled build
   schedule:
     - cron: "0 0 * * *" # daily at 00:00 UTC
-  push:
-    branches: [main]
+  
+  # Allows you to run this workflow manually from the Actions tab
+  workflow_dispatch:
 
+# Sets permissions of the GITHUB_TOKEN
 permissions:
   contents: write
   pages: write
   id-token: write
 
+# Allow only one concurrent deployment
 concurrency:
-  group: pages
-  cancel-in-progress: true
+  group: "pages"
+  cancel-in-progress: false
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    
     steps:
       - name: Checkout website repo
         uses: actions/checkout@v4
@@ -45,7 +52,7 @@ jobs:
             -R Internetperson-dev/liquid_glass_widgets \
             --pattern "web-builds.tar.gz" \
             --pattern "wasm-builds.tar.gz"
-
+      
       - name: Debug - Check tar contents
         run: |
           echo "=== web-builds.tar.gz structure (first 30 files) ==="
@@ -143,3 +150,26 @@ jobs:
           git add liquid_glass_widgets
           git commit -m "Update builds from latest release" || echo "No changes to commit"
           git push
+
+  deploy:
+    needs: build
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: '.'
+      
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
