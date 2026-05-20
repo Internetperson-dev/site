@@ -1,0 +1,168 @@
+name: Mobile WASM Navigation Benchmark
+
+on:
+  workflow_dispatch:
+  push:
+
+jobs:
+  benchmark:
+    runs-on: ubuntu-latest
+
+    strategy:
+      fail-fast: false
+      matrix:
+        browser: [chromium, firefox, webkit]
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install Playwright
+        run: |
+          npm init -y
+          npm install -D @playwright/test
+          npx playwright install --with-deps
+
+      - name: Create test
+        run: |
+          mkdir -p tests
+
+          cat > tests/navigation.spec.ts << 'EOF'
+          import { test } from '@playwright/test';
+          import fs from 'fs';
+
+          const sites = [
+            {
+              name: 'apple_news_wasm',
+              url: 'https://internetperson-dev.github.io/site/liquid_glass_widgets/apple_news_wasm/',
+              steps: [
+                // You will likely need to adjust selectors based on actual UI
+                { action: 'wait' },
+                { action: 'click', selector: 'text=News' },
+                { action: 'wait' },
+                { action: 'click', selector: 'text=Explore' },
+                { action: 'wait' },
+              ]
+            },
+            {
+              name: 'apple_music_wasm',
+              url: 'https://internetperson-dev.github.io/site/liquid_glass_widgets/apple_music_wasm/',
+              steps: [
+                { action: 'wait' },
+                { action: 'click', selector: 'text=Browse' },
+                { action: 'wait' },
+                { action: 'click', selector: 'text=Radio' },
+                { action: 'wait' },
+              ]
+            },
+            {
+              name: 'apple_messages_wasm',
+              url: 'https://internetperson-dev.github.io/site/liquid_glass_widgets/apple_messages_wasm/',
+              steps: [
+                { action: 'wait' },
+                { action: 'click', selector: 'text=Chat' },
+                { action: 'wait' },
+              ]
+            },
+            {
+              name: 'apple_podcasts_wasm',
+              url: 'https://internetperson-dev.github.io/site/liquid_glass_widgets/apple_podcasts_wasm/',
+              steps: [
+                { action: 'wait' },
+                { action: 'click', selector: 'text=Browse' },
+                { action: 'wait' },
+              ]
+            }
+          ];
+
+          function sleep(ms) {
+            return new Promise(r => setTimeout(r, ms));
+          }
+
+          for (const site of sites) {
+            test(`${site.name}`, async ({ page, browserName }) => {
+
+              const results = [];
+
+              // OPTIONAL: throttle only Chromium
+              if (browserName === 'chromium') {
+                const client = await page.context().newCDPSession(page);
+
+                await client.send('Emulation.setCPUThrottlingRate', { rate: 4 });
+
+                await client.send('Network.emulateNetworkConditions', {
+                  offline: false,
+                  latency: 150,
+                  downloadThroughput: 1.5 * 1024 * 1024 / 8,
+                  uploadThroughput: 750 * 1024 / 8,
+                });
+              }
+
+              const startTotal = Date.now();
+
+              const startLoad = Date.now();
+              await page.goto(site.url, { waitUntil: 'load' });
+              await page.waitForTimeout(2000);
+
+              results.push({
+                step: 'initial_load',
+                time: Date.now() - startLoad,
+              });
+
+              for (const step of site.steps) {
+
+                if (step.action === 'wait') {
+                  const t = Date.now();
+                  await page.waitForTimeout(1200);
+                  results.push({
+                    step: 'wait',
+                    time: Date.now() - t,
+                  });
+                }
+
+                if (step.action === 'click' && step.selector) {
+                  const t = Date.now();
+
+                  try {
+                    await page.click(step.selector, { timeout: 5000 });
+                  } catch {
+                    // selector might not exist in all apps
+                  }
+
+                  // wait for UI to stabilize
+                  await page.waitForTimeout(1500);
+
+                  results.push({
+                    step: `click:${step.selector}`,
+                    time: Date.now() - t,
+                  });
+                }
+              }
+
+              const totalTime = Date.now() - startTotal;
+
+              fs.mkdirSync('results', { recursive: true });
+
+              fs.writeFileSync(
+                `results/${browserName}_${site.name}.json`,
+                JSON.stringify({
+                  totalTime,
+                  steps: results
+                }, null, 2)
+              );
+            });
+          }
+          EOF
+
+      - name: Run benchmark
+        run: npx playwright test --project=${{ matrix.browser }}
+
+      - name: Upload results
+        uses: actions/upload-artifact@v4
+        with:
+          name: nav-benchmark-${{ matrix.browser }}
+          path: results/
