@@ -1,24 +1,19 @@
 name: Deploy Liquid Glass Website to Pages
 
 on:
-  # Runs on pushes targeting the default branch
   push:
     branches: ["main"]
-  
-  # Daily scheduled build
+
   schedule:
-    - cron: "0 0 * * *" # daily at 00:00 UTC
-  
-  # Allows you to run this workflow manually from the Actions tab
+    - cron: "0 0 * * *"
+
   workflow_dispatch:
 
-# Sets permissions of the GITHUB_TOKEN
 permissions:
   contents: write
   pages: write
   id-token: write
 
-# Allow only one concurrent deployment
 concurrency:
   group: "pages"
   cancel-in-progress: false
@@ -26,7 +21,7 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout website repo
         uses: actions/checkout@v4
@@ -37,7 +32,7 @@ jobs:
         run: |
           rm -rf liquid_glass_widgets
           mkdir -p liquid_glass_widgets
-      
+
       - name: Get latest release tag and download assets
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -47,106 +42,91 @@ jobs:
             --limit 1 \
             --json tagName \
             -q '.[0].tagName')
+
           echo "Latest tag: $TAG"
+
           gh release download "$TAG" \
             -R Internetperson-dev/liquid_glass_widgets \
-            --pattern "web-builds.tar.gz" \
-            --pattern "wasm-builds.tar.gz"
-      
-      - name: Debug - Check tar contents
+            --pattern "web-canvas-builds.tar.gz" \
+            --pattern "wasm-builds.tar.gz" \
+            --pattern "web-html-builds.tar.gz"
+
+      - name: Extract and organize builds
         run: |
-          echo "=== web-builds.tar.gz structure (first 30 files) ==="
-          tar -tzf web-builds.tar.gz | head -30
-          echo ""
-          echo "=== wasm-builds.tar.gz structure (first 30 files) ==="
-          tar -tzf wasm-builds.tar.gz | head -30
-      
-      - name: Extract web builds
-        run: |
-          mkdir -p web_extract
-          tar -xzf web-builds.tar.gz -C web_extract
-          echo "=== web_extract directory structure ==="
-          find web_extract -type f | head -20
-      
-      - name: Extract wasm builds
-        run: |
-          mkdir -p wasm_extract
-          tar -xzf wasm-builds.tar.gz -C wasm_extract
-          echo "=== wasm_extract directory structure ==="
-          find wasm_extract -type f | head -20
-      
-      - name: Organize web builds into app directories
-        run: |
-          # Find all index.html files in web_extract and create proper app structure
-          for index_file in $(find web_extract -name "index.html" -type f); do
-            # Get the app directory (parent of the HTML file)
-            app_dir=$(dirname "$index_file")
-            app_name=$(basename "$app_dir")
-            
-            # Skip if it's the root
-            if [ "$app_name" != "web_extract" ] && [ -n "$app_name" ]; then
-              echo "Processing web app: $app_name"
+          set -e
+          mkdir -p liquid_glass_widgets
+
+          ########################################
+          # CANVAS (no suffix)
+          ########################################
+          if [ -f web-canvas-builds.tar.gz ]; then
+            echo "=== Canvas builds ==="
+            mkdir -p canvas_extract
+            tar -xzf web-canvas-builds.tar.gz -C canvas_extract
+
+            for index_file in $(find canvas_extract -name "index.html" -type f); do
+              app_dir=$(dirname "$index_file")
+              app_name=$(basename "$app_dir")
+
+              echo "Canvas: $app_name"
               mkdir -p "liquid_glass_widgets/$app_name"
               cp -r "$app_dir"/* "liquid_glass_widgets/$app_name/"
-            fi
-          done
-          
-          # If no index.html files found, try to move all directories
-          if [ $(find web_extract -name "index.html" | wc -l) -eq 0 ]; then
-            echo "No index.html found, moving all directories..."
-            for dir in web_extract/*/; do
-              if [ -d "$dir" ]; then
-                app_name=$(basename "$dir")
-                echo "Moving web app: $app_name"
-                mv "$dir" "liquid_glass_widgets/$app_name"
-              fi
             done
           fi
-      
-      - name: Organize wasm builds into app directories
-        run: |
-          # Find all index.html files in wasm_extract and create proper app structure
-          for index_file in $(find wasm_extract -name "index.html" -type f); do
-            # Get the app directory (parent of the HTML file)
-            app_dir=$(dirname "$index_file")
-            app_name=$(basename "$app_dir")
-            
-            # Skip if it's the root
-            if [ "$app_name" != "wasm_extract" ] && [ -n "$app_name" ]; then
-              echo "Processing wasm app: $app_name"
-              mkdir -p "liquid_glass_widgets/$app_name"
-              cp -r "$app_dir"/* "liquid_glass_widgets/$app_name/"
-            fi
-          done
-          
-          # If no index.html files found, try to move all directories
-          if [ $(find wasm_extract -name "index.html" | wc -l) -eq 0 ]; then
-            echo "No index.html found, moving all directories..."
-            for dir in wasm_extract/*/; do
-              if [ -d "$dir" ]; then
-                app_name=$(basename "$dir")
-                echo "Moving wasm app: $app_name"
-                mv "$dir" "liquid_glass_widgets/$app_name"
-              fi
+
+          ########################################
+          # WASM (_wasm suffix)
+          ########################################
+          if [ -f wasm-builds.tar.gz ]; then
+            echo "=== WASM builds ==="
+            mkdir -p wasm_extract
+            tar -xzf wasm-builds.tar.gz -C wasm_extract
+
+            for index_file in $(find wasm_extract -name "index.html" -type f); do
+              app_dir=$(dirname "$index_file")
+              app_name=$(basename "$app_dir")
+
+              target="${app_name}_wasm"
+
+              echo "WASM: $app_name → $target"
+              mkdir -p "liquid_glass_widgets/$target"
+              cp -r "$app_dir"/* "liquid_glass_widgets/$target/"
             done
           fi
-      
-      - name: Cleanup extraction directories
-        run: |
-          rm -rf web_extract wasm_extract
-      
-      - name: Display final structure
-        run: |
-          echo "=== Final liquid_glass_widgets structure ==="
+
+          ########################################
+          # HTML (_html suffix)
+          ########################################
+          if [ -f web-html-builds.tar.gz ]; then
+            echo "=== HTML builds ==="
+            mkdir -p html_extract
+            tar -xzf web-html-builds.tar.gz -C html_extract
+
+            for index_file in $(find html_extract -name "index.html" -type f); do
+              app_dir=$(dirname "$index_file")
+              app_name=$(basename "$app_dir")
+
+              target="${app_name}_html"
+
+              echo "HTML: $app_name → $target"
+              mkdir -p "liquid_glass_widgets/$target"
+              cp -r "$app_dir"/* "liquid_glass_widgets/$target/"
+            done
+          fi
+
+          ########################################
+          # Cleanup + debug
+          ########################################
+          rm -rf canvas_extract wasm_extract html_extract
+
+          echo "=== Final structure ==="
           find liquid_glass_widgets -maxdepth 2 -type d | sort
-          echo ""
-          echo "=== Directory count ==="
-          find liquid_glass_widgets -maxdepth 1 -type d | wc -l
-      
+
       - name: Commit updated builds
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
           git add liquid_glass_widgets
           git commit -m "Update builds from latest release" || echo "No changes to commit"
           git push
@@ -157,19 +137,19 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     runs-on: ubuntu-latest
-    
+
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      
+
       - name: Setup Pages
         uses: actions/configure-pages@v5
-      
+
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
           path: '.'
-      
+
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
