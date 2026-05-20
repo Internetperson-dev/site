@@ -107,8 +107,8 @@ jobs:
             # Skip if it's the root
             if [ "$app_name" != "wasm_extract" ] && [ -n "$app_name" ]; then
               echo "Processing wasm app: $app_name"
-              mkdir -p "liquid_glass_widgets/${app_name}_wasm"
-              cp -r "$app_dir"/* "liquid_glass_widgets/${app_name}_wasm/"
+              mkdir -p "liquid_glass_widgets/$app_name"
+              cp -r "$app_dir"/* "liquid_glass_widgets/$app_name/"
             fi
           done
           
@@ -119,7 +119,7 @@ jobs:
               if [ -d "$dir" ]; then
                 app_name=$(basename "$dir")
                 echo "Moving wasm app: $app_name"
-                mv "$dir" "liquid_glass_widgets/${app_name}_wasm"
+                mv "$dir" "liquid_glass_widgets/$app_name"
               fi
             done
           fi
