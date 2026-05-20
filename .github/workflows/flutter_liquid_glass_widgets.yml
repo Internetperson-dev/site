@@ -45,12 +45,6 @@ jobs:
             -R Internetperson-dev/liquid_glass_widgets \
             --pattern "web-builds.tar.gz" \
             --pattern "wasm-builds.tar.gz"
-      
-          gh release download "$TAG" \
-            -R Internetperson-dev/liquid_glass_widgets \
-            --pattern "web-builds.tar.gz" \
-            --pattern "wasm-builds.tar.gz"
-
 
       - name: Debug - Check tar contents
         run: |
