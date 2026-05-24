@@ -37,11 +37,10 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          TAG=$(gh release list \
+          TAG=$(gh release view \
             -R Internetperson-dev/liquid_glass_widgets \
-            --limit 1 \
             --json tagName \
-            -q '.[0].tagName')
+            -q '.tagName')
 
           echo "Latest tag: $TAG"
 
@@ -54,6 +53,7 @@ jobs:
       - name: Extract and organize builds
         run: |
           set -e
+
           mkdir -p liquid_glass_widgets
 
           ########################################
@@ -61,6 +61,7 @@ jobs:
           ########################################
           if [ -f web-canvas-builds.tar.gz ]; then
             echo "=== Canvas builds ==="
+
             mkdir -p canvas_extract
             tar -xzf web-canvas-builds.tar.gz -C canvas_extract
 
@@ -69,6 +70,7 @@ jobs:
               app_name=$(basename "$app_dir")
 
               echo "Canvas: $app_name"
+
               mkdir -p "liquid_glass_widgets/$app_name"
               cp -r "$app_dir"/* "liquid_glass_widgets/$app_name/"
             done
@@ -79,16 +81,17 @@ jobs:
           ########################################
           if [ -f wasm-builds.tar.gz ]; then
             echo "=== WASM builds ==="
+
             mkdir -p wasm_extract
             tar -xzf wasm-builds.tar.gz -C wasm_extract
 
             for index_file in $(find wasm_extract -name "index.html" -type f); do
               app_dir=$(dirname "$index_file")
               app_name=$(basename "$app_dir")
-
               target="${app_name}_wasm"
 
               echo "WASM: $app_name → $target"
+
               mkdir -p "liquid_glass_widgets/$target"
               cp -r "$app_dir"/* "liquid_glass_widgets/$target/"
             done
@@ -99,16 +102,17 @@ jobs:
           ########################################
           if [ -f web-html-builds.tar.gz ]; then
             echo "=== HTML builds ==="
+
             mkdir -p html_extract
             tar -xzf web-html-builds.tar.gz -C html_extract
 
             for index_file in $(find html_extract -name "index.html" -type f); do
               app_dir=$(dirname "$index_file")
               app_name=$(basename "$app_dir")
-
               target="${app_name}_html"
 
               echo "HTML: $app_name → $target"
+
               mkdir -p "liquid_glass_widgets/$target"
               cp -r "$app_dir"/* "liquid_glass_widgets/$target/"
             done
@@ -128,14 +132,18 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
           git add liquid_glass_widgets
+
           git commit -m "Update builds from latest release" || echo "No changes to commit"
+
           git push
 
   deploy:
     needs: build
+
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+
     runs-on: ubuntu-latest
 
     steps:
