@@ -7,8 +7,8 @@
 <title>Internetperson-dev Useful links</title>
 <link rel="icon" type="image/png" href="favicon.png">
 
-<!-- Orbitron font for CRYSTAL button -->
-<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css" />
+<link rel="stylesheet" href="glass.css" />
 
 <style>
 html, body {
@@ -23,9 +23,6 @@ html, body {
   color: #fff;
 }
 
-/* =========================
-   GLASS CURSOR
-   ========================= */
 .glass-cursor {
   position: fixed;
   top: 0;
@@ -36,95 +33,13 @@ html, body {
   transform: translate(-50%, -50%);
   pointer-events: none;
   z-index: 9999;
-
   background: rgba(255, 255, 255, 0.08);
-  border: 2px solid rgba(255,255,255,0.6);
-  box-shadow: 0 16px 32px rgba(0, 0, 0, 0.12);
+  box-shadow:
+    0 0 0 2px rgba(255, 255, 255, 0.6),
+    0 16px 32px rgba(0, 0, 0, 0.12);
   backdrop-filter: blur(10px);
 }
 
-/* =========================
-   CRYSTAL BUTTON
-   ========================= */
-.glass-button {
-  position: relative;
-  cursor: pointer;
-  outline: none;
-  width: 320px;
-  height: 140px;
-  border-radius: 999px;
-
-  border: 1px solid rgba(255, 255, 255, 0.3);
-
-  background: linear-gradient(
-    135deg,
-    rgba(255, 255, 255, 0.2) 0%,
-    rgba(255, 255, 255, 0.08) 50%,
-    rgba(255, 255, 255, 0.03) 100%
-  );
-
-  backdrop-filter: url(#glass);
-  -webkit-backdrop-filter: url(#glass);
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.2);
-}
-
-.glass-button span {
-  font-family: "Orbitron", sans-serif;
-  color: white;
-  font-size: 2.2rem;
-  font-weight: 600;
-  text-transform: uppercase;
-  letter-spacing: 0.1em;
-}
-
-.glass-button:hover {
-  transform: scale(1.05);
-}
-
-/* =========================
-   LIQUID GLASS BUTTONS (rest of site)
-   ========================= */
-.glass {
-  position: relative;
-  padding: 14px;
-  width: 320px;
-  border-radius: 18px;
-  font-size: 1rem;
-  text-align: center;
-  color: #fff;
-  border: 1px solid rgba(255,255,255,0.18);
-
-  background: linear-gradient(
-    135deg,
-    rgba(255,255,255,0.18),
-    rgba(255,255,255,0.06)
-  );
-
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-
-  filter: url(#liquid-glass-filter);
-
-  box-shadow:
-    0 10px 30px rgba(0,0,0,0.25),
-    inset 0 1px 0 rgba(255,255,255,0.25);
-
-  cursor: none;
-  user-select: none;
-  overflow: hidden;
-  transition: transform 0.25s ease, box-shadow 0.25s ease;
-}
-
-.glass:hover {
-  transform: translateY(-3px) scale(1.01);
-}
-
-/* layout */
 .links {
   display: flex;
   flex-direction: column;
@@ -134,12 +49,9 @@ html, body {
   gap: 15px;
 }
 
-.content {
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 10px;
-  gap: 10px;
+h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
 }
 </style>
 </head>
@@ -148,89 +60,102 @@ html, body {
 
 <div class="glass-cursor"></div>
 
-<!-- LIQUID FILTER -->
-<svg width="0" height="0" style="position:absolute">
-  <defs>
-    <filter id="liquid-glass-filter">
-      <feGaussianBlur in="SourceGraphic" stdDeviation="0.6" result="blur"/>
-      <feColorMatrix in="blur" type="saturate" values="1.6"/>
-    </filter>
-  </defs>
-</svg>
-
-<!-- CRYSTAL FILTER -->
-<svg style="position: absolute; width: 0; height: 0">
-  <filter
-    id="glass"
-    x="-50%"
-    y="-50%"
-    width="200%"
-    height="200%"
-    primitiveUnits="objectBoundingBox"
-  >
-    <feImage x="-50%" y="-50%" width="200%" height="200%" result="map" />
-    <feGaussianBlur in="SourceGraphic" stdDeviation="0.02" result="blur" />
-    <feDisplacementMap
-      id="disp"
-      in="blur"
-      in2="map"
-      scale="0.8"
-      xChannelSelector="R"
-      yChannelSelector="G"
-    />
-  </filter>
-</svg>
-
 <div class="links">
   <h1>Useful Links</h1>
 
-  <!-- 🔥 REPLACED BUTTON -->
-  <button class="glass-button collapsible">
-    <span>CRYSTAL</span>
-  </button>
-
-  <div class="content">
-    <button class="glass" onclick="location.href='https://wolfyxon.github.io/3ds-web-stuff/'">3DS Games</button>
-    <button class="glass" onclick="location.href='http://froxot.de/'">3DS Games - 2</button>
-    <button class="glass" onclick="location.href='https://www.elizium.nu/scripts/lemmings/'">Lemmings</button>
-    <button class="glass" onclick="location.href='https://kazuki-4ys.github.io/web_apps/snes9x-2005-wasm/'">SNES Emu</button>
-    <button class="glass" onclick="location.href='https://www.supersmashflash.com/play/ssf1/'">Super Smash Flash</button>
-    <button class="glass" onclick="location.href='https://kbhgames.com/game/super-smash-flash-2'">Super Smash Flash 2</button>
-    <button class="glass" onclick="location.href='https://internetperson-dev.github.io/site/platformer/title.html'">Test Game</button>
-  </div>
+  <div id="etc-container"></div>
+  <div id="content" style="display:none; flex-direction:column; gap:10px;"></div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+<script src="container.js"></script>
+<script src="button.js"></script>
+
 <script>
-/* cursor follow */
+/* =========================
+   CURSOR
+========================= */
 const cursor = document.querySelector('.glass-cursor');
 document.addEventListener('mousemove', e => {
   cursor.style.left = e.clientX + 'px';
   cursor.style.top  = e.clientY + 'px';
 });
 
-/* collapsible */
-document.querySelector(".collapsible").addEventListener("click", function() {
-  const content = this.nextElementSibling;
-  content.style.display = content.style.display === "flex" ? "none" : "flex";
+/* =========================
+   NAV HELPERS
+========================= */
+function go(url) {
+  window.location.href = url;
+}
+
+function createLinkButton(text, url) {
+  return new Button({
+    text,
+    size: 32,
+    type: 'rounded',
+    onClick: () => go(url)
+  }).element;
+}
+
+/* =========================
+   COLLAPSIBLE BUTTON
+========================= */
+const content = document.getElementById("content");
+
+const toggleButton = new Button({
+  text: "/etc",
+  size: 34,
+  type: "rounded",
+  onClick: () => {
+    content.style.display =
+      content.style.display === "flex" ? "none" : "flex";
+  }
 });
 
-/* liquid hover */
-document.querySelectorAll(".glass").forEach(btn => {
-  btn.addEventListener("mousemove", e => {
-    const r = btn.getBoundingClientRect();
-    btn.style.setProperty("--x", `${e.clientX - r.left}px`);
-    btn.style.setProperty("--y", `${e.clientY - r.top}px`);
-  });
+document.getElementById("etc-container")
+  .appendChild(toggleButton.element);
+
+/* =========================
+   LINKS (UI LIBRARY)
+========================= */
+const links = [
+  ["3DS Games", "https://wolfyxon.github.io/3ds-web-stuff/"],
+  ["3DS Games - 2", "http://froxot.de/"],
+  ["Lemmings", "https://www.elizium.nu/scripts/lemmings/"],
+  ["SNES Emu", "https://kazuki-4ys.github.io/web_apps/snes9x-2005-wasm/"],
+  ["Super Smash Flash", "https://www.supersmashflash.com/play/ssf1/"],
+  ["Super Smash Flash 2", "https://kbhgames.com/game/super-smash-flash-2"],
+  ["Test Game", "https://internetperson-dev.github.io/site/platformer/title.html"],
+  ["Angry Birds Chrome", "https://yell0wsuit.page/assets/games/angry-birds-chrome/index.html"],
+  ["Music PWA Test", "https://kinoposts.web.app/test/playlistmaker.html"],
+  ["Google Calculator PWA", "https://calculator.apps.chrome/"],
+  ["yt-bad", "https://internetperson-dev.github.io/site/etc/yt/yt-bad.html"],
+  ["yt-good", "https://internetperson-dev.github.io/site/etc/yt/yt-good.html"]
+];
+
+links.forEach(([name, url]) => {
+  content.appendChild(createLinkButton(name, url));
 });
 
-/* CRYSTAL filter map */
-const feImage = document.querySelector("feImage");
-fetch("https://essykings.github.io/JavaScript/map.png")
-  .then(r => r.blob())
-  .then(blob => {
-    const objURL = URL.createObjectURL(blob);
-    feImage.setAttribute("href", objURL);
-  });
+/* =========================
+   LADYBIRD EFFECT
+========================= */
+function createLadybird() {
+  const e = document.createElement("div");
+  e.className = "ladybird";
+  e.innerText = "🐞";
+  e.style.position = "absolute";
+  e.style.left = Math.random() * window.innerWidth + "px";
+  e.style.top = "0px";
+  document.body.appendChild(e);
+  setTimeout(() => e.remove(), 1000);
+}
+
+if (navigator.userAgent.includes("Ladybird")) {
+  for (let i = 0; i < 10; i++) {
+    setTimeout(createLadybird, 500 * Math.random());
+  }
+}
 </script>
 
 </body>
