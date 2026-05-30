@@ -9,7 +9,6 @@
 <link rel="stylesheet" href="styles.css"/>
 <link rel="stylesheet" href="glass.css"/>
 
-  
 <style>
 html, body {
   height: 100%;
@@ -55,56 +54,60 @@ html, body {
   <div id="content" style="display:none; flex-direction:column; gap:10px;"></div>
 </div>
 
-<!-- REQUIRED DEPENDENCY -->
+<!-- dependencies -->
 <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
 
-<!-- LIQUID GLASS JS (FROM GITHUB RAW) -->
-<script src="https://raw.githubusercontent.com/dashersw/liquid-glass-js/refs/heads/main/container.js"></script>
-<script src="https://raw.githubusercontent.com/dashersw/liquid-glass-js/refs/heads/main/button.js"></script>
+<!-- FIXED LIBRARY IMPORTS -->
+<script src="https://cdn.jsdelivr.net/gh/dashersw/liquid-glass-js@main/container.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/dashersw/liquid-glass-js@main/button.js"></script>
 
 <script>
-const cursor = document.querySelector(".glass-cursor");
+window.addEventListener("DOMContentLoaded", () => {
 
-document.addEventListener("mousemove", e => {
-  cursor.style.left = e.clientX + "px";
-  cursor.style.top = e.clientY + "px";
-});
+  const cursor = document.querySelector(".glass-cursor");
 
-const go = (url) => window.location.href = url;
-
-/* TOGGLE */
-const content = document.getElementById("content");
-
-const toggleBtn = new Button({
-  text: "/etc",
-  size: 34,
-  type: "rounded",
-  onClick: () => {
-    content.style.display =
-      content.style.display === "flex" ? "none" : "flex";
-  }
-});
-
-document.getElementById("menu").appendChild(toggleBtn.element);
-
-/* LINKS */
-const links = [
-  ["3DS Games", "https://wolfyxon.github.io/3ds-web-stuff/"],
-  ["Lemmings", "https://www.elizium.nu/scripts/lemmings/"],
-  ["SNES Emu", "https://kazuki-4ys.github.io/web_apps/snes9x-2005-wasm/"],
-  ["Super Smash Flash", "https://www.supersmashflash.com/play/ssf1/"],
-  ["Super Smash Flash 2", "https://kbhgames.com/game/super-smash-flash-2"]
-];
-
-links.forEach(([text, url]) => {
-  const btn = new Button({
-    text,
-    size: 28,
-    type: "rounded",
-    onClick: () => go(url)
+  document.addEventListener("mousemove", e => {
+    cursor.style.left = e.clientX + "px";
+    cursor.style.top = e.clientY + "px";
   });
 
-  content.appendChild(btn.element);
+  const go = (url) => window.location.href = url;
+
+  const content = document.getElementById("content");
+
+  /* TOGGLE BUTTON */
+  const toggleBtn = new Button({
+    text: "/etc",
+    size: 34,
+    type: "rounded",
+    onClick: () => {
+      content.style.display =
+        content.style.display === "flex" ? "none" : "flex";
+    }
+  });
+
+  document.getElementById("menu").appendChild(toggleBtn.element);
+
+  /* LINKS */
+  const links = [
+    ["3DS Games", "https://wolfyxon.github.io/3ds-web-stuff/"],
+    ["Lemmings", "https://www.elizium.nu/scripts/lemmings/"],
+    ["SNES Emu", "https://kazuki-4ys.github.io/web_apps/snes9x-2005-wasm/"],
+    ["Super Smash Flash", "https://www.supersmashflash.com/play/ssf1/"],
+    ["Super Smash Flash 2", "https://kbhgames.com/game/super-smash-flash-2"]
+  ];
+
+  links.forEach(([text, url]) => {
+    const btn = new Button({
+      text,
+      size: 28,
+      type: "rounded",
+      onClick: () => go(url)
+    });
+
+    content.appendChild(btn.element);
+  });
+
 });
 </script>
 
