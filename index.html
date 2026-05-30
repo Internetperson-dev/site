@@ -7,6 +7,9 @@
 <title>Internetperson-dev Useful links</title>
 <link rel="icon" type="image/png" href="favicon.png">
 
+<!-- Orbitron font for CRYSTAL button -->
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;700&display=swap" rel="stylesheet">
+
 <style>
 html, body {
   height: 100%;
@@ -41,7 +44,50 @@ html, body {
 }
 
 /* =========================
-   LIQUID GLASS BUTTONS
+   CRYSTAL BUTTON
+   ========================= */
+.glass-button {
+  position: relative;
+  cursor: pointer;
+  outline: none;
+  width: 320px;
+  height: 140px;
+  border-radius: 999px;
+
+  border: 1px solid rgba(255, 255, 255, 0.3);
+
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(255, 255, 255, 0.08) 50%,
+    rgba(255, 255, 255, 0.03) 100%
+  );
+
+  backdrop-filter: url(#glass);
+  -webkit-backdrop-filter: url(#glass);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.2);
+}
+
+.glass-button span {
+  font-family: "Orbitron", sans-serif;
+  color: white;
+  font-size: 2.2rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+}
+
+.glass-button:hover {
+  transform: scale(1.05);
+}
+
+/* =========================
+   LIQUID GLASS BUTTONS (rest of site)
    ========================= */
 .glass {
   position: relative;
@@ -62,7 +108,6 @@ html, body {
   backdrop-filter: blur(14px);
   -webkit-backdrop-filter: blur(14px);
 
-  /* LIQUID FILTER */
   filter: url(#liquid-glass-filter);
 
   box-shadow:
@@ -75,25 +120,8 @@ html, body {
   transition: transform 0.25s ease, box-shadow 0.25s ease;
 }
 
-/* moving light sheen */
-.glass::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(
-    circle at var(--x, 50%) var(--y, 50%),
-    rgba(255,255,255,0.25),
-    transparent 60%
-  );
-  opacity: 0.6;
-  pointer-events: none;
-}
-
 .glass:hover {
   transform: translateY(-3px) scale(1.01);
-  box-shadow:
-    0 18px 45px rgba(0,0,0,0.35),
-    inset 0 1px 0 rgba(255,255,255,0.35);
 }
 
 /* layout */
@@ -106,12 +134,6 @@ html, body {
   gap: 15px;
 }
 
-h1 {
-  font-size: 2rem;
-  margin-bottom: 20px;
-}
-
-/* collapsible */
 .content {
   display: none;
   flex-direction: column;
@@ -124,10 +146,9 @@ h1 {
 
 <body>
 
-<!-- cursor -->
 <div class="glass-cursor"></div>
 
-<!-- LIQUID GLASS FILTER ENGINE -->
+<!-- LIQUID FILTER -->
 <svg width="0" height="0" style="position:absolute">
   <defs>
     <filter id="liquid-glass-filter">
@@ -137,10 +158,36 @@ h1 {
   </defs>
 </svg>
 
+<!-- CRYSTAL FILTER -->
+<svg style="position: absolute; width: 0; height: 0">
+  <filter
+    id="glass"
+    x="-50%"
+    y="-50%"
+    width="200%"
+    height="200%"
+    primitiveUnits="objectBoundingBox"
+  >
+    <feImage x="-50%" y="-50%" width="200%" height="200%" result="map" />
+    <feGaussianBlur in="SourceGraphic" stdDeviation="0.02" result="blur" />
+    <feDisplacementMap
+      id="disp"
+      in="blur"
+      in2="map"
+      scale="0.8"
+      xChannelSelector="R"
+      yChannelSelector="G"
+    />
+  </filter>
+</svg>
+
 <div class="links">
   <h1>Useful Links</h1>
 
-  <button class="glass collapsible">/etc</button>
+  <!-- 🔥 REPLACED BUTTON -->
+  <button class="glass-button collapsible">
+    <span>CRYSTAL</span>
+  </button>
 
   <div class="content">
     <button class="glass" onclick="location.href='https://wolfyxon.github.io/3ds-web-stuff/'">3DS Games</button>
@@ -167,7 +214,7 @@ document.querySelector(".collapsible").addEventListener("click", function() {
   content.style.display = content.style.display === "flex" ? "none" : "flex";
 });
 
-/* liquid hover highlight tracking */
+/* liquid hover */
 document.querySelectorAll(".glass").forEach(btn => {
   btn.addEventListener("mousemove", e => {
     const r = btn.getBoundingClientRect();
@@ -175,6 +222,15 @@ document.querySelectorAll(".glass").forEach(btn => {
     btn.style.setProperty("--y", `${e.clientY - r.top}px`);
   });
 });
+
+/* CRYSTAL filter map */
+const feImage = document.querySelector("feImage");
+fetch("https://essykings.github.io/JavaScript/map.png")
+  .then(r => r.blob())
+  .then(blob => {
+    const objURL = URL.createObjectURL(blob);
+    feImage.setAttribute("href", objURL);
+  });
 </script>
 
 </body>
