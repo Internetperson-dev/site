@@ -3,226 +3,198 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="A group of websites">
-<title>Internetperson-dev Useful links</title>
-<link rel="icon" type="image/png" href="favicon.png">
+<title>Liquid Glass Links (WebGL Buttons)</title>
 
 <style>
-
-/* =========================
-   SYSTEM / GLOBAL
-   ========================= */
-html, body {
-  height: 100%;
-  min-height: 500vh;
-  margin: 0;
-  font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
-               Roboto, Helvetica, Arial, sans-serif;
-  overflow-x: hidden;
-  cursor: none;
-  background: radial-gradient(circle at top left, #1f1f1f, #121212);
-  color: #fff;
+html,body{
+  margin:0;
+  background:radial-gradient(circle at top,#1b1b1b,#0e0e0e);
+  font-family:system-ui;
+  color:white;
+  overflow-x:hidden;
+  cursor:none;
 }
 
-/* =========================
-   GLASS CURSOR
-   ========================= */
-.glass-cursor {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 2rem;
-  height: 2rem;
-  border-radius: 50%;
-  transform: translate(-50%, -50%);
-  pointer-events: none;
-  z-index: 9999;
-
-  background: rgba(255, 255, 255, 0.08);
-  border: 2px solid transparent;
-  box-shadow:
-    0 0 0 2px rgba(255, 255, 255, 0.6),
-    0 16px 32px rgba(0, 0, 0, 0.12);
-
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+/* layout */
+.links{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:18px;
+  padding:60px;
 }
 
-/* =========================
-   LINKS / UI
-   ========================= */
-.links {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  min-height: 100vh;
-  padding: 40px;
-  gap: 15px;
+/* WebGL button */
+.liquid-btn{
+  position:relative;
+  width:340px;
+  height:72px;
+  border:none;
+  padding:0;
+  background:transparent;
+  border-radius:24px;
+  overflow:hidden;
+  cursor:none;
 }
 
-h1 {
-  font-size: 2rem;
-  margin-bottom: 20px;
-  text-shadow: 0 4px 15px rgba(255,255,255,0.2);
+.liquid-btn span{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:2;
+  font-weight:600;
+  pointer-events:none;
+  text-shadow:0 2px 10px rgba(0,0,0,.6);
 }
 
-/* glass UI buttons */
-.glass {
-  padding: 14px;
-  width: 320px;
-  border: none;
-  border-radius: 18px;
-  font-size: 1rem;
-  text-align: center;
-  transition: 0.25s ease;
-
-  background: rgba(255, 255, 255, 0.12);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  color: #fff;
-  cursor: none; /* force hide cursor */
-  user-select: none;
-  -webkit-user-select: none;
-  outline: none;
+.liquid-btn canvas{
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  display:block;
 }
-
-.glass:hover {
-  background: rgba(255, 255, 255, 0.2);
-  transform: translateY(-2px);
-}
-
-/* collapsible content */
-.content {
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  margin-top: 10px;
-  gap: 10px;
-}
-
-.content button {
-  width: 300px;
-  padding: 12px;
-  border-radius: 16px;
-  border: none;
-  font-size: 0.95rem;
-  transition: 0.25s ease;
-  cursor: none; /* force hide cursor */
-  user-select: none;
-  -webkit-user-select: none;
-  outline: none;
-}
-
-.content button:hover {
-  background: rgba(255,255,255,0.15);
-  transform: translateY(-2px);
-}
-
-/* =========================
-   LADYBIRD ANIMATION
-   ========================= */
-.ladybird {
-  position: absolute;
-  font-size: 2rem;
-  top: 0;
-  opacity: 1;
-  pointer-events: none;
-  animation: fall 3s linear forwards;
-}
-
-@keyframes fall {
-  from { transform: translateY(-50px); opacity: 1; }
-  to   { transform: translateY(100vh); opacity: 0; }
-}
-
 </style>
 </head>
 
 <body>
 
-<!-- Glass Cursor -->
-<div class="glass-cursor"></div>
-
 <div class="links">
-  <h1>Useful Links</h1>
 
-  <button class="glass collapsible">/etc</button>
+<h1>Useful Links</h1>
 
-  <div class="content">
-    <button class="glass" onclick="location.href='https://wolfyxon.github.io/3ds-web-stuff/'">3DS Games</button>
-    <button class="glass" onclick="location.href='http://froxot.de/'">3DS Games - 2</button>
-    <button class="glass" onclick="location.href='https://www.elizium.nu/scripts/lemmings/'">Lemmings</button>
-    <button class="glass" onclick="location.href='https://kazuki-4ys.github.io/web_apps/snes9x-2005-wasm/'">SNES Emu</button>
-    <button class="glass" onclick="location.href='https://www.supersmashflash.com/play/ssf1/'">Super Smash Flash</button>
-    <button class="glass" onclick="location.href='https://kbhgames.com/game/super-smash-flash-2'">Super Smash Flash 2</button>
-    <button class="glass" onclick="location.href='https://internetperson-dev.github.io/site/platformer/title.html'">Test Game</button>
-    <button class="glass" onclick="location.href='https://yell0wsuit.page/assets/games/angry-birds-chrome/index.html'">Angry Birds Chrome</button>
-    <button class="glass" onclick="location.href='https://kinoposts.web.app/test/playlistmaker.html'">Music PWA Test</button>
-    <button class="glass" onclick="location.href='https://calculator.apps.chrome/'">Google Calculator PWA</button>
-    <button class="glass" onclick="location.href='https://internetperson-dev.github.io/site/etc/yt/yt-bad.html'">yt-bad</button>
-    <button class="glass" onclick="location.href='https://internetperson-dev.github.io/site/etc/yt/yt-good.html'">yt-good</button>
-    <button class="glass" onclick="location.href='https://calculator.apps.chrome/'">Google Calculator PWA</button>
-    <button class="glass" onclick="location.href='https://internetperson-dev.github.io/site/etc/yt/yt-bad.html'">yt-bad</button>
-    <button class="glass" onclick="location.href='https://internetperson-dev.github.io/site/etc/yt/yt-good.html'">yt-good</button>
+<button class="liquid-btn" onclick="location.href='https://wolfyxon.github.io/3ds-web-stuff/'">
+  <canvas></canvas><span>3DS Games</span>
+</button>
 
-<h6>Default is Canvas builds. - Very slow on Firefox</h6>
-     
-    <button class="glass" onclick="location.href='https://internetperson-dev.github.io/site/liquid_glass_widgets/apple_news/'">Liquid Glass Flutter - Unoffical Apple News Mockup Example from sdegenaar</button>
-    <button class="glass" onclick="location.href='https://internetperson-dev.github.io/site/liquid_glass_widgets/apple_music/'">Liquid Glass Flutter - Unoffical Apple Music Mockup Example from sdegenaar</button>
-    <button class="glass" onclick="location.href='https://internetperson-dev.github.io/site/liquid_glass_widgets/apple_messages/'">Liquid Glass Flutter - Unoffical iMessage Mockup Example from sdegenaar</button>
-    <button class="glass" onclick="location.href='https://internetperson-dev.github.io/site/liquid_glass_widgets/apple_podcasts/'">Liquid Glass Flutter - Unoffical Apple Podcast Mockup Example from sdegenaar</button>
+<button class="liquid-btn" onclick="location.href='https://www.elizium.nu/scripts/lemmings/'">
+  <canvas></canvas><span>Lemmings</span>
+</button>
 
-<h6>WASM builds may run faster.</h6>
-     
-    <button class="glass" onclick="location.href='https://internetperson-dev.github.io/site/liquid_glass_widgets/apple_news_wasm/'">Liquid Glass Flutter - Unoffical WASM Apple News Mockup Example from sdegenaar</button>
-    <button class="glass" onclick="location.href='https://internetperson-dev.github.io/site/liquid_glass_widgets/apple_music_wasm/'">Liquid Glass Flutter - Unoffical WASM Apple Music Mockup Example from sdegenaar</button>
-    <button class="glass" onclick="location.href='https://internetperson-dev.github.io/site/liquid_glass_widgets/apple_messages_wasm/'">Liquid Glass Flutter - Unoffical WASM iMessage Mockup Example from sdegenaar</button>
-    <button class="glass" onclick="location.href='https://internetperson-dev.github.io/site/liquid_glass_widgets/apple_podcasts_wasm/'">Liquid Glass Flutter - Unoffical WASM Apple Podcast Mockup Example from sdegenaar</button>
+<button class="liquid-btn" onclick="location.href='https://kazuki-4ys.github.io/web_apps/snes9x-2005-wasm/'">
+  <canvas></canvas><span>SNES Emulator</span>
+</button>
 
-<h6>HTML builds</h6>
+<button class="liquid-btn" onclick="location.href='https://www.supersmashflash.com/play/ssf1/'">
+  <canvas></canvas><span>Super Smash Flash</span>
+</button>
 
+<button class="liquid-btn" onclick="location.href='https://kbhgames.com/game/super-smash-flash-2'">
+  <canvas></canvas><span>Super Smash Flash 2</span>
+</button>
 
-    <button class="glass" onclick="location.href='https://internetperson-dev.github.io/site/liquid_glass_widgets/apple_news_html/'">Liquid Glass Flutter - Unoffical WASM Apple News Mockup Example from sdegenaar</button>
-    <button class="glass" onclick="location.href='https://internetperson-dev.github.io/site/liquid_glass_widgets/apple_music_html/'">Liquid Glass Flutter - Unoffical WASM Apple Music Mockup Example from sdegenaar</button>
-    <button class="glass" onclick="location.href='https://internetperson-dev.github.io/site/liquid_glass_widgets/apple_messages_html/'">Liquid Glass Flutter - Unoffical WASM iMessage Mockup Example from sdegenaar</button>
-    <button class="glass" onclick="location.href='https://internetperson-dev.github.io/site/liquid_glass_widgets/apple_podcasts_html/'">Liquid Glass Flutter - Unoffical WASM Apple Podcast Mockup Example from sdegenaar</button>
-
-       
-  </div>
 </div>
 
+<!-- =========================
+WEBGL SHADER (YOUR VERSION ADAPTED)
+========================= -->
 
+<script id="fragShader" type="x-shader/x-fragment">
+precision mediump float;
 
+uniform vec2 iResolution;
 
-<script>
-/* cursor follow */
-const cursor = document.querySelector('.glass-cursor');
-document.addEventListener('mousemove', e => {
-  cursor.style.left = e.clientX + 'px';
-  cursor.style.top  = e.clientY + 'px';
-});
-
-/* collapsible */
-document.querySelector(".collapsible").addEventListener("click", function() {
-  const content = this.nextElementSibling;
-  content.style.display = content.style.display === "flex" ? "none" : "flex";
-});
-
-/* ladybird */
-function createLadybird() {
-  const e = document.createElement("div");
-  e.className = "ladybird";
-  e.innerText = "🐞";
-  e.style.left = Math.random() * window.innerWidth + "px";
-  document.body.appendChild(e);
-  setTimeout(() => e.remove(), 1000);
+float rounded(vec2 p){
+  float r = 6.0;
+  vec2 b = iResolution * 0.5;
+  vec2 d = abs(p) - b + r;
+  return min(max(d.x,d.y),0.0) + length(max(d,0.0)) - r;
 }
 
-if (navigator.userAgent.includes("Ladybird")) {
-  for (let i = 0; i < 10; i++) {
-    setTimeout(createLadybird, 500 * Math.random());
+void main(){
+  vec2 uv = gl_FragCoord.xy;
+
+  vec2 center = iResolution * 0.5;
+  vec2 p = uv - center;
+
+  float d = rounded(p);
+
+  vec3 base = vec3(0.15,0.15,0.18);
+
+  // glass interior
+  if(d < 0.0){
+    float glow = smoothstep(-40.0,0.0,d);
+
+    vec3 col = base;
+
+    // fake refraction gradient
+    col += vec3(0.1,0.12,0.15) * glow;
+
+    // highlight
+    col += vec3(0.25) * smoothstep(-20.0,-5.0,d);
+
+    gl_FragColor = vec4(col,1.0);
+  }
+  else{
+    // shadow
+    float shadow = exp(-d*d*0.002);
+    gl_FragColor = vec4(0.0,0.0,0.0,shadow*0.5);
   }
 }
+</script>
+
+<script>
+function createGL(button){
+
+  const canvas = button.querySelector("canvas");
+  const gl = canvas.getContext("webgl");
+
+  const vs = `
+  attribute vec2 position;
+  void main(){
+    gl_Position = vec4(position,0.0,1.0);
+  }`;
+
+  const fs = document.getElementById("fragShader").textContent;
+
+  function compile(type,src){
+    const s = gl.createShader(type);
+    gl.shaderSource(s,src);
+    gl.compileShader(s);
+    return s;
+  }
+
+  const prog = gl.createProgram();
+  gl.attachShader(prog,compile(gl.VERTEX_SHADER,vs));
+  gl.attachShader(prog,compile(gl.FRAGMENT_SHADER,fs));
+  gl.linkProgram(prog);
+  gl.useProgram(prog);
+
+  const buf = gl.createBuffer();
+  gl.bindBuffer(gl.ARRAY_BUFFER,buf);
+  gl.bufferData(gl.ARRAY_BUFFER,new Float32Array([
+    -1,-1,  1,-1,  -1,1,  1,1
+  ]),gl.STATIC_DRAW);
+
+  const loc = gl.getAttribLocation(prog,"position");
+  gl.enableVertexAttribArray(loc);
+  gl.vertexAttribPointer(loc,2,gl.FLOAT,false,0,0);
+
+  const resLoc = gl.getUniformLocation(prog,"iResolution");
+
+  function resize(){
+    const r = button.getBoundingClientRect();
+    canvas.width = r.width;
+    canvas.height = r.height;
+    gl.viewport(0,0,canvas.width,canvas.height);
+  }
+
+  window.addEventListener("resize",resize);
+  resize();
+
+  function draw(){
+    gl.uniform2f(resLoc,canvas.width,canvas.height);
+    gl.drawArrays(gl.TRIANGLE_STRIP,0,4);
+    requestAnimationFrame(draw);
+  }
+
+  draw();
+}
+
+document.querySelectorAll(".liquid-btn")
+.forEach(createGL);
 </script>
 
 </body>
