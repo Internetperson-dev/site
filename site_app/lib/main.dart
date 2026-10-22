@@ -1,9 +1,14 @@
-import 'dart:html' as html;
+import 'dart:js_interop';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:liquid_glass_widgets/liquid_glass_setup.dart';
 import 'package:liquid_glass_widgets/liquid_glass_widgets.dart';
+
+@JS('window.open')
+external void _jsWindowOpen(String url, String target);
+
+void _openUrl(String url) => _jsWindowOpen(url, '_blank');
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -85,7 +90,7 @@ class HomeScreen extends StatelessWidget {
                     useOwnLayer: true,
                     width: double.infinity,
                     height: 44,
-                    onTap: () => html.window.open(link[1], '_blank'),
+                    onTap: () => _openUrl(link[1]),
                     child: Text(link[0], style: const TextStyle(color: Colors.white, fontSize: 14)),
                   ),
                   const SizedBox(height: 8),
