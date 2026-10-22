@@ -13,11 +13,9 @@ void _openUrl(String url) => _jsWindowOpen(url, '_blank');
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await LiquidGlassWidgets.initialize();
-
   runApp(
     LiquidGlassWidgets.wrap(
       child: const SiteApp(),
-      respectSystemAccessibility: true,
       adaptiveQuality: true,
     ),
   );
@@ -31,8 +29,6 @@ class SiteApp extends StatelessWidget {
     return CupertinoApp(
       title: 'Internetperson-dev Useful Links',
       theme: const CupertinoThemeData(brightness: Brightness.dark),
-      builder: (context, child) =>
-          Theme(data: ThemeData.dark(useMaterial3: true), child: child!),
       home: const HomeScreen(),
       debugShowCheckedModeBanner: false,
     );
@@ -52,48 +48,75 @@ class HomeScreen extends StatelessWidget {
     ['Super Smash Flash 2', 'https://kbhgames.com/game/super-smash-flash-2'],
   ];
 
+  LiquidGlassSettings get _pillGlass => LiquidGlassSettings(
+        glassColor: const Color(0xCC1C1C1E),
+        thickness: 30,
+        blur: 2,
+        chromaticAberration: .01,
+        lightIntensity: 0.18,
+        saturation: 1.2,
+      );
+
   @override
   Widget build(BuildContext context) {
     return GlassScaffold(
       background: Container(
         decoration: const BoxDecoration(
           gradient: RadialGradient(
-            center: Alignment(-0.8, -0.8),
-            radius: 1.2,
+            center: Alignment(-0.6, -0.8),
+            radius: 1.3,
             colors: [Color(0xFF1F1F1F), Color(0xFF121212)],
           ),
         ),
       ),
+      settings: _pillGlass,
+      statusBarStyle: GlassStatusBarStyle.light,
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 600),
+            constraints: const BoxConstraints(maxWidth: 520),
             child: ListView(
-              padding: const EdgeInsets.all(40),
+              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
               children: [
                 const Text(
                   'Useful Links',
                   textAlign: TextAlign.center,
-                  style: TextStyle(fontSize: 32, fontWeight: FontWeight.w700, color: Colors.white),
+                  style: TextStyle(
+                    fontSize: 34,
+                    fontWeight: FontWeight.w700,
+                    color: Colors.white,
+                    letterSpacing: -0.5,
+                  ),
                 ),
                 const SizedBox(height: 24),
                 GlassButton.custom(
+                  onTap: () {},
+                  quality: GlassQuality.premium,
                   useOwnLayer: true,
                   width: double.infinity,
-                  height: 48,
-                  onTap: () {},
-                  child: const Text('/etc', style: TextStyle(color: Colors.white)),
+                  height: 52,
+                  shape: const LiquidRoundedSuperellipse(borderRadius: 26),
+                  settings: _pillGlass,
+                  child: const Text('/etc',
+                      style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w600)),
                 ),
                 const SizedBox(height: 12),
                 for (final link in _links) ...[
                   GlassButton.custom(
+                    onTap: () => _openUrl(link[1]),
+                    quality: GlassQuality.premium,
                     useOwnLayer: true,
                     width: double.infinity,
-                    height: 44,
-                    onTap: () => _openUrl(link[1]),
-                    child: Text(link[0], style: const TextStyle(color: Colors.white, fontSize: 14)),
+                    height: 52,
+                    shape: const LiquidRoundedSuperellipse(borderRadius: 26),
+                    settings: _pillGlass,
+                    child: Text(
+                      link[0],
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w500),
+                    ),
                   ),
-                  const SizedBox(height: 8),
+                  const SizedBox(height: 10),
                 ],
               ],
             ),
