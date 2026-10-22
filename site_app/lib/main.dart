@@ -57,11 +57,11 @@ class _HomeScreenState extends State<HomeScreen> {
 
   LiquidGlassSettings get _glass => LiquidGlassSettings(
         glassColor: const Color(0xCC1C1C1E),
-        thickness: 30,
-        blur: 2,
+        thickness: 20,
+        blur: 1,
         chromaticAberration: .01,
-        lightIntensity: 0.2,
-        saturation: 1.2,
+        lightIntensity: 0.15,
+        saturation: 1.1,
       );
 
   @override
@@ -79,7 +79,6 @@ class _HomeScreenState extends State<HomeScreen> {
           children: [
             Positioned(top: -100, right: -80, child: _blob(const Color(0xFF8FA2FF), 320)),
             Positioned(bottom: -60, left: -60, child: _blob(const Color(0xFFA855F7), 280)),
-            Positioned(top: 200, left: 40, child: _blob(const Color(0xFF34C759), 180)),
           ],
         ),
       ),
@@ -90,33 +89,39 @@ class _HomeScreenState extends State<HomeScreen> {
             style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w600)),
       ),
       body: SafeArea(
-        child: Center(
-          child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 520),
-            child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
-              children: [
-                for (final link in _links) ...[
-                  GlassButton.custom(
-                    onTap: () => _openUrl(link[1]),
-                    quality: GlassQuality.premium,
-                    useOwnLayer: true,
-                    width: double.infinity,
-                    height: 56,
-                    shape: const LiquidRoundedSuperellipse(borderRadius: 28),
-                    settings: _glass,
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Text(
-                        link[0],
-                        textAlign: TextAlign.center,
-                        style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w500),
+        child: AdaptiveLiquidGlassLayer(
+          settings: _glass,
+          quality: GlassQuality.standard,
+          child: LiquidGlassBlendGroup(
+            blend: 12,
+            child: Center(
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 520),
+                child: ListView(
+                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                  children: [
+                    for (final link in _links) ...[
+                      GlassButton.custom(
+                        onTap: () => _openUrl(link[1]),
+                        quality: GlassQuality.standard,
+                        width: double.infinity,
+                        height: 52,
+                        shape: const LiquidRoundedSuperellipse(borderRadius: 26),
+                        settings: _glass,
+                        child: Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Text(
+                            link[0],
+                            textAlign: TextAlign.center,
+                            style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w500),
+                          ),
+                        ),
                       ),
-                    ),
-                  ),
-                  const SizedBox(height: 12),
-                ],
-              ],
+                      const SizedBox(height: 12),
+                    ],
+                  ],
+                ),
+              ),
             ),
           ),
         ),
@@ -129,8 +134,7 @@ class _HomeScreenState extends State<HomeScreen> {
         selectedIndex: _tab,
         onTabSelected: (i) => setState(() => _tab = i),
         settings: _glass,
-        useOwnLayer: true,
-        quality: GlassQuality.premium,
+        quality: GlassQuality.standard,
       ),
     );
   }
