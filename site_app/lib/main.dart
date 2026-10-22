@@ -27,7 +27,7 @@ class SiteApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CupertinoApp(
-      title: 'Internetperson-dev Useful Links',
+      title: 'Useful Links',
       theme: const CupertinoThemeData(brightness: Brightness.dark),
       home: const HomeScreen(),
       debugShowCheckedModeBanner: false,
@@ -48,12 +48,12 @@ class HomeScreen extends StatelessWidget {
     ['Super Smash Flash 2', 'https://kbhgames.com/game/super-smash-flash-2'],
   ];
 
-  LiquidGlassSettings get _pillGlass => LiquidGlassSettings(
+  LiquidGlassSettings get _glass => LiquidGlassSettings(
         glassColor: const Color(0xCC1C1C1E),
         thickness: 30,
         blur: 2,
         chromaticAberration: .01,
-        lightIntensity: 0.18,
+        lightIntensity: 0.2,
         saturation: 1.2,
       );
 
@@ -62,61 +62,52 @@ class HomeScreen extends StatelessWidget {
     return GlassScaffold(
       background: Container(
         decoration: const BoxDecoration(
-          gradient: RadialGradient(
-            center: Alignment(-0.6, -0.8),
-            radius: 1.3,
-            colors: [Color(0xFF1F1F1F), Color(0xFF121212)],
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [Color(0xFF0F0F23), Color(0xFF1A1A2E), Color(0xFF16213E)],
           ),
         ),
+        child: Stack(
+          children: [
+            Positioned(top: -100, right: -80, child: _blob(const Color(0xFF8FA2FF), 320)),
+            Positioned(bottom: -60, left: -60, child: _blob(const Color(0xFFA855F7), 280)),
+            Positioned(top: 200, left: 40, child: _blob(const Color(0xFF34C759), 180)),
+          ],
+        ),
       ),
-      settings: _pillGlass,
+      settings: _glass,
       statusBarStyle: GlassStatusBarStyle.light,
+      appBar: GlassAppBar(
+        title: const Text('Useful Links',
+            style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w600)),
+      ),
       body: SafeArea(
         child: Center(
           child: ConstrainedBox(
             constraints: const BoxConstraints(maxWidth: 520),
             child: ListView(
-              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
+              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
               children: [
-                const Text(
-                  'Useful Links',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 34,
-                    fontWeight: FontWeight.w700,
-                    color: Colors.white,
-                    letterSpacing: -0.5,
-                  ),
-                ),
-                const SizedBox(height: 24),
-                GlassButton.custom(
-                  onTap: () {},
-                  quality: GlassQuality.premium,
-                  useOwnLayer: true,
-                  width: double.infinity,
-                  height: 52,
-                  shape: const LiquidRoundedSuperellipse(borderRadius: 26),
-                  settings: _pillGlass,
-                  child: const Text('/etc',
-                      style: TextStyle(color: Colors.white, fontSize: 17, fontWeight: FontWeight.w600)),
-                ),
-                const SizedBox(height: 12),
                 for (final link in _links) ...[
                   GlassButton.custom(
                     onTap: () => _openUrl(link[1]),
                     quality: GlassQuality.premium,
                     useOwnLayer: true,
                     width: double.infinity,
-                    height: 52,
-                    shape: const LiquidRoundedSuperellipse(borderRadius: 26),
-                    settings: _pillGlass,
-                    child: Text(
-                      link[0],
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w500),
+                    height: 56,
+                    shape: const LiquidRoundedSuperellipse(borderRadius: 28),
+                    settings: _glass,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Text(
+                        link[0],
+                        textAlign: TextAlign.center,
+                        style: const TextStyle(color: Colors.white, fontSize: 15, fontWeight: FontWeight.w500),
+                      ),
                     ),
                   ),
-                  const SizedBox(height: 10),
+                  const SizedBox(height: 12),
                 ],
               ],
             ),
@@ -125,4 +116,13 @@ class HomeScreen extends StatelessWidget {
       ),
     );
   }
+
+  Widget _blob(Color color, double size) => Container(
+        width: size,
+        height: size,
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          gradient: RadialGradient(colors: [color.withValues(alpha: 0.35), Colors.transparent]),
+        ),
+      );
 }
