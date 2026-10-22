@@ -35,8 +35,15 @@ class SiteApp extends StatelessWidget {
   }
 }
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  int _tab = 0;
 
   static const _links = [
     ['Epic Games/Fortnite/Easy Anti Cheat on Linux thanks to AI', 'https://internetperson-dev.github.io/site/etc/2026-10-14-Epic%20Games%20Update.html'],
@@ -113,6 +120,17 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
         ),
+      ),
+      bottomBar: GlassTabBar(
+        tabs: const [
+          GlassTab(label: 'Links', icon: Icon(CupertinoIcons.link)),
+          GlassTab(label: 'About', icon: Icon(CupertinoIcons.info)),
+        ],
+        selectedIndex: _tab,
+        onTabSelected: (i) => setState(() => _tab = i),
+        settings: _glass,
+        useOwnLayer: true,
+        quality: GlassQuality.premium,
       ),
     );
   }
